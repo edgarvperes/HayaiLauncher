@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.seizonsenryaku.testwidget;
+package com.seizonsenryaku.hayailauncher;
 
 public final class R {
     public static final class attr {

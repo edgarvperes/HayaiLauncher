@@ -1,10 +1,10 @@
-package com.seizonsenryaku.testwidget;
+package com.seizonsenryaku.hayailauncher;
 
 import android.content.ComponentName;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
+import android.support.annotation.NonNull;
 
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	private ActivityInfo activityInfo;
@@ -56,7 +56,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	}
 
 	@Override
-	public int compareTo(LaunchableActivity another) {
+	public int compareTo(@NonNull LaunchableActivity another) {
 		
 		//Criteria 1 (Bit 1) indicates whether the activity is flagged as favorite or not.
 		//Criteria 2 (Bits 2 to 16) indicates the number of launches

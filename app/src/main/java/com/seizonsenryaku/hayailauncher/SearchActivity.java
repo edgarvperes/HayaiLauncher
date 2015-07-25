@@ -1,9 +1,4 @@
-package com.seizonsenryaku.testwidget;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+package com.seizonsenryaku.hayailauncher;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -38,6 +33,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
 
 public class SearchActivity extends Activity {
 
@@ -77,8 +77,8 @@ public class SearchActivity extends Activity {
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
-		trie = new Trie<LaunchableActivity>();
-		activityInfos = new ArrayList<LaunchableActivity>();
+		trie = new Trie<>();
+		activityInfos = new ArrayList<>();
 		for (ResolveInfo info : infoList) {
 			CharSequence activityLabel = info.activityInfo.loadLabel(pm);
 			LaunchableActivity launchableActivity = new LaunchableActivity(
@@ -191,7 +191,7 @@ public class SearchActivity extends Activity {
 
 	public void onClickAppRow(View view) {
 		TextView textView = ((TextView) view
-				.findViewById(com.seizonsenryaku.testwidget.R.id.appListTopText));
+				.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListTopText));
 
 		LaunchableActivity launchableActivity = trie.get(textView.getText()
 				.toString().toLowerCase(Locale.US));
@@ -260,11 +260,11 @@ public class SearchActivity extends Activity {
             if(sharedPreferences.getBoolean("pref_show_icon",true)) {
                 Drawable icon = launchableActivity.getActivityIcon(pm);
                 ((ImageView) view
-                        .findViewById(com.seizonsenryaku.testwidget.R.id.imageView1))
+                        .findViewById(com.seizonsenryaku.hayailauncher.R.id.imageView1))
                         .setImageDrawable(icon);
             } else {
                 ((ImageView) view
-                        .findViewById(com.seizonsenryaku.testwidget.R.id.imageView1))
+                        .findViewById(com.seizonsenryaku.hayailauncher.R.id.imageView1))
                         .setImageDrawable(null);
             }
 			CharSequence label = launchableActivity.getActivityLabel();
@@ -286,22 +286,21 @@ public class SearchActivity extends Activity {
 			}
 
 			((TextView) view
-					.findViewById(com.seizonsenryaku.testwidget.R.id.appListTopText))
+					.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListTopText))
 					.setText(label);
 
 			((TextView) view
-					.findViewById(com.seizonsenryaku.testwidget.R.id.appListBottomText))
+					.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListBottomText))
 					.setText(bottomText);
 
 
 			
-			((TextView) view
-					.findViewById(com.seizonsenryaku.testwidget.R.id.appListFavoriteText))
+			view.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListFavoriteText)
 					.setVisibility(launchableActivity.isFavorite()?View.VISIBLE:View.INVISIBLE);
 			return view;
 		}
 
-	};
+	}
 
 	TextWatcher textWatcher = new TextWatcher() {
 

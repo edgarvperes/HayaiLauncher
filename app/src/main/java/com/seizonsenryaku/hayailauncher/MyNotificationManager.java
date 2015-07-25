@@ -1,4 +1,4 @@
-package com.seizonsenryaku.testwidget;
+package com.seizonsenryaku.hayailauncher;
 
 import android.app.Notification;
 import android.app.NotificationManager;

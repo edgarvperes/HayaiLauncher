@@ -1,9 +1,9 @@
-package com.seizonsenryaku.testwidget;
+package com.seizonsenryaku.hayailauncher;
+
+import android.util.SparseArray;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import android.util.SparseArray;
 
 public class Trie<T> {
 
@@ -12,7 +12,7 @@ public class Trie<T> {
 		public T object;
 
 		public Node() {
-			children = new SparseArray<Node>();
+			children = new SparseArray<>();
 		}
 
 	}
@@ -53,8 +53,6 @@ public class Trie<T> {
                 if(!list.contains(ancestor.object))
 				    list.add(ancestor.object);
 				// Log.d("TRIE", charSequence.toString());
-			} else {
-				// Log.d("TRIE", "NULL");
 			}
 			int numOfChildren = ancestor.children.size();
 

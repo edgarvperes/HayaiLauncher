@@ -1,4 +1,4 @@
-package com.seizonsenryaku.testwidget;
+package com.seizonsenryaku.hayailauncher;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

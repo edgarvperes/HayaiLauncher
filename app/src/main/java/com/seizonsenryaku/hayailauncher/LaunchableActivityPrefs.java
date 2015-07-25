@@ -1,9 +1,8 @@
-package com.seizonsenryaku.testwidget;
+package com.seizonsenryaku.hayailauncher;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDoneException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
@@ -85,7 +84,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 			favorite=0;
 		}
 		launchableActivity.setNumberOfLaunches((int)numberOfLaunches);
-		launchableActivity.setFavorite(favorite==1?true:false);
+		launchableActivity.setFavorite(favorite==1);
 
 	}
 

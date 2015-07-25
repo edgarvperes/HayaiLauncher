@@ -1,4 +1,4 @@
-package com.seizonsenryaku.testwidget;
+package com.seizonsenryaku.hayailauncher;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
