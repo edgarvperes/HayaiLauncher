@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="app_name" translatable="false">TestWidget</string>
-    <string name="title_activity_search" translatable="false">SearchActivity</string>
+    <string name="app_name" translatable="false">Hayai Launcher</string>
+    <string name="title_activity_search" translatable="false">Hayai Launcher</string>
     <string name="action_settings">Settings</string>
     <string name="application_icon_desc" >Application Icon</string>
     <string name="search_view_hint">Find an app…</string>
