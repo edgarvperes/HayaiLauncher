@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/app_row_vertical_margin"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="start" >
+
+    <TextView
+        android:id="@+id/appListTopText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/app_row_horizontal_margin"
+        android:layout_marginTop="@dimen/app_row_vertical_margin"
+        android:layout_toRightOf="@+id/imageView1"
+        android:maxLines="1"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/appListBottomText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appListTopText"
+        android:layout_marginLeft="@dimen/app_row_horizontal_margin"
+        android:layout_marginBottom="@dimen/app_row_vertical_margin"
+        android:layout_toRightOf="@+id/imageView1"
+        android:maxLines="1"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="@dimen/app_row_vertical_margin"
+        android:layout_marginLeft="@dimen/app_row_horizontal_margin"
+        android:layout_marginTop="@dimen/app_row_vertical_margin"
+        android:contentDescription="@string/application_icon_desc" />
+
+    <TextView
+        android:id="@+id/appListFavoriteText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/app_row_vertical_margin"
+        android:layout_marginRight="@dimen/app_row_horizontal_margin"
+        android:shadowColor="#333300"
+        android:shadowRadius="2.0"
+        android:text="@string/app_item_favorite_symbol"
+        android:textColor="#FFEF00"
+        android:textSize="14sp" />
+
+</RelativeLayout>

@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+     >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" 
+        android:padding="0dp">
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/search_view_hint"
+            android:inputType="textVisiblePassword" >
+
+            <requestFocus />
+        </EditText>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_settings"
+            android:onClick="onClickSettingsButton" 
+            android:contentDescription="@string/application_icon_content_description"/>
+			
+        
+        
+        
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:choiceMode="singleChoice"
+        android:drawSelectorOnTop="true"
+        android:fastScrollEnabled="true"
+        >
+
+    </ListView>
+
+</LinearLayout>
