@@ -78,7 +78,7 @@ public class SearchActivity extends Activity {
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
 		List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
 		trie = new Trie<>();
-		activityInfos = new ArrayList<>();
+
 		for (ResolveInfo info : infoList) {
 			CharSequence activityLabel = info.activityInfo.loadLabel(pm);
 			LaunchableActivity launchableActivity = new LaunchableActivity(
@@ -88,6 +88,8 @@ public class SearchActivity extends Activity {
                         launchableActivity);
 
 		}
+		
+		activityInfos = new ArrayList<>();
 		activityInfos.addAll(trie.getAllStartingWith(""));
 
 		Collections.sort(activityInfos);

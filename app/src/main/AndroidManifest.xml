@@ -13,15 +13,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppBaseTheme" >
-         
-        <receiver
-            android:name="com.seizonsenryaku.hayailauncher.Main"
-            android:label="@string/app_name" >
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/test_widget_provider" />
-        </receiver>
 
         <activity
             android:name="com.seizonsenryaku.hayailauncher.SearchActivity"
