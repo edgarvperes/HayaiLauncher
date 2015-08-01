@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.zip.Inflater;
 
 public class SearchActivity extends Activity {
 
@@ -95,11 +96,14 @@ public class SearchActivity extends Activity {
 
 		Collections.sort(activityInfos);
 		ListView appListView = (ListView) findViewById(R.id.listView1);
+
 		registerForContextMenu(appListView);
 
 		arrayAdapter = new ActivityInfoArrayAdapter(this,
 				R.layout.app_list_item, activityInfos);
-		appListView.setAdapter(arrayAdapter);
+
+        appListView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header, null));
+        appListView.setAdapter(arrayAdapter);
 		appListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

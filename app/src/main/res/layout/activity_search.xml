@@ -6,8 +6,9 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:padding="0dp">
+        android:layout_height="48dp"
+        android:paddingLeft="16dp"
+        android:background="#3F51B5">
 
         <EditText
             android:id="@+id/editText1"
@@ -16,21 +17,22 @@
             android:layout_weight="1"
             android:ems="10"
             android:hint="@string/search_view_hint"
-            android:inputType="textVisiblePassword" >
+            android:inputType="textVisiblePassword"
+            android:textColor="#FFFFFF">
 
             <requestFocus />
         </EditText>
 
         <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_settings"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_settings_white_24dp"
+            android:background="@android:color/transparent"
             android:onClick="onClickSettingsButton" 
             android:contentDescription="@string/application_icon_content_description"/>
-			
-        
-        
-        
+
+
+
     </LinearLayout>
 
     <ListView
