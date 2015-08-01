@@ -83,14 +83,15 @@ public class SearchActivity extends Activity {
 			CharSequence activityLabel = info.activityInfo.loadLabel(pm);
 			LaunchableActivity launchableActivity = new LaunchableActivity(
 					info.activityInfo, activityLabel.toString());
-			launchableActivityPrefs.setPreferences(launchableActivity);
+
             trie.put(activityLabel.toString().toLowerCase(Locale.US),
                         launchableActivity);
 
 		}
-		
+
 		activityInfos = new ArrayList<>();
 		activityInfos.addAll(trie.getAllStartingWith(""));
+		launchableActivityPrefs.setAllPreferences(activityInfos);
 
 		Collections.sort(activityInfos);
 		ListView appListView = (ListView) findViewById(R.id.listView1);
@@ -273,6 +274,7 @@ public class SearchActivity extends Activity {
 			// CharSequence label = activityInfo.processName;
 			String bottomText;
 			int numberOfLaunches = launchableActivity.getNumberOfLaunches();
+			//TODO remove hardcoded strings
 			switch (numberOfLaunches) {
 			case 0:
 				bottomText = getString(R.string.app_item_bottom_never);

@@ -30,9 +30,9 @@ public class SettingsActivity extends PreferenceActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (key.equals(KEY_PREF_NOTIFICATION)) {
-			boolean notific = sharedPreferences.getBoolean(key, false);
+			boolean notificationEnabled = sharedPreferences.getBoolean(key, false);
 			MyNotificationManager myNotificationManager = new MyNotificationManager();
-			if (notific) {
+			if (notificationEnabled) {
 				myNotificationManager.showNotification(this);
 			} else {
 				myNotificationManager.cancelNotification(this);
