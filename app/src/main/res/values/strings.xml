@@ -17,4 +17,7 @@
     <string name="app_item_bottom_once">Launched %d time</string>
     <string name="app_item_bottom_never">Never launched</string>
     <string name="app_item_favorite_symbol" translatable="false">★</string>
+    <string name="title_activity_about">About</string>
+
+    <string name="hello_world">Hello world!</string>
 </resources>

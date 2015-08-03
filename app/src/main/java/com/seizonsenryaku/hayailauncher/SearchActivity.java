@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -24,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -49,6 +52,8 @@ public class SearchActivity extends Activity {
 	private ArrayAdapter<LaunchableActivity> arrayAdapter;
 	private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
+    private Resources resources;
+
 	public OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
 
 		@Override
@@ -62,6 +67,8 @@ public class SearchActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+        resources=getResources();
+
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -121,8 +128,24 @@ public class SearchActivity extends Activity {
 			myNotificationManager.showNotification(this);
 		}
 
+
+        setStatusBarColor();
+
 	}
 
+    private void setStatusBarColor() {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
+            Window window = getWindow();
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+
+            int statusBarHeight = getStatusBarHeight();
+            View statusBarDummy = findViewById(R.id.statusBarDummyView);
+            statusBarDummy.getLayoutParams().height=statusBarHeight;
+            statusBarDummy.setBackgroundColor(resources.getColor(R.color.indigo_700));
+        }
+    }
 	public void showPopup(View v) {
 		// PopupMenu popup = new PopupMenu(this, v);
 		// MenuInflater inflater = popup.getMenuInflater();
@@ -146,6 +169,15 @@ public class SearchActivity extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.app, menu);
 	}
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
@@ -278,7 +310,7 @@ public class SearchActivity extends Activity {
 			// CharSequence label = activityInfo.processName;
 			String bottomText;
 			int numberOfLaunches = launchableActivity.getNumberOfLaunches();
-			//TODO remove hardcoded strings
+
 			switch (numberOfLaunches) {
 			case 0:
 				bottomText = getString(R.string.app_item_bottom_never);

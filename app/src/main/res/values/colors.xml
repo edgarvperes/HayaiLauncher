@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="indigo_500">#3f51b5</color>
+    <color name="indigo_50">#e8eaf6</color>
+    <color name="indigo_100">#c5cae9</color>
+    <color name="indigo_200">#9fa8da</color>
+    <color name="indigo_300">#7986cb</color>
+    <color name="indigo_400">#5c6bc0</color>
+    <color name="indigo_600">#3949ab</color>
+    <color name="indigo_700">#303f9f</color>
+    <color name="indigo_800">#283593</color>
+    <color name="indigo_900">#1a237e</color>
+    <color name="indigo_A100">#8c9eff</color>
+    <color name="indigo_A200">#536dfe</color>
+    <color name="indigo_A400">#3d5afe</color>
+    <color name="indigo_A700">#304ffe</color>
+</resources>
