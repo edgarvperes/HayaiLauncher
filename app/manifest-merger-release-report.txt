@@ -24,70 +24,58 @@ MERGED from com.android.support:support-v4:22.2.0:20:5
 		ADDED from AndroidManifest.xml:8:9
 		INJECTED from AndroidManifest.xml:0:0
 		INJECTED from AndroidManifest.xml:0:0
-android:uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
-ADDED from AndroidManifest.xml:11:5
-	android:name
-		ADDED from AndroidManifest.xml:11:30
-android:uses-permission#android.permission.READ_PHONE_STATE
-ADDED from AndroidManifest.xml:12:5
-	android:name
-		ADDED from AndroidManifest.xml:12:30
-android:uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from AndroidManifest.xml:13:5
-	android:name
-		ADDED from AndroidManifest.xml:13:30
 application
-ADDED from AndroidManifest.xml:15:5
+ADDED from AndroidManifest.xml:12:5
 MERGED from com.android.support:support-v4:22.2.0:22:5
 	android:label
-		ADDED from AndroidManifest.xml:18:9
+		ADDED from AndroidManifest.xml:15:9
 	android:allowBackup
-		ADDED from AndroidManifest.xml:16:9
+		ADDED from AndroidManifest.xml:13:9
 	android:icon
-		ADDED from AndroidManifest.xml:17:9
+		ADDED from AndroidManifest.xml:14:9
 	android:theme
-		ADDED from AndroidManifest.xml:19:9
+		ADDED from AndroidManifest.xml:16:9
 activity#com.seizonsenryaku.hayailauncher.SearchActivity
-ADDED from AndroidManifest.xml:20:9
+ADDED from AndroidManifest.xml:17:9
 	android:screenOrientation
-		ADDED from AndroidManifest.xml:23:13
+		ADDED from AndroidManifest.xml:20:13
 	android:label
-		ADDED from AndroidManifest.xml:22:13
+		ADDED from AndroidManifest.xml:19:13
 	android:name
-		ADDED from AndroidManifest.xml:21:13
+		ADDED from AndroidManifest.xml:18:13
 intent-filter#android.appwidget.action.APPWIDGET_UPDATE+android.intent.action.MAIN+android.intent.category.DEFAULT+android.intent.category.HOME+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:24:13
+ADDED from AndroidManifest.xml:21:13
 action#android.intent.action.MAIN
-ADDED from AndroidManifest.xml:25:17
+ADDED from AndroidManifest.xml:22:17
 	android:name
-		ADDED from AndroidManifest.xml:25:25
+		ADDED from AndroidManifest.xml:22:25
 category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:27:17
+ADDED from AndroidManifest.xml:24:17
 	android:name
-		ADDED from AndroidManifest.xml:27:27
+		ADDED from AndroidManifest.xml:24:27
 action#android.appwidget.action.APPWIDGET_UPDATE
+ADDED from AndroidManifest.xml:26:17
+	android:name
+		ADDED from AndroidManifest.xml:26:25
+category#android.intent.category.HOME
+ADDED from AndroidManifest.xml:28:17
+	android:name
+		ADDED from AndroidManifest.xml:28:27
+category#android.intent.category.DEFAULT
 ADDED from AndroidManifest.xml:29:17
 	android:name
-		ADDED from AndroidManifest.xml:29:25
-category#android.intent.category.HOME
-ADDED from AndroidManifest.xml:31:17
-	android:name
-		ADDED from AndroidManifest.xml:31:27
-category#android.intent.category.DEFAULT
-ADDED from AndroidManifest.xml:32:17
-	android:name
-		ADDED from AndroidManifest.xml:32:27
+		ADDED from AndroidManifest.xml:29:27
 activity#com.seizonsenryaku.hayailauncher.SettingsActivity
-ADDED from AndroidManifest.xml:35:9
+ADDED from AndroidManifest.xml:32:9
 	android:label
-		ADDED from AndroidManifest.xml:37:13
+		ADDED from AndroidManifest.xml:34:13
 	android:theme
-		ADDED from AndroidManifest.xml:38:13
+		ADDED from AndroidManifest.xml:35:13
 	android:name
-		ADDED from AndroidManifest.xml:36:13
+		ADDED from AndroidManifest.xml:33:13
 activity#com.seizonsenryaku.hayailauncher.About
-ADDED from AndroidManifest.xml:40:9
+ADDED from AndroidManifest.xml:37:9
 	android:label
-		ADDED from AndroidManifest.xml:42:13
+		ADDED from AndroidManifest.xml:39:13
 	android:name
-		ADDED from AndroidManifest.xml:41:13
+		ADDED from AndroidManifest.xml:38:13

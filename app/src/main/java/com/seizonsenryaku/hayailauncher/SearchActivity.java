@@ -139,10 +139,16 @@ public class SearchActivity extends Activity {
 	}
 
     private void setStatusBarColor(Resources resources) {
+
+        //There's no support for colored status bar in versions below KITKAT
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
+
         Window window = getWindow();
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            //LOLLIPOP+ path
             window.setStatusBarColor(resources.getColor(R.color.indigo_700));
-        } else if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
+        } else {
+            //KITKAT path
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
