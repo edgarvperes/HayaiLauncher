@@ -47,8 +47,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/activities/SearchActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/activities/SearchActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/manifest-merger-release-report.txt" afterPath="$PROJECT_DIR$/app/manifest-merger-release-report.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/LaunchableActivityPrefs.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/LaunchableActivityPrefs.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="LiteLauncher.iws" />
@@ -120,8 +119,8 @@
       <file leaf-file-name="LaunchableActivityPrefs.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/LaunchableActivityPrefs.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.2175574">
-              <caret line="20" column="40" selection-start-line="20" selection-start-column="40" selection-end-line="20" selection-end-column="40" />
+            <state vertical-scroll-proportion="0.5458015">
+              <caret line="110" column="54" selection-start-line="110" selection-start-column="54" selection-end-line="110" selection-end-column="54" />
               <folding />
             </state>
           </provider>
@@ -1363,7 +1362,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/Main.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colors.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/LaunchableActivityPrefs.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/xml/preferences.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/menu/search_activity_menu.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values-pt/strings.xml" />
@@ -1396,6 +1394,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/StatusBarColorHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values-v21/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/activities/SearchActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/LaunchableActivityPrefs.java" />
       </list>
     </option>
   </component>
@@ -1972,7 +1971,13 @@
       <option name="project" value="LOCAL" />
       <updated>1438724660615</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Remove duplicate code">
+      <created>1438726589725</created>
+      <option name="number" value="00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1438726589726</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TodoView">
@@ -2052,7 +2057,8 @@
     <MESSAGE value="Fix About activity status bar color on Lollipop+" />
     <MESSAGE value="Code cleanup" />
     <MESSAGE value="Switched to gridview" />
-    <option name="LAST_COMMIT_MESSAGE" value="Switched to gridview" />
+    <MESSAGE value="Remove duplicate code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Remove duplicate code" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -2441,8 +2447,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/LaunchableActivityPrefs.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.2175574">
-          <caret line="20" column="40" selection-start-line="20" selection-start-column="40" selection-end-line="20" selection-end-column="40" />
+        <state vertical-scroll-proportion="0.5458015">
+          <caret line="110" column="54" selection-start-line="110" selection-start-column="54" selection-end-line="110" selection-end-column="54" />
           <folding />
         </state>
       </provider>

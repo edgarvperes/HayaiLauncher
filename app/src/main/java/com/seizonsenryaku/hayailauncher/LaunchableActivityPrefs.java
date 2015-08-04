@@ -6,15 +6,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 
-    class ActivityPref {
+    private class ActivityPref {
         String className;
         boolean favorite;
         int numberOfLaunches;
+        boolean wasUsed;
     }
 
     private static final int DATABASE_VERSION = 1;
@@ -99,8 +101,16 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         for (LaunchableActivity activity : activityList) {
             ActivityPref activityPref = activityPrefMap.get(activity.getClassName());
             if (activityPref != null) {
+                activityPref.wasUsed=true;
                 activity.setNumberOfLaunches(activityPref.numberOfLaunches);
                 activity.setFavorite(activityPref.favorite);
+            }
+        }
+
+        Collection<ActivityPref> allLoadedPrefs=activityPrefMap.values();
+        for(ActivityPref activityPref:allLoadedPrefs){
+            if(!activityPref.wasUsed){
+                deletePreference(activityPref.className);
             }
         }
 
