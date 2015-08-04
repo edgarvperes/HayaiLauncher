@@ -35,8 +35,7 @@ public final class R {
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
         public static final int ic_more_vert_white_24dp=0x7f020001;
-        public static final int ic_settings_white_24dp=0x7f020002;
-        public static final int textfield_default_holo_dark=0x7f020003;
+        public static final int textfield_default_holo_dark=0x7f020002;
     }
     public static final class id {
         public static final int action_about=0x7f0a000f;
@@ -64,7 +63,8 @@ public final class R {
     }
     public static final class menu {
         public static final int app=0x7f090000;
-        public static final int search_activity_menu=0x7f090001;
+        public static final int menu_about=0x7f090001;
+        public static final int search_activity_menu=0x7f090002;
     }
     public static final class string {
         public static final int about_content=0x7f070000;

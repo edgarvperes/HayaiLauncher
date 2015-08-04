@@ -3,22 +3,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
      >
+    <View
+        android:id="@+id/statusBarDummyView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
+        android:id="@+id/customActionBar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:paddingLeft="16dp"
-        android:background="#3F51B5">
+        android:background="@color/indigo_500">
 
         <EditText
             android:id="@+id/editText1"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:background="@drawable/textfield_default_holo_dark"
             android:ems="10"
             android:hint="@string/search_view_hint"
+            android:textColorHint="#CCCCCC"
+            android:textSize="18sp"
             android:inputType="textVisiblePassword"
-            android:textColor="#FFFFFF">
+            android:textColor="@android:color/white">
 
             <requestFocus />
         </EditText>
@@ -26,7 +34,8 @@
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_settings_white_24dp"
+            android:id="@+id/overflow_button"
+            android:src="@drawable/ic_more_vert_white_24dp"
             android:background="@android:color/transparent"
             android:onClick="onClickSettingsButton" 
             android:contentDescription="@string/application_icon_content_description"/>

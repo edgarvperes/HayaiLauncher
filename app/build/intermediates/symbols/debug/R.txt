@@ -18,8 +18,7 @@ int dimen app_row_horizontal_margin 0x7f060002
 int dimen app_row_vertical_margin 0x7f060003
 int drawable ic_launcher 0x7f020000
 int drawable ic_more_vert_white_24dp 0x7f020001
-int drawable ic_settings_white_24dp 0x7f020002
-int drawable textfield_default_holo_dark 0x7f020003
+int drawable textfield_default_holo_dark 0x7f020002
 int id action_about 0x7f0a000f
 int id action_refresh_app_list 0x7f0a000e
 int id action_settings 0x7f0a000d
@@ -41,7 +40,8 @@ int layout activity_search 0x7f030001
 int layout app_list_item 0x7f030002
 int layout list_header 0x7f030003
 int menu app 0x7f090000
-int menu search_activity_menu 0x7f090001
+int menu menu_about 0x7f090001
+int menu search_activity_menu 0x7f090002
 int string about_content 0x7f070000
 int string action_about 0x7f070001
 int string action_refresh_app_list 0x7f070002

@@ -5,8 +5,12 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="10"
         android:targetSdkVersion="22" />
+
+    <android:uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -32,6 +36,10 @@
             android:name="com.seizonsenryaku.hayailauncher.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppSettingsTheme" >
+        </activity>
+        <activity
+            android:name="com.seizonsenryaku.hayailauncher.About"
+            android:label="@string/title_activity_about" >
         </activity>
     </application>
 

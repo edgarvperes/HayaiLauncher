@@ -1,4 +1,1 @@
-C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\app\build\intermediates\classes\release
-C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\app\build\intermediates\pre-dexed\release\support-annotations-22.2.0-69de552fdb5cf3badddea95a6676a100c210d70c.jar
-C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\app\build\intermediates\pre-dexed\release\internal_impl-22.2.0-8c02a6bac84e14666e232609ac53845c4dc42ddd.jar
-C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\app\build\intermediates\pre-dexed\release\classes-ad7f8640a18d2e15c2e80572bc33b1dde4b2d111.jar
+C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\app\build\intermediates\classes-proguard\release\classes.jar
