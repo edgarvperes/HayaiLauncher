@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"/>
 
     <LinearLayout
+        android:id="@+id/customActionBar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:paddingLeft="16dp"
@@ -23,6 +24,7 @@
             android:ems="10"
             android:hint="@string/search_view_hint"
             android:textColorHint="#CCCCCC"
+            android:textSize="18sp"
             android:inputType="textVisiblePassword"
             android:textColor="@android:color/white">
 
@@ -32,7 +34,8 @@
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_settings_white_24dp"
+            android:id="@+id/overflow_button"
+            android:src="@drawable/ic_more_vert_white_24dp"
             android:background="@android:color/transparent"
             android:onClick="onClickSettingsButton" 
             android:contentDescription="@string/application_icon_content_description"/>

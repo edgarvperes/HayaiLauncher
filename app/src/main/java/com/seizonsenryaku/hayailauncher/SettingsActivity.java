@@ -5,6 +5,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
@@ -18,13 +19,6 @@ public class SettingsActivity extends PreferenceActivity implements
 		addPreferencesFromResource(R.xml.preferences);
 	}
 
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.settings, menu);
-		return false;
-	}
 
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
@@ -39,6 +33,13 @@ public class SettingsActivity extends PreferenceActivity implements
 			}
 		}
 
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		//MenuInflater inflater = getMenuInflater();
+		//inflater.inflate(R.menu.menu_about, menu);
+		return true;
 	}
 
 	@SuppressWarnings("deprecation")

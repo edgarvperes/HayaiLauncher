@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/C:/Users/Edgar/Documents/Android/LiteLauncher_android_studio/app/src/main/res/values/dimens.xml -->
+    <eat-comment/>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="app_row_horizontal_margin">8dp</dimen>
+    <dimen name="app_row_vertical_margin">4dp</dimen>
+    <!-- From: file:/C:/Users/Edgar/Documents/Android/LiteLauncher_android_studio/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="action_settings">Settings</string>
+    <string name="app_item_bottom_never">Never launched</string>
+    <string name="app_item_bottom_once">Launched %d time</string>
+    <string name="app_item_bottom_several">Launched %d times</string>
+    <string name="app_item_favorite_symbol" translatable="false">★</string>
+    <string name="app_name" translatable="false">Hayai Launcher</string>
+    <string name="application_icon_content_description">Application Icon</string>
+    <string name="application_icon_desc">Application Icon</string>
+    <string name="appmenu_favorite">Favorite</string>
+    <string name="appmenu_info">App info</string>
+    <string name="appmenu_launch">Launch</string>
+    <string name="search_view_hint">Find an app…</string>
+    <string name="settings_enable_icons_title">Show App Icons</string>
+    <string name="settings_enable_notification_title">Show Ongoing Notification</string>
+    <string name="title_activity_search" translatable="false">Hayai Launcher</string>
+    <string name="title_activity_settings">Settings</string>
+    <!-- From: file:/C:/Users/Edgar/Documents/Android/LiteLauncher_android_studio/app/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="AppBaseTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+        
+    </style>
+    <style name="AppSettingsTheme" parent="@android:style/Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+        
+    </style>
+    <style name="AppTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    <style name="TextSelectedList">
+	    	<item name="android:textSize">26sp</item>
+	    	<item name="android:textStyle">bold</item>
+	    	<item name="android:text">bold</item>
+		</style>
+    <style name="TextUnselectedList">
+	    	<item name="android:textSize">26sp</item>
+		</style>
+</resources>

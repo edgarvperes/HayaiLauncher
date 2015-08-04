@@ -4,6 +4,5 @@
         android:defaultValue="false"/>
     <CheckBoxPreference android:title="@string/settings_enable_icons_title" android:key="pref_show_icon"
         android:defaultValue="true"/>
-    
 
 </PreferenceScreen>

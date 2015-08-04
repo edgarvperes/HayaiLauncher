@@ -13,4 +13,13 @@
     <string name="app_item_bottom_several">Executado %d vezes</string>
     <string name="app_item_bottom_never">Nunca executado</string>
     <string name="settings_enable_icons_title">Mostrar icones</string>
+    <string name="action_refresh_app_list">Atualizar lista de apps</string>
+    <string name="action_about">Sobre</string>
+    <string name="title_activity_about">Sobre</string><string name="about_content">Hayai Launcher Versão 20150803
+\n
+\nWebsite do projeto:
+\nhttps://github.com/seizonsenryaku/HayaiLauncher
+\n
+\nAutores:
+\n\tEdgar Villani Peres (seizonsenryaku)</string>
 </resources>

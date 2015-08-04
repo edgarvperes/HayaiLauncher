@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/list_header"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="8dp" android:background="@android:color/transparent"/>
+
+<!-- From: file:/C:/Users/Edgar/Documents/Android/LiteLauncher_android_studio/app/src/main/res/layout/list_header.xml -->

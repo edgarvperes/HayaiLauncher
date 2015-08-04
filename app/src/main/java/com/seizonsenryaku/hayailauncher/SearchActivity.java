@@ -1,5 +1,6 @@
 package com.seizonsenryaku.hayailauncher;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -19,6 +20,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +37,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -52,7 +55,6 @@ public class SearchActivity extends Activity {
 	private ArrayAdapter<LaunchableActivity> arrayAdapter;
 	private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
-    private Resources resources;
 
 	public OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
 
@@ -67,7 +69,7 @@ public class SearchActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-        resources=getResources();
+
 
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -79,7 +81,7 @@ public class SearchActivity extends Activity {
 		editText.requestFocus();
 		editText.addTextChangedListener(textWatcher);
 		getWindow().setSoftInputMode(
-				WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		PackageManager pm = getPackageManager();
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_MAIN);
@@ -97,7 +99,7 @@ public class SearchActivity extends Activity {
 
 		}
 
-		activityInfos = new ArrayList<>();
+		activityInfos = new ArrayList<>(infoList.size());
 		activityInfos.addAll(trie.getAllStartingWith(""));
 		launchableActivityPrefs.setAllPreferences(activityInfos);
 
@@ -109,8 +111,11 @@ public class SearchActivity extends Activity {
 		arrayAdapter = new ActivityInfoArrayAdapter(this,
 				R.layout.app_list_item, activityInfos);
 
-        appListView.addHeaderView(getLayoutInflater().inflate(R.layout.list_header, null));
+        View listHeader = getLayoutInflater().inflate(R.layout.list_header, appListView, false);
+        appListView.addHeaderView(listHeader);
         appListView.setAdapter(arrayAdapter);
+
+
 		appListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -128,12 +133,12 @@ public class SearchActivity extends Activity {
 			myNotificationManager.showNotification(this);
 		}
 
-
-        setStatusBarColor();
+        Resources resources=getResources();
+        setStatusBarColor(resources);
 
 	}
 
-    private void setStatusBarColor() {
+    private void setStatusBarColor(Resources resources) {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
             Window window = getWindow();
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
@@ -146,21 +151,43 @@ public class SearchActivity extends Activity {
             statusBarDummy.setBackgroundColor(resources.getColor(R.color.indigo_700));
         }
     }
-	public void showPopup(View v) {
-		// PopupMenu popup = new PopupMenu(this, v);
-		// MenuInflater inflater = popup.getMenuInflater();
-		// popup.setOnMenuItemClickListener(this);
-		// inflater.inflate(R.menu.overflow, popup.getMenu());
+	public boolean showPopup(View v) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+            PopupMenu popup = new PopupMenu(this, v);
+            popup.setOnMenuItemClickListener(new PopupEventListener());
+            MenuInflater inflater = popup.getMenuInflater();
+            inflater.inflate(R.menu.search_activity_menu, popup.getMenu());
+            popup.show();
+            return true;
+        }
+        return false;
+    }
 
-		// popup.show();
-	}
+    @TargetApi(11)
+    class PopupEventListener implements PopupMenu.OnMenuItemClickListener{
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            return onOptionsItemSelected(item);
+        }
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		// getMenuInflater().inflate(R.menu.search, menu);
-		return false;
-	}
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            if(!showPopup(findViewById(R.id.overflow_button))){
+                openOptionsMenu();
+            }
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search_activity_menu, menu);
+        return true;
+
+    }
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v,
@@ -169,6 +196,32 @@ public class SearchActivity extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.app, menu);
 	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            case R.id.action_refresh_app_list:
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    recreate();
+                }
+                else {
+                    Intent intent_refresh = new Intent(this, SearchActivity.class);
+                    finish();
+                    startActivity(intent_refresh);
+                }
+                return true;
+            case R.id.action_about:
+                Intent intent_about = new Intent(this, About.class);
+                startActivity(intent_about);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     public int getStatusBarHeight() {
         int result = 0;
@@ -224,8 +277,10 @@ public class SearchActivity extends Activity {
 	}
 
 	public void onClickSettingsButton(View view) {
-		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
+        if(!showPopup(findViewById(R.id.overflow_button))){
+            openOptionsMenu();
+        }
+
 	}
 
 	public void onClickAppRow(View view) {
@@ -236,13 +291,12 @@ public class SearchActivity extends Activity {
 				.toString().toLowerCase(Locale.US));
 
 		ComponentName componentName = launchableActivity.getComponent();
-		// .getActivityInfo();
+
 		Intent launchIntent = new Intent(Intent.ACTION_MAIN);
 		launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		launchIntent.setComponent(componentName);
-		// getWindow().setSoftInputMode(
-		// WindowManager.LayoutParams.SOFT_INPUT_STATE_);
+
 		int prevIndex = Collections.binarySearch(activityInfos,
 				launchableActivity);
 		activityInfos.remove(prevIndex);
@@ -257,8 +311,7 @@ public class SearchActivity extends Activity {
             startActivity(launchIntent);
             arrayAdapter.notifyDataSetChanged();
         }catch(ActivityNotFoundException e){
-            if (android.os.Build.VERSION.SDK_INT >=  Build.VERSION_CODES.HONEYCOMB)
-            {
+            if (android.os.Build.VERSION.SDK_INT >=  Build.VERSION_CODES.HONEYCOMB) {
                 launchableActivityPrefs.deletePreference(componentName.getClassName());
                 super.recreate();
             }
