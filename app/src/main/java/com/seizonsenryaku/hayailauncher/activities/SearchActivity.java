@@ -198,14 +198,7 @@ public class SearchActivity extends Activity {
                 startActivity(intent);
                 return true;
             case R.id.action_refresh_app_list:
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                    recreate();
-                }
-                else {
-                    Intent intent_refresh = new Intent(this, SearchActivity.class);
-                    finish();
-                    startActivity(intent_refresh);
-                }
+                refreshAppList();
                 return true;
             case R.id.action_about:
                 Intent intent_about = new Intent(this, AboutActivity.class);
@@ -262,6 +255,16 @@ public class SearchActivity extends Activity {
 		return false;
 	}
 
+    private void refreshAppList(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            recreate();
+        }
+        else {
+            Intent intentRefresh = new Intent(this, SearchActivity.class);
+            finish();
+            startActivity(intentRefresh);
+        }
+    }
 	public void onClickSettingsButton(View view) {
         if(!showPopup(findViewById(R.id.overflow_button))){
             openOptionsMenu();
@@ -297,15 +300,8 @@ public class SearchActivity extends Activity {
             startActivity(launchIntent);
             arrayAdapter.notifyDataSetChanged();
         }catch(ActivityNotFoundException e){
-            if (android.os.Build.VERSION.SDK_INT >=  Build.VERSION_CODES.HONEYCOMB) {
-                launchableActivityPrefs.deletePreference(componentName.getClassName());
-                super.recreate();
-            }
-            else
-            {
-                startActivity(getIntent());
-                finish();
-            }
+            launchableActivityPrefs.deletePreference(componentName.getClassName());
+            refreshAppList();
         }
 
 

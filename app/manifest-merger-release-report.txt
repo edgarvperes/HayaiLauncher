@@ -35,7 +35,7 @@ MERGED from com.android.support:support-v4:22.2.0:22:5
 		ADDED from AndroidManifest.xml:14:9
 	android:theme
 		ADDED from AndroidManifest.xml:16:9
-activity#com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities.SearchActivity
+activity#com.seizonsenryaku.hayailauncher.activities.SearchActivity
 ADDED from AndroidManifest.xml:17:9
 	android:screenOrientation
 		ADDED from AndroidManifest.xml:20:13
@@ -65,7 +65,7 @@ category#android.intent.category.DEFAULT
 ADDED from AndroidManifest.xml:29:17
 	android:name
 		ADDED from AndroidManifest.xml:29:27
-activity#com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities.SettingsActivity
+activity#com.seizonsenryaku.hayailauncher.activities.SettingsActivity
 ADDED from AndroidManifest.xml:32:9
 	android:label
 		ADDED from AndroidManifest.xml:34:13
@@ -73,7 +73,7 @@ ADDED from AndroidManifest.xml:32:9
 		ADDED from AndroidManifest.xml:35:13
 	android:name
 		ADDED from AndroidManifest.xml:33:13
-activity#com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities.AboutActivity
+activity#com.seizonsenryaku.hayailauncher.activities.AboutActivity
 ADDED from AndroidManifest.xml:37:9
 	android:label
 		ADDED from AndroidManifest.xml:39:13
