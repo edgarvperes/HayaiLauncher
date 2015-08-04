@@ -6,7 +6,6 @@
         res/values-v11/styles.xml on API 14+ devices.
     -->
     <style name="AppBaseTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
-        <!-- API 14 theme customizations can go here. -->
 
     </style>
     <style name="AppSettingsTheme" parent="@android:style/Theme.Material.Light">

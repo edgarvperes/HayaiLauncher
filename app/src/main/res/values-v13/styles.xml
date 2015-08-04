@@ -6,7 +6,7 @@
         res/values-v11/styles.xml on API 13+ devices.
     -->
     <style name="AppBaseTheme" parent="@android:style/Theme.Holo.Light.NoActionBar">
-        <!-- API 14 theme customizations can go here. -->
+
         
     </style>
     <style name="AppSettingsTheme" parent="@android:style/Theme.Holo.Light">

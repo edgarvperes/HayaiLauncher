@@ -139,11 +139,12 @@ public class SearchActivity extends Activity {
 	}
 
     private void setStatusBarColor(Resources resources) {
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
-            Window window = getWindow();
+        Window window = getWindow();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+            window.setStatusBarColor(resources.getColor(R.color.indigo_700));
+        } else if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT) {
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
 
             int statusBarHeight = getStatusBarHeight();
             View statusBarDummy = findViewById(R.id.statusBarDummyView);
