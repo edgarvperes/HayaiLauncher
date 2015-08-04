@@ -1,4 +1,4 @@
-package com.seizonsenryaku.hayailauncher;
+package com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
@@ -40,11 +39,17 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.seizonsenryaku.hayailauncher.LaunchableActivity;
+import com.seizonsenryaku.hayailauncher.LaunchableActivityPrefs;
+import com.seizonsenryaku.hayailauncher.MyNotificationManager;
+import com.seizonsenryaku.hayailauncher.R;
+import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
+import com.seizonsenryaku.hayailauncher.Trie;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.zip.Inflater;
 
 public class SearchActivity extends Activity {
 
@@ -134,30 +139,11 @@ public class SearchActivity extends Activity {
 		}
 
         Resources resources=getResources();
-        setStatusBarColor(resources);
+        StatusBarColorHelper.setStatusBarColor(resources, this,resources.getColor(R.color.indigo_700));
 
 	}
 
-    private void setStatusBarColor(Resources resources) {
 
-        //There's no support for colored status bar in versions below KITKAT
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
-
-        Window window = getWindow();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            //LOLLIPOP+ path
-            window.setStatusBarColor(resources.getColor(R.color.indigo_700));
-        } else {
-            //KITKAT path
-            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            int statusBarHeight = getStatusBarHeight();
-            View statusBarDummy = findViewById(R.id.statusBarDummyView);
-            statusBarDummy.getLayoutParams().height=statusBarHeight;
-            statusBarDummy.setBackgroundColor(resources.getColor(R.color.indigo_700));
-        }
-    }
 	public boolean showPopup(View v) {
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
             PopupMenu popup = new PopupMenu(this, v);
@@ -222,7 +208,7 @@ public class SearchActivity extends Activity {
                 }
                 return true;
             case R.id.action_about:
-                Intent intent_about = new Intent(this, About.class);
+                Intent intent_about = new Intent(this, AboutActivity.class);
                 startActivity(intent_about);
                 return true;
             default:
@@ -230,14 +216,7 @@ public class SearchActivity extends Activity {
         }
     }
 
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
+
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {

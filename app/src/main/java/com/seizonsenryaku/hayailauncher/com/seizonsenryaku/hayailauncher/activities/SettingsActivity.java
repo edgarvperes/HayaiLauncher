@@ -1,4 +1,4 @@
-package com.seizonsenryaku.hayailauncher;
+package com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+
+import com.seizonsenryaku.hayailauncher.MyNotificationManager;
+import com.seizonsenryaku.hayailauncher.R;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {

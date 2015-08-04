@@ -19,7 +19,7 @@ public class Trie<T> {
 
 	private Node root;
 
-	Trie() {
+	public Trie() {
 		root = new Node();
 	}
 
