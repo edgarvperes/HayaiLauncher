@@ -1,4 +1,4 @@
-package com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities;
+package com.seizonsenryaku.hayailauncher.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -27,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
@@ -109,15 +108,16 @@ public class SearchActivity extends Activity {
 		launchableActivityPrefs.setAllPreferences(activityInfos);
 
 		Collections.sort(activityInfos);
-		ListView appListView = (ListView) findViewById(R.id.listView1);
+		AdapterView appListView = (AdapterView) findViewById(R.id.appsContainer);
 
 		registerForContextMenu(appListView);
 
 		arrayAdapter = new ActivityInfoArrayAdapter(this,
-				R.layout.app_list_item, activityInfos);
+				R.layout.app_grid_item, activityInfos);
 
-        View listHeader = getLayoutInflater().inflate(R.layout.list_header, appListView, false);
-        appListView.addHeaderView(listHeader);
+        //View listHeader = getLayoutInflater().inflate(R.layout.list_header, appListView, false);
+
+        //appListView.addHeaderView(listHeader);
         appListView.setAdapter(arrayAdapter);
 
 
@@ -224,7 +224,7 @@ public class SearchActivity extends Activity {
 				.getMenuInfo();
 		View rowView = info.targetView;
 		LaunchableActivity launchableActivity = trie.get(((TextView) rowView
-				.findViewById(R.id.appListTopText)).getText().toString()
+				.findViewById(R.id.appLabel)).getText().toString()
 				.toLowerCase(Locale.US));
 		switch (item.getItemId()) {
 		case R.id.appmenu_launch:
@@ -271,7 +271,7 @@ public class SearchActivity extends Activity {
 
 	public void onClickAppRow(View view) {
 		TextView textView = ((TextView) view
-				.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListTopText));
+				.findViewById(com.seizonsenryaku.hayailauncher.R.id.appLabel));
 
 		LaunchableActivity launchableActivity = trie.get(textView.getText()
 				.toString().toLowerCase(Locale.US));
@@ -329,7 +329,7 @@ public class SearchActivity extends Activity {
 			if (convertView != null) {
 				view = convertView;
 			} else {
-				view = inflater.inflate(R.layout.app_list_item, null);
+				view = inflater.inflate(R.layout.app_grid_item, null);
 				// view.setOnLongClickListener(onLongClickAppRow);
 			}
 			LaunchableActivity launchableActivity = getItem(position);
@@ -337,12 +337,13 @@ public class SearchActivity extends Activity {
 			// launchableActivity.getActivityInfo();
             if(sharedPreferences.getBoolean("pref_show_icon",true)) {
                 Drawable icon = launchableActivity.getActivityIcon(pm);
+
                 ((ImageView) view
-                        .findViewById(com.seizonsenryaku.hayailauncher.R.id.imageView1))
+                        .findViewById(R.id.appIcon))
                         .setImageDrawable(icon);
             } else {
                 ((ImageView) view
-                        .findViewById(com.seizonsenryaku.hayailauncher.R.id.imageView1))
+                        .findViewById(R.id.appIcon))
                         .setImageDrawable(null);
             }
 			CharSequence label = launchableActivity.getActivityLabel();
@@ -365,16 +366,16 @@ public class SearchActivity extends Activity {
 			}
 
 			((TextView) view
-					.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListTopText))
+					.findViewById(R.id.appLabel))
 					.setText(label);
 
-			((TextView) view
-					.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListBottomText))
-					.setText(bottomText);
+			//((TextView) view
+					//.findViewById(R.id.appListBottomText))
+					// .setText(bottomText);
 
 
 			
-			view.findViewById(com.seizonsenryaku.hayailauncher.R.id.appListFavoriteText)
+			view.findViewById(R.id.appFavorite)
 					.setVisibility(launchableActivity.isFavorite()?View.VISIBLE:View.INVISIBLE);
 			return view;
 		}

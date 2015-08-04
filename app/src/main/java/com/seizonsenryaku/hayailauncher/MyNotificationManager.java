@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
-import com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities.SearchActivity;
+import com.seizonsenryaku.hayailauncher.activities.SearchActivity;
 
 public class MyNotificationManager {
 	private static final int NOTIFICATION_ID = 0;

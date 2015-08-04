@@ -5,6 +5,8 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
+import android.util.Log;
 
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	private ActivityInfo activityInfo;
@@ -51,8 +53,10 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	}
 
 	public Drawable getActivityIcon(PackageManager pm) {
-		if (activityIcon == null)
+		if (activityIcon == null) {
 			activityIcon = activityInfo.loadIcon(pm);
+			//Log.d("DEBUG_ICON", "w:" + activityIcon.getMinimumWidth() + " h:" + activityIcon.getMinimumHeight());
+		}
 		return activityIcon;
 	}
 
