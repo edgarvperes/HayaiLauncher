@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -60,7 +61,7 @@ public class SearchActivity extends Activity {
 	private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
 
-	public OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
+	private final OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
 
 		@Override
 		public boolean onLongClick(View v) {
@@ -81,16 +82,17 @@ public class SearchActivity extends Activity {
 		setContentView(R.layout.activity_search);
 
 		launchableActivityPrefs = new LaunchableActivityPrefs(this);
-		EditText editText = (EditText) findViewById(R.id.editText1);
+		final EditText editText = (EditText) findViewById(R.id.editText1);
 		editText.requestFocus();
 		editText.addTextChangedListener(textWatcher);
+
 		getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		PackageManager pm = getPackageManager();
-		Intent intent = new Intent();
+		final Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
+		final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
 		trie = new Trie<>();
 
 		for (ResolveInfo info : infoList) {
@@ -140,7 +142,7 @@ public class SearchActivity extends Activity {
 			myNotificationManager.showNotification(this);
 		}
 
-        Resources resources=getResources();
+        final Resources resources=getResources();
         StatusBarColorHelper.setStatusBarColor(resources, this,resources.getColor(R.color.indigo_700));
 
 	}
@@ -275,7 +277,6 @@ public class SearchActivity extends Activity {
     public void launchActivity(LaunchableActivity launchableActivity) {
 
 		ComponentName componentName = launchableActivity.getComponent();
-
 		Intent launchIntent = new Intent(Intent.ACTION_MAIN);
 		launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -337,7 +338,6 @@ public class SearchActivity extends Activity {
                         .setImageDrawable(null);
             }
 			CharSequence label = launchableActivity.getActivityLabel();
-			String bottomText;
 
 
 			((TextView) view
