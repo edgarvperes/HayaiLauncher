@@ -331,7 +331,6 @@ public class SearchActivity extends Activity {
 				view = convertView;
 			} else {
 				view = inflater.inflate(R.layout.app_grid_item, null);
-				// view.setOnLongClickListener(onLongClickAppRow);
 			}
 			LaunchableActivity launchableActivity = getItem(position);
 			// ActivityInfo activityInfo =
@@ -348,32 +347,12 @@ public class SearchActivity extends Activity {
                         .setImageDrawable(null);
             }
 			CharSequence label = launchableActivity.getActivityLabel();
-			// CharSequence label = activityInfo.processName;
 			String bottomText;
-			int numberOfLaunches = launchableActivity.getNumberOfLaunches();
 
-			switch (numberOfLaunches) {
-			case 0:
-				bottomText = getString(R.string.app_item_bottom_never);
-				break;
-			case 1:
-				bottomText = getString(R.string.app_item_bottom_once,
-						numberOfLaunches);
-				break;
-			default:
-				bottomText = getString(R.string.app_item_bottom_several,
-						numberOfLaunches);
-				break;
-			}
 
 			((TextView) view
 					.findViewById(R.id.appLabel))
 					.setText(label);
-
-			//((TextView) view
-					//.findViewById(R.id.appListBottomText))
-					// .setText(bottomText);
-
 
 			
 			view.findViewById(R.id.appFavorite)
