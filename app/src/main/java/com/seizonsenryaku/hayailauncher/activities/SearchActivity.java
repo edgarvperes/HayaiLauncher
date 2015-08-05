@@ -47,6 +47,7 @@ import com.seizonsenryaku.hayailauncher.Trie;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -387,7 +388,7 @@ public class SearchActivity extends Activity {
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
-			List<LaunchableActivity> infoList = trie.getAllStartingWith(s
+			HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(s
 					.toString().toLowerCase(Locale.US).trim());
 			activityInfos.clear();
 			activityInfos.addAll(infoList);

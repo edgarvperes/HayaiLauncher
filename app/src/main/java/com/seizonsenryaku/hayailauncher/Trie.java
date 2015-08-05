@@ -32,12 +32,9 @@ public class Trie<T> {
 		return getRec(charSequence, root);
 	}
 
-	public List<T> getAllStartingWith(CharSequence charSequence) {
+	public HashSet<T> getAllStartingWith(CharSequence charSequence) {
 		// Log.d("TRIE", "Starting with " + charSequence);
-        HashSet<T> setWithAll=getAllStartingWithRec(charSequence, root, new HashSet<T>());;
-		List<T> listOfAllWithoutDuplicates= new ArrayList<T>(setWithAll.size());
-        listOfAllWithoutDuplicates.addAll(setWithAll);
-		return listOfAllWithoutDuplicates;
+        return getAllStartingWithRec(charSequence, root, new HashSet<T>());
 	}
 
 	private HashSet<T> getAllStartingWithRec(CharSequence charSequence,
