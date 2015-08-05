@@ -34,7 +34,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -55,7 +54,7 @@ public class SearchActivity extends Activity {
 
 	// private static final int ACTIVITY_LIST_RESULT = 1;
 
-	private List<LaunchableActivity> activityInfos;
+	private ArrayList<LaunchableActivity> activityInfos;
 	private Trie<LaunchableActivity> trie;
 	private ArrayAdapter<LaunchableActivity> arrayAdapter;
 	private LaunchableActivityPrefs launchableActivityPrefs;
@@ -129,10 +128,8 @@ public class SearchActivity extends Activity {
 		appListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View view, int arg2,
-					long arg3) {
-				onClickAppRow(view);
-
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				launchActivity(activityInfos.get(position));
 			}
 
 		});
@@ -226,11 +223,9 @@ public class SearchActivity extends Activity {
 				.toLowerCase(Locale.US));
 		switch (item.getItemId()) {
 		case R.id.appmenu_launch:
-			onClickAppRow(rowView);
+            launchActivity(launchableActivity);
 			return true;
-			// case R.id.delete:
-			// deleteNote(info.id);
-			// return true;
+
 		case R.id.appmenu_favorite:
 			
 			int prevIndex = Collections.binarySearch(activityInfos,
@@ -277,12 +272,7 @@ public class SearchActivity extends Activity {
 
 	}
 
-	public void onClickAppRow(View view) {
-		TextView textView = ((TextView) view
-				.findViewById(com.seizonsenryaku.hayailauncher.R.id.appLabel));
-
-		LaunchableActivity launchableActivity = trie.get(textView.getText()
-				.toString().toLowerCase(Locale.US));
+    public void launchActivity(LaunchableActivity launchableActivity) {
 
 		ComponentName componentName = launchableActivity.getComponent();
 
