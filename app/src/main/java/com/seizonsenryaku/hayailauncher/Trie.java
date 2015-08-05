@@ -87,7 +87,7 @@ public class Trie<T> {
 		} else {
 			if (node.object == null) {
 				node.object = object;
-			} else {
+			} else if(node.object != object){
 				addRec(charSequence + " ", node, object);
 			}
 		}
