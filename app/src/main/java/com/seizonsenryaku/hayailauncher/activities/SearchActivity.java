@@ -126,6 +126,11 @@ public class SearchActivity extends Activity {
                     } else {
                         skippedFirstWord = true;
                     }
+                    if(wordSinceLastCapitalBuilder.length() > 1 && wordSinceLastCapitalBuilder.length()!=wordSinceLastSpaceBuilder.length()){
+                            trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
+                                    launchableActivity);
+                    }
+
                     wordSinceLastCapitalBuilder.setLength(0);
                     wordSinceLastSpaceBuilder.setLength(0);
                 } else {
