@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -49,104 +48,104 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 
 public class SearchActivity extends Activity {
 
-	// private static final int ACTIVITY_LIST_RESULT = 1;
+    // private static final int ACTIVITY_LIST_RESULT = 1;
 
-	private ArrayList<LaunchableActivity> activityInfos;
-	private Trie<LaunchableActivity> trie;
-	private ArrayAdapter<LaunchableActivity> arrayAdapter;
-	private LaunchableActivityPrefs launchableActivityPrefs;
+    private ArrayList<LaunchableActivity> activityInfos;
+    private Trie<LaunchableActivity> trie;
+    private ArrayAdapter<LaunchableActivity> arrayAdapter;
+    private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
 
-	private final OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
+    private final OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
 
-		@Override
-		public boolean onLongClick(View v) {
-			openContextMenu(v);
-			return true;
-		}
-	};
+        @Override
+        public boolean onLongClick(View v) {
+            openContextMenu(v);
+            return true;
+        }
+    };
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
 
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
-		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		setContentView(R.layout.activity_search);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        setContentView(R.layout.activity_search);
 
-		launchableActivityPrefs = new LaunchableActivityPrefs(this);
-		final EditText editText = (EditText) findViewById(R.id.editText1);
-		editText.requestFocus();
-		editText.addTextChangedListener(textWatcher);
+        launchableActivityPrefs = new LaunchableActivityPrefs(this);
+        final EditText editText = (EditText) findViewById(R.id.editText1);
+        editText.requestFocus();
+        editText.addTextChangedListener(textWatcher);
 
-		getWindow().setSoftInputMode(
+        getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		PackageManager pm = getPackageManager();
-		final Intent intent = new Intent();
-		intent.setAction(Intent.ACTION_MAIN);
-		intent.addCategory(Intent.CATEGORY_LAUNCHER);
-		final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
-		trie = new Trie<>();
+        PackageManager pm = getPackageManager();
+        final Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
+        trie = new Trie<>();
 
-		for (ResolveInfo info : infoList) {
-			String activityLabel = info.activityInfo.loadLabel(pm).toString();
-			LaunchableActivity launchableActivity = new LaunchableActivity(
-					info.activityInfo, activityLabel);
+        for (ResolveInfo info : infoList) {
+            String activityLabel = info.activityInfo.loadLabel(pm).toString();
+            LaunchableActivity launchableActivity = new LaunchableActivity(
+                    info.activityInfo, activityLabel);
 
-            final String activityLabelLower=activityLabel.toLowerCase();
-			trie.put(activityLabelLower, launchableActivity);
+            final String activityLabelLower = activityLabel.toLowerCase();
+            trie.put(activityLabelLower, launchableActivity);
 
-            String wordSinceLastSpace="";
-            String wordSinceLastCapital="";
-            boolean skippedFirstWord=false;
-            for(int i=0;i<activityLabel.length();i++){
-                char character=activityLabel.charAt(i);
-                if(Character.isUpperCase(character)){
-                    if(wordSinceLastCapital.length()>1 && !activityLabel.startsWith(wordSinceLastCapital)){
+            String wordSinceLastSpace = "";
+            String wordSinceLastCapital = "";
+            boolean skippedFirstWord = false;
+            for (int i = 0; i < activityLabel.length(); i++) {
+                final char character = activityLabel.charAt(i);
+                if (Character.isUpperCase(character)) {
+                    if (wordSinceLastCapital.length() > 1 && !activityLabel.startsWith(wordSinceLastCapital)) {
                         trie.put(wordSinceLastCapital.toLowerCase(), launchableActivity);
                     }
-                    wordSinceLastCapital="";
+                    wordSinceLastCapital = "";
                 }
-                if(Character.isSpaceChar(character)){
-                    if(skippedFirstWord) {
+                if (Character.isSpaceChar(character)) {
+                    if (skippedFirstWord) {
                         trie.put(wordSinceLastSpace.toLowerCase(), launchableActivity);
-                    }else{
-                        skippedFirstWord=true;
+                    } else {
+                        skippedFirstWord = true;
                     }
-                    wordSinceLastCapital="";
-                    wordSinceLastSpace="";
-                } else{
-                    wordSinceLastCapital+=character;
-                    wordSinceLastSpace+=character;
+                    wordSinceLastCapital = "";
+                    wordSinceLastSpace = "";
+                } else {
+                    wordSinceLastCapital += character;
+                    wordSinceLastSpace += character;
                 }
 
             }
-            if(skippedFirstWord && !wordSinceLastSpace.isEmpty() && activityLabel.length()>wordSinceLastSpace.length()){
+            if (skippedFirstWord && !wordSinceLastSpace.isEmpty() && activityLabel.length() > wordSinceLastSpace.length()) {
                 trie.put(wordSinceLastSpace.toLowerCase(), launchableActivity);
             }
-            if(!wordSinceLastCapital.isEmpty() && !wordSinceLastCapital.equals(wordSinceLastSpace)){
+            if (!wordSinceLastCapital.isEmpty() && wordSinceLastCapital.length() > 1
+                    && !wordSinceLastCapital.equals(wordSinceLastSpace)) {
                 trie.put(wordSinceLastCapital.toLowerCase(), launchableActivity);
             }
-		}
+        }
 
-		activityInfos = new ArrayList<>(infoList.size());
-		activityInfos.addAll(trie.getAllStartingWith(""));
-		launchableActivityPrefs.setAllPreferences(activityInfos);
+        activityInfos = new ArrayList<>(infoList.size());
+        activityInfos.addAll(trie.getAllStartingWith(""));
+        launchableActivityPrefs.setAllPreferences(activityInfos);
 
-		Collections.sort(activityInfos);
-		AdapterView appListView = (AdapterView) findViewById(R.id.appsContainer);
+        Collections.sort(activityInfos);
+        AdapterView appListView = (AdapterView) findViewById(R.id.appsContainer);
 
-		registerForContextMenu(appListView);
+        registerForContextMenu(appListView);
 
-		arrayAdapter = new ActivityInfoArrayAdapter(this,
-				R.layout.app_grid_item, activityInfos);
+        arrayAdapter = new ActivityInfoArrayAdapter(this,
+                R.layout.app_grid_item, activityInfos);
 
         //View listHeader = getLayoutInflater().inflate(R.layout.list_header, appListView, false);
 
@@ -154,29 +153,29 @@ public class SearchActivity extends Activity {
         appListView.setAdapter(arrayAdapter);
 
 
-		appListView.setOnItemClickListener(new OnItemClickListener() {
+        appListView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				launchActivity(activityInfos.get(position));
-			}
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                launchActivity(activityInfos.get(position));
+            }
 
-		});
+        });
 
-		if (sharedPreferences.getBoolean(
-				SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
-			MyNotificationManager myNotificationManager = new MyNotificationManager();
-			myNotificationManager.showNotification(this);
-		}
+        if (sharedPreferences.getBoolean(
+                SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
+            MyNotificationManager myNotificationManager = new MyNotificationManager();
+            myNotificationManager.showNotification(this);
+        }
 
-        final Resources resources=getResources();
-        StatusBarColorHelper.setStatusBarColor(resources, this,resources.getColor(R.color.indigo_700));
+        final Resources resources = getResources();
+        StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
-	}
+    }
 
 
-	public boolean showPopup(View v) {
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+    public boolean showPopup(View v) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             PopupMenu popup = new PopupMenu(this, v);
             popup.setOnMenuItemClickListener(new PopupEventListener());
             MenuInflater inflater = popup.getMenuInflater();
@@ -188,7 +187,7 @@ public class SearchActivity extends Activity {
     }
 
     @TargetApi(11)
-    class PopupEventListener implements PopupMenu.OnMenuItemClickListener{
+    class PopupEventListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
             return onOptionsItemSelected(item);
@@ -197,7 +196,7 @@ public class SearchActivity extends Activity {
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if(!showPopup(findViewById(R.id.overflow_button))){
+            if (!showPopup(findViewById(R.id.overflow_button))) {
                 openOptionsMenu();
             }
             return true;
@@ -213,13 +212,14 @@ public class SearchActivity extends Activity {
 
     }
 
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.app, menu);
-	}
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.app, menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -241,119 +241,118 @@ public class SearchActivity extends Activity {
     }
 
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+                .getMenuInfo();
+        View rowView = info.targetView;
+        LaunchableActivity launchableActivity = trie.get(((TextView) rowView
+                .findViewById(R.id.appLabel)).getText().toString()
+                .toLowerCase());
+        switch (item.getItemId()) {
+            case R.id.appmenu_launch:
+                launchActivity(launchableActivity);
+                return true;
 
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
-				.getMenuInfo();
-		View rowView = info.targetView;
-		LaunchableActivity launchableActivity = trie.get(((TextView) rowView
-				.findViewById(R.id.appLabel)).getText().toString()
-				.toLowerCase());
-		switch (item.getItemId()) {
-		case R.id.appmenu_launch:
-            launchActivity(launchableActivity);
-			return true;
+            case R.id.appmenu_favorite:
 
-		case R.id.appmenu_favorite:
-			
-			int prevIndex = Collections.binarySearch(activityInfos,
-					launchableActivity);
-			activityInfos.remove(prevIndex);
-			launchableActivity.setFavorite(!launchableActivity.isFavorite());
-			int newIndex = -(Collections.binarySearch(activityInfos,
-					launchableActivity) + 1);
-			activityInfos.add(newIndex, launchableActivity);
-			launchableActivityPrefs.writePreference(launchableActivity.getClassName(),
-					launchableActivity.getNumberOfLaunches(),
-					launchableActivity.isFavorite());
-			arrayAdapter.notifyDataSetChanged();
-			break;
-		case R.id.appmenu_info:
-			Intent intent = new Intent(
-					android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-			intent.setData(Uri.parse("package:"
-					+ launchableActivity.getComponent().getPackageName()));
-			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			startActivity(intent);
-			return true;
-			// default:
-			// return super.onContextItemSelected(item);
-		}
-
-		return false;
-	}
-
-    private void refreshAppList(){
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            recreate();
+                int prevIndex = Collections.binarySearch(activityInfos,
+                        launchableActivity);
+                activityInfos.remove(prevIndex);
+                launchableActivity.setFavorite(!launchableActivity.isFavorite());
+                int newIndex = -(Collections.binarySearch(activityInfos,
+                        launchableActivity) + 1);
+                activityInfos.add(newIndex, launchableActivity);
+                launchableActivityPrefs.writePreference(launchableActivity.getClassName(),
+                        launchableActivity.getNumberOfLaunches(),
+                        launchableActivity.isFavorite());
+                arrayAdapter.notifyDataSetChanged();
+                break;
+            case R.id.appmenu_info:
+                Intent intent = new Intent(
+                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                intent.setData(Uri.parse("package:"
+                        + launchableActivity.getComponent().getPackageName()));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            // default:
+            // return super.onContextItemSelected(item);
         }
-        else {
+
+        return false;
+    }
+
+    private void refreshAppList() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            recreate();
+        } else {
             Intent intentRefresh = new Intent(this, SearchActivity.class);
             finish();
             startActivity(intentRefresh);
         }
     }
-	public void onClickSettingsButton(View view) {
-        if(!showPopup(findViewById(R.id.overflow_button))){
+
+    public void onClickSettingsButton(View view) {
+        if (!showPopup(findViewById(R.id.overflow_button))) {
             openOptionsMenu();
         }
 
-	}
+    }
 
     public void launchActivity(LaunchableActivity launchableActivity) {
 
-		ComponentName componentName = launchableActivity.getComponent();
-		Intent launchIntent = new Intent(Intent.ACTION_MAIN);
-		launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-		launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		launchIntent.setComponent(componentName);
+        ComponentName componentName = launchableActivity.getComponent();
+        Intent launchIntent = new Intent(Intent.ACTION_MAIN);
+        launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchIntent.setComponent(componentName);
 
-		int prevIndex = Collections.binarySearch(activityInfos,
-				launchableActivity);
-		activityInfos.remove(prevIndex);
-		launchableActivity.incrementLaunches();
-		int newIndex = -(Collections.binarySearch(activityInfos,
-				launchableActivity) + 1);
-		activityInfos.add(newIndex, launchableActivity);
-		launchableActivityPrefs.writePreference(componentName.getClassName(),
-				launchableActivity.getNumberOfLaunches(),
-				launchableActivity.isFavorite());
+        int prevIndex = Collections.binarySearch(activityInfos,
+                launchableActivity);
+        activityInfos.remove(prevIndex);
+        launchableActivity.incrementLaunches();
+        int newIndex = -(Collections.binarySearch(activityInfos,
+                launchableActivity) + 1);
+        activityInfos.add(newIndex, launchableActivity);
+        launchableActivityPrefs.writePreference(componentName.getClassName(),
+                launchableActivity.getNumberOfLaunches(),
+                launchableActivity.isFavorite());
         try {
             startActivity(launchIntent);
             arrayAdapter.notifyDataSetChanged();
-        }catch(ActivityNotFoundException e){
+        } catch (ActivityNotFoundException e) {
             launchableActivityPrefs.deletePreference(componentName.getClassName());
             refreshAppList();
         }
 
 
-	}
+    }
 
-	class ActivityInfoArrayAdapter extends ArrayAdapter<LaunchableActivity> {
-		LayoutInflater inflater;
-		PackageManager pm;
+    class ActivityInfoArrayAdapter extends ArrayAdapter<LaunchableActivity> {
+        LayoutInflater inflater;
+        PackageManager pm;
 
-		public ActivityInfoArrayAdapter(Context context, int resource,
-				List<LaunchableActivity> activityInfos) {
-			super(context, resource, activityInfos);
-			inflater = getLayoutInflater();
-			pm = getPackageManager();
-		}
+        public ActivityInfoArrayAdapter(Context context, int resource,
+                                        List<LaunchableActivity> activityInfos) {
+            super(context, resource, activityInfos);
+            inflater = getLayoutInflater();
+            pm = getPackageManager();
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
 
-			View view;
-			if (convertView != null) {
-				view = convertView;
-			} else {
-				view = inflater.inflate(R.layout.app_grid_item, null);
-			}
-			LaunchableActivity launchableActivity = getItem(position);
-			// ActivityInfo activityInfo =
-			// launchableActivity.getActivityInfo();
-            if(sharedPreferences.getBoolean("pref_show_icon",true)) {
+            View view;
+            if (convertView != null) {
+                view = convertView;
+            } else {
+                view = inflater.inflate(R.layout.app_grid_item, null);
+            }
+            LaunchableActivity launchableActivity = getItem(position);
+            // ActivityInfo activityInfo =
+            // launchableActivity.getActivityInfo();
+            if (sharedPreferences.getBoolean("pref_show_icon", true)) {
                 Drawable icon = launchableActivity.getActivityIcon(pm);
 
                 ((ImageView) view
@@ -364,46 +363,46 @@ public class SearchActivity extends Activity {
                         .findViewById(R.id.appIcon))
                         .setImageDrawable(null);
             }
-			CharSequence label = launchableActivity.getActivityLabel();
+            CharSequence label = launchableActivity.getActivityLabel();
 
 
-			((TextView) view
-					.findViewById(R.id.appLabel))
-					.setText(label);
+            ((TextView) view
+                    .findViewById(R.id.appLabel))
+                    .setText(label);
 
-			
-			view.findViewById(R.id.appFavorite)
-					.setVisibility(launchableActivity.isFavorite()?View.VISIBLE:View.INVISIBLE);
-			return view;
-		}
 
-	}
+            view.findViewById(R.id.appFavorite)
+                    .setVisibility(launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
+            return view;
+        }
 
-	TextWatcher textWatcher = new TextWatcher() {
+    }
 
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before,
-				int count) {
-			HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(s
-					.toString().toLowerCase().trim());
-			activityInfos.clear();
-			activityInfos.addAll(infoList);
-			Collections.sort(activityInfos);
-			arrayAdapter.notifyDataSetChanged();
-		}
+    TextWatcher textWatcher = new TextWatcher() {
 
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
-			// TODO Auto-generated method stub
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+            HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(s
+                    .toString().toLowerCase().trim());
+            activityInfos.clear();
+            activityInfos.addAll(infoList);
+            Collections.sort(activityInfos);
+            arrayAdapter.notifyDataSetChanged();
+        }
 
-		}
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count,
+                                      int after) {
+            // TODO Auto-generated method stub
 
-		@Override
-		public void afterTextChanged(Editable s) {
-			// TODO Auto-generated method stub
+        }
 
-		}
-	};
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+
+        }
+    };
 
 }
