@@ -86,15 +86,15 @@ public class SearchActivity extends Activity {
 
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-        PackageManager pm = getPackageManager();
+        final PackageManager pm = getPackageManager();
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
         trie = new Trie<>();
 
-        final StringBuilder wordSinceLastSpaceBuilder = new StringBuilder();
-        final StringBuilder wordSinceLastCapitalBuilder = new StringBuilder();
+        final StringBuilder wordSinceLastSpaceBuilder = new StringBuilder(64);
+        final StringBuilder wordSinceLastCapitalBuilder = new StringBuilder(64);
 
         for (ResolveInfo info : infoList) {
             final String activityLabel = info.activityInfo.loadLabel(pm).toString();
