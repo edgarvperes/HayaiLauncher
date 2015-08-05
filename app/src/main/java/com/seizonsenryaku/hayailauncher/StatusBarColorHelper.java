@@ -15,7 +15,7 @@ public class StatusBarColorHelper {
         //There's no support for colored status bar in versions below KITKAT
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
 
-        Window window = activity.getWindow();
+        final Window window = activity.getWindow();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             //LOLLIPOP+ path
             window.setStatusBarColor(color);

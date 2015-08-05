@@ -1,16 +1,13 @@
 package com.seizonsenryaku.hayailauncher;
 
-import android.util.Log;
 import android.util.SparseArray;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 public class Trie<T> {
 
 	private class Node {
-		SparseArray<Node> children;
+		final SparseArray<Node> children;
 		public T object;
 
 		public Node() {
@@ -34,18 +31,16 @@ public class Trie<T> {
 	}
 
 	public HashSet<T> getAllStartingWith(CharSequence charSequence) {
-		// Log.d("TRIE", "Starting with " + charSequence);
         return getAllStartingWithRec(charSequence, root, new HashSet<T>());
 	}
 
 	private HashSet<T> getAllStartingWithRec(CharSequence charSequence,
 			Node ancestor, HashSet<T> list) {
-		int length = charSequence.length();
+		final int length = charSequence.length();
 		if (length > 0) {
-			char currentLetter = charSequence.charAt(0);
-			Node child = ancestor.children.get(currentLetter);
+			final char currentLetter = charSequence.charAt(0);
+			final Node child = ancestor.children.get(currentLetter);
 			if (child == null) {
-				// Log.d("TRIE", "DEAD END");
 				return list;
 			}
 			return getAllStartingWithRec(charSequence.subSequence(1, length),
@@ -53,9 +48,8 @@ public class Trie<T> {
 		} else {
 			if (ancestor.object != null) {
 				    list.add(ancestor.object);
-				// Log.d("TRIE", charSequence.toString());
 			}
-			int numOfChildren = ancestor.children.size();
+			final int numOfChildren = ancestor.children.size();
 
 			for (int childIndex = 0; childIndex < numOfChildren; childIndex++) {
 				getAllStartingWithRec(charSequence,
@@ -66,10 +60,10 @@ public class Trie<T> {
 	}
 
 	private T getRec(CharSequence charSequence, Node ancestor) {
-		int length = charSequence.length();
+		final int length = charSequence.length();
 		if (length > 0) {
-			char currentLetter = charSequence.charAt(0);
-			Node child = ancestor.children.get(currentLetter);
+			final char currentLetter = charSequence.charAt(0);
+			final Node child = ancestor.children.get(currentLetter);
 			if (child == null) {
 				return null;
 			}
@@ -81,10 +75,10 @@ public class Trie<T> {
 	}
 
 	private void addRec(CharSequence charSequence, Node node, T object) {
-		int length = charSequence.length();
+		final int length = charSequence.length();
 		if (length > 0) {
-			char currentLetter = charSequence.charAt(0);
-			Node child = node.children.get(currentLetter);
+			final char currentLetter = charSequence.charAt(0);
+            Node child = node.children.get(currentLetter);
 			if (child == null) {
 				child = new Node();
 				node.children.put(currentLetter, child);

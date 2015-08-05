@@ -94,8 +94,8 @@ public class SearchActivity extends Activity {
         trie = new Trie<>();
 
         for (ResolveInfo info : infoList) {
-            String activityLabel = info.activityInfo.loadLabel(pm).toString();
-            LaunchableActivity launchableActivity = new LaunchableActivity(
+            final String activityLabel = info.activityInfo.loadLabel(pm).toString();
+            final LaunchableActivity launchableActivity = new LaunchableActivity(
                     info.activityInfo, activityLabel);
 
             final String activityLabelLower = activityLabel.toLowerCase();
@@ -126,7 +126,8 @@ public class SearchActivity extends Activity {
                 }
 
             }
-            if (skippedFirstWord && !wordSinceLastSpace.isEmpty() && activityLabel.length() > wordSinceLastSpace.length()) {
+            if (skippedFirstWord && !wordSinceLastSpace.isEmpty()
+                    && activityLabel.length() > wordSinceLastSpace.length()) {
                 trie.put(wordSinceLastSpace.toLowerCase(), launchableActivity);
             }
             if (!wordSinceLastCapital.isEmpty() && wordSinceLastCapital.length() > 1
