@@ -1,5 +1,6 @@
 package com.seizonsenryaku.hayailauncher;
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.ArrayList;

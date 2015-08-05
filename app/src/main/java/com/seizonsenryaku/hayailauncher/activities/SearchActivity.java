@@ -100,12 +100,39 @@ public class SearchActivity extends Activity {
 			LaunchableActivity launchableActivity = new LaunchableActivity(
 					info.activityInfo, activityLabel);
 
-            String activityLabelLower=activityLabel.toLowerCase(Locale.US);
-            String[] activityLabelSubWords=activityLabelLower.split(" ");
+            final String activityLabelLower=activityLabel.toLowerCase();
+			trie.put(activityLabelLower, launchableActivity);
 
-            trie.put(activityLabelLower, launchableActivity);
-            for(String subword : activityLabelSubWords){
-                trie.put(subword, launchableActivity);
+            String wordSinceLastSpace="";
+            String wordSinceLastCapital="";
+            boolean skippedFirstWord=false;
+            for(int i=0;i<activityLabel.length();i++){
+                char character=activityLabel.charAt(i);
+                if(Character.isUpperCase(character)){
+                    if(wordSinceLastCapital.length()>1 && !activityLabel.startsWith(wordSinceLastCapital)){
+                        trie.put(wordSinceLastCapital.toLowerCase(), launchableActivity);
+                    }
+                    wordSinceLastCapital="";
+                }
+                if(Character.isSpaceChar(character)){
+                    if(skippedFirstWord) {
+                        trie.put(wordSinceLastSpace.toLowerCase(), launchableActivity);
+                    }else{
+                        skippedFirstWord=true;
+                    }
+                    wordSinceLastCapital="";
+                    wordSinceLastSpace="";
+                } else{
+                    wordSinceLastCapital+=character;
+                    wordSinceLastSpace+=character;
+                }
+
+            }
+            if(skippedFirstWord && !wordSinceLastSpace.isEmpty() && activityLabel.length()>wordSinceLastSpace.length()){
+                trie.put(wordSinceLastSpace.toLowerCase(), launchableActivity);
+            }
+            if(!wordSinceLastCapital.isEmpty() && !wordSinceLastCapital.equals(wordSinceLastSpace)){
+                trie.put(wordSinceLastCapital.toLowerCase(), launchableActivity);
             }
 		}
 
@@ -222,7 +249,7 @@ public class SearchActivity extends Activity {
 		View rowView = info.targetView;
 		LaunchableActivity launchableActivity = trie.get(((TextView) rowView
 				.findViewById(R.id.appLabel)).getText().toString()
-				.toLowerCase(Locale.US));
+				.toLowerCase());
 		switch (item.getItemId()) {
 		case R.id.appmenu_launch:
             launchActivity(launchableActivity);
@@ -358,7 +385,7 @@ public class SearchActivity extends Activity {
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(s
-					.toString().toLowerCase(Locale.US).trim());
+					.toString().toLowerCase().trim());
 			activityInfos.clear();
 			activityInfos.addAll(infoList);
 			Collections.sort(activityInfos);
