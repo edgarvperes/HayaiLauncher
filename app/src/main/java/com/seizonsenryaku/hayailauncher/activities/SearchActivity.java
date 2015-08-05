@@ -17,8 +17,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -58,6 +60,7 @@ public class SearchActivity extends Activity {
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
     private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
+    private Context context;
 
     private final OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
 
@@ -175,8 +178,11 @@ public class SearchActivity extends Activity {
             myNotificationManager.showNotification(this);
         }
 
+        context=getApplicationContext();
+
         final Resources resources = getResources();
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
+
 
     }
 
@@ -360,7 +366,7 @@ public class SearchActivity extends Activity {
             // ActivityInfo activityInfo =
             // launchableActivity.getActivityInfo();
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
-                Drawable icon = launchableActivity.getActivityIcon(pm);
+                Drawable icon = launchableActivity.getActivityIcon(pm, context);
 
                 ((ImageView) view
                         .findViewById(R.id.appIcon))

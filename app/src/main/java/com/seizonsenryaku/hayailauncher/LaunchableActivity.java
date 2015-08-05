@@ -1,9 +1,12 @@
 package com.seizonsenryaku.hayailauncher;
 
+import android.app.ActivityManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -14,13 +17,14 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	private String activityLabel;
 	private Drawable activityIcon;
 	private boolean favorite;
-
+    private ComponentName componentName;
 	//This limitation is needed to speedup the compareTo function.
 	private static final int MAX_LAUNCHES = 16383;
 
 	public LaunchableActivity(ActivityInfo activityInfo, String activityLabel) {
 		this.activityInfo = activityInfo;
 		this.activityLabel = activityLabel;
+        componentName = new ComponentName(activityInfo.packageName, activityInfo.name);
 	}
 
 	public void incrementLaunches() {
@@ -48,10 +52,22 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 		return activityLabel;
 	}
 
-	public Drawable getActivityIcon(PackageManager pm) {
+	public Drawable getActivityIcon(PackageManager pm,Context context ) {
+
 		if (activityIcon == null) {
-			activityIcon = activityInfo.loadIcon(pm);
-			//Log.d("DEBUG_ICON", "w:" + activityIcon.getMinimumWidth() + " h:" + activityIcon.getMinimumHeight());
+			if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+				try {
+                    final ActivityManager activityManager =
+                            (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                    final int iconDpi = activityManager.getLauncherLargeIconDensity();
+                    activityIcon = pm.getResourcesForActivity(componentName).getDrawableForDensity(
+                            activityInfo.getIconResource(), iconDpi);
+				} catch (PackageManager.NameNotFoundException e) {
+					e.printStackTrace();
+				}
+			}else {
+				activityIcon = activityInfo.loadIcon(pm);
+			}
 		}
 		return activityIcon;
 	}
@@ -76,7 +92,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	}
 
 	public ComponentName getComponent() {
-		return new ComponentName(activityInfo.packageName, activityInfo.name);
+		return componentName;
 	}
 
 	public String getClassName() {
