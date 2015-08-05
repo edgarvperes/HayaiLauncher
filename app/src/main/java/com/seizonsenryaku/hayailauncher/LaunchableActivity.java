@@ -44,10 +44,6 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 		return numberOfLaunches;
 	}
 
-	// public ActivityInfo getActivityInfo() {
-	// return activityInfo;
-	// }
-
 	public CharSequence getActivityLabel() {
 		return activityLabel;
 	}

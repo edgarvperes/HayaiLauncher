@@ -94,13 +94,17 @@ public class SearchActivity extends Activity {
 		trie = new Trie<>();
 
 		for (ResolveInfo info : infoList) {
-			CharSequence activityLabel = info.activityInfo.loadLabel(pm);
+			String activityLabel = info.activityInfo.loadLabel(pm).toString();
 			LaunchableActivity launchableActivity = new LaunchableActivity(
-					info.activityInfo, activityLabel.toString());
+					info.activityInfo, activityLabel);
 
-            trie.put(activityLabel.toString().toLowerCase(Locale.US),
-                        launchableActivity);
+            String activityLabelLower=activityLabel.toLowerCase(Locale.US);
+            String[] activityLabelSubWords=activityLabelLower.split(" ");
 
+            trie.put(activityLabelLower, launchableActivity);
+            for(String subword : activityLabelSubWords){
+                trie.put(subword, launchableActivity);
+            }
 		}
 
 		activityInfos = new ArrayList<>(infoList.size());
