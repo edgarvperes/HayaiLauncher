@@ -93,6 +93,9 @@ public class SearchActivity extends Activity {
         final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
         trie = new Trie<>();
 
+        final StringBuilder wordSinceLastSpaceBuilder = new StringBuilder();
+        final StringBuilder wordSinceLastCapitalBuilder = new StringBuilder();
+
         for (ResolveInfo info : infoList) {
             final String activityLabel = info.activityInfo.loadLabel(pm).toString();
             final LaunchableActivity launchableActivity = new LaunchableActivity(
@@ -101,38 +104,41 @@ public class SearchActivity extends Activity {
             final String activityLabelLower = activityLabel.toLowerCase();
             trie.put(activityLabelLower, launchableActivity);
 
-            String wordSinceLastSpace = "";
-            String wordSinceLastCapital = "";
             boolean skippedFirstWord = false;
+            wordSinceLastSpaceBuilder.setLength(0);
+            wordSinceLastCapitalBuilder.setLength(0);
             for (int i = 0; i < activityLabel.length(); i++) {
                 final char character = activityLabel.charAt(i);
                 if (Character.isUpperCase(character)) {
-                    if (wordSinceLastCapital.length() > 1 && !activityLabel.startsWith(wordSinceLastCapital)) {
-                        trie.put(wordSinceLastCapital.toLowerCase(), launchableActivity);
+                    if (wordSinceLastCapitalBuilder.length() > 1
+                            && !activityLabel.startsWith(wordSinceLastCapitalBuilder.toString())) {
+                        trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
+                                launchableActivity);
                     }
-                    wordSinceLastCapital = "";
+                    wordSinceLastCapitalBuilder.setLength(0);
                 }
                 if (Character.isSpaceChar(character)) {
                     if (skippedFirstWord) {
-                        trie.put(wordSinceLastSpace.toLowerCase(), launchableActivity);
+                        trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
                     } else {
                         skippedFirstWord = true;
                     }
-                    wordSinceLastCapital = "";
-                    wordSinceLastSpace = "";
+                    wordSinceLastCapitalBuilder.setLength(0);
+                    wordSinceLastSpaceBuilder.setLength(0);
                 } else {
-                    wordSinceLastCapital += character;
-                    wordSinceLastSpace += character;
+                    wordSinceLastCapitalBuilder.append(character);
+                    wordSinceLastSpaceBuilder.append(character);
                 }
 
             }
-            if (skippedFirstWord && !wordSinceLastSpace.isEmpty()
-                    && activityLabel.length() > wordSinceLastSpace.length()) {
-                trie.put(wordSinceLastSpace.toLowerCase(), launchableActivity);
+            if (skippedFirstWord && wordSinceLastSpaceBuilder.length()>0
+                    && activityLabel.length() > wordSinceLastSpaceBuilder.length()) {
+                trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
             }
-            if (!wordSinceLastCapital.isEmpty() && wordSinceLastCapital.length() > 1
-                    && !wordSinceLastCapital.equals(wordSinceLastSpace)) {
-                trie.put(wordSinceLastCapital.toLowerCase(), launchableActivity);
+            if (wordSinceLastCapitalBuilder.length()>1
+                    && !wordSinceLastCapitalBuilder.toString()
+                    .equals(wordSinceLastSpaceBuilder.toString())) {
+                trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(), launchableActivity);
             }
         }
 
