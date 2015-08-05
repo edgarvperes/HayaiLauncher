@@ -388,7 +388,7 @@ public class SearchActivity extends Activity {
 		public void onTextChanged(CharSequence s, int start, int before,
 				int count) {
 			List<LaunchableActivity> infoList = trie.getAllStartingWith(s
-					.toString().toLowerCase(Locale.US));
+					.toString().toLowerCase(Locale.US).trim());
 			activityInfos.clear();
 			activityInfos.addAll(infoList);
 			Collections.sort(activityInfos);
