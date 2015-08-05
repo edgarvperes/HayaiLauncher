@@ -3,6 +3,7 @@ package com.seizonsenryaku.hayailauncher;
 import android.util.SparseArray;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class Trie<T> {
@@ -33,11 +34,14 @@ public class Trie<T> {
 
 	public List<T> getAllStartingWith(CharSequence charSequence) {
 		// Log.d("TRIE", "Starting with " + charSequence);
-		return getAllStartingWithRec(charSequence, root, new ArrayList<T>());
+        HashSet<T> setWithAll=getAllStartingWithRec(charSequence, root, new HashSet<T>());;
+		List<T> listOfAllWithoutDuplicates= new ArrayList<T>(setWithAll.size());
+        listOfAllWithoutDuplicates.addAll(setWithAll);
+		return listOfAllWithoutDuplicates;
 	}
 
-	private List<T> getAllStartingWithRec(CharSequence charSequence,
-			Node ancestor, List<T> list) {
+	private HashSet<T> getAllStartingWithRec(CharSequence charSequence,
+			Node ancestor, HashSet<T> list) {
 		int length = charSequence.length();
 		if (length > 0) {
 			char currentLetter = charSequence.charAt(0);
@@ -50,7 +54,6 @@ public class Trie<T> {
 					child, list);
 		} else {
 			if (ancestor.object != null) {
-                if(!list.contains(ancestor.object))
 				    list.add(ancestor.object);
 				// Log.d("TRIE", charSequence.toString());
 			}
