@@ -41,16 +41,33 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8c8f3751-834f-4e05-95cd-784ef14108dd" name="Default" comment="Updated screenshots">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Screenshots/ss1.png" afterPath="$PROJECT_DIR$/Screenshots/ss1.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Screenshots/ss2.png" afterPath="$PROJECT_DIR$/Screenshots/ss2.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Screenshots/ss3.png" afterPath="$PROJECT_DIR$/Screenshots/ss3.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/activities/SearchActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/activities/SearchActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+    <list default="true" id="8c8f3751-834f-4e05-95cd-784ef14108dd" name="Default" comment="">
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.gradle\2.2.1\taskArtifacts\cache.properties" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.gradle\2.2.1\taskArtifacts\cache.properties.lock" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.gradle\2.2.1\taskArtifacts\fileHashes.bin" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.gradle\2.2.1\taskArtifacts\fileSnapshots.bin" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.gradle\2.2.1\taskArtifacts\outputFileStates.bin" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.gradle\2.2.1\taskArtifacts\taskArtifacts.bin" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\.name" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\compiler.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\copyright\profiles_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\encodings.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\gradle.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\libraries\support_annotations_22_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\libraries\support_v4_22_2_0.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\misc.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\runConfigurations.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\scopes\scope_settings.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\vcs.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\.idea\workspace.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\LiteLauncher_android_studio.iml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\app\app.iml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\build\intermediates\dex-cache\cache.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\build\intermediates\gradle_project_sync_data.bin" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\build\intermediates\model_data.bin" afterPath="" />
+      <change type="DELETED" beforePath="C:\Users\Edgar\Documents\Android\LiteLauncher_android_studio\local.properties" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
     </list>
     <ignored path="LiteLauncher.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -133,7 +150,7 @@
       <file leaf-file-name="SearchActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/activities/SearchActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21888413">
+            <state vertical-scroll-proportion="-21.012875">
               <caret line="63" column="11" selection-start-line="63" selection-start-column="11" selection-end-line="63" selection-end-column="11" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -150,12 +167,11 @@
         <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
               <folding>
-                <marker date="1438740993992" expanded="true" signature="155930:155947" placeholder="..." />
-                <marker date="1438740993992" expanded="true" signature="155930:155965" placeholder="..." />
-                <marker date="1438740993992" expanded="true" signature="155930:155978" placeholder="..." />
-                <marker date="1438740993992" expanded="true" signature="155930:155993" placeholder="..." />
+                <marker date="1438741430563" expanded="true" signature="154593:154610" placeholder="..." />
+                <marker date="1438741430563" expanded="true" signature="154593:154628" placeholder="..." />
+                <marker date="1438741430563" expanded="true" signature="154593:154656" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -1859,7 +1875,13 @@
       <option name="project" value="LOCAL" />
       <updated>1438739692370</updated>
     </task>
-    <option name="localTasksCounter" value="27" />
+    <task id="LOCAL-00027" summary="Updated screenshots, minor code cleanup">
+      <created>1438741064132</created>
+      <option name="number" value="00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1438741064132</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TodoView">
@@ -1887,7 +1909,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32879046" sideWeight="0.43040848" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924694" sideWeight="0.4968896" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.50596255" sideWeight="0.67776096" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.50596255" sideWeight="0.67776096" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.50596255" sideWeight="0.2881997" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24281392" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1921,7 +1943,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="added screenshots" />
     <MESSAGE value="Changed app and activity name" />
     <MESSAGE value="Removed unused file" />
     <MESSAGE value="Avoid multiple queries to the activity preference database at startup." />
@@ -1946,7 +1967,8 @@
     <MESSAGE value="changed return type of getAllStartingWith to HashSet" />
     <MESSAGE value="removed unused code" />
     <MESSAGE value="Avoid Trie search when opening app by clicking on it" />
-    <option name="LAST_COMMIT_MESSAGE" value="Avoid Trie search when opening app by clicking on it" />
+    <MESSAGE value="Updated screenshots, minor code cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated screenshots, minor code cleanup" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -2339,12 +2361,11 @@
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding>
-            <marker date="1438740993992" expanded="true" signature="155930:155947" placeholder="..." />
-            <marker date="1438740993992" expanded="true" signature="155930:155965" placeholder="..." />
-            <marker date="1438740993992" expanded="true" signature="155930:155978" placeholder="..." />
-            <marker date="1438740993992" expanded="true" signature="155930:155993" placeholder="..." />
+            <marker date="1438741430563" expanded="true" signature="154593:154610" placeholder="..." />
+            <marker date="1438741430563" expanded="true" signature="154593:154628" placeholder="..." />
+            <marker date="1438741430563" expanded="true" signature="154593:154656" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -2361,7 +2382,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/seizonsenryaku/hayailauncher/activities/SearchActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21888413">
+        <state vertical-scroll-proportion="-21.012875">
           <caret line="63" column="11" selection-start-line="63" selection-start-column="11" selection-end-line="63" selection-end-column="11" />
           <folding>
             <element signature="imports" expanded="true" />

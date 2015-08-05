@@ -33,3 +33,18 @@ proguard/
 
 ### Android Patch ###
 gen-external-apklibs
+
+#Idea
+*.iml
+.idea/
+
+#gradle
+.gradle/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+[Bb]in/
+[Oo]bj/
