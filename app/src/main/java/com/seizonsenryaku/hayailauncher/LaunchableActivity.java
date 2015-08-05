@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -56,17 +57,27 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 
 		if (activityIcon == null) {
 			if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1){
+                final ActivityManager activityManager =
+                        (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+                final int iconDpi = activityManager.getLauncherLargeIconDensity();
 				try {
-                    final ActivityManager activityManager =
-                            (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-                    final int iconDpi = activityManager.getLauncherLargeIconDensity();
                     activityIcon = pm.getResourcesForActivity(componentName).getDrawableForDensity(
                             activityInfo.getIconResource(), iconDpi);
 				} catch (PackageManager.NameNotFoundException e) {
 					e.printStackTrace();
 				}
+                if(activityIcon==null){
+                        activityIcon = Resources.getSystem().getDrawableForDensity(
+                                android.R.mipmap.sym_def_app_icon, iconDpi);
+                }
+
 			}else {
+
 				activityIcon = activityInfo.loadIcon(pm);
+                if(activityIcon==null){
+                    activityIcon = Resources.getSystem().getDrawable(
+                            android.R.mipmap.sym_def_app_icon);
+                }
 			}
 		}
 		return activityIcon;
