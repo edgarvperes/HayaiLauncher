@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -109,7 +110,7 @@ public class SearchActivity extends Activity {
             if(launchableActivity.getClassName().equals(this.getClass().getCanonicalName())) {
                 continue;
             }
-            
+
             final String activityLabel =launchableActivity.getActivityLabel().toString();
             final String activityLabelLower = activityLabel.toLowerCase();
             trie.put(activityLabelLower, launchableActivity);
@@ -204,7 +205,12 @@ public class SearchActivity extends Activity {
         thread.start();
     }
 
+    private void hideKeyboard(){
+        final EditText searchEditText = (EditText) findViewById(R.id.editText1);
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).
+                hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
 
+    }
     public boolean showPopup(View v) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             PopupMenu popup = new PopupMenu(this, v);
@@ -349,8 +355,11 @@ public class SearchActivity extends Activity {
         launchableActivityPrefs.writePreference(componentName.getClassName(),
                 launchableActivity.getNumberOfLaunches(),
                 launchableActivity.isFavorite());
-        EditText searchEditText = (EditText) findViewById(R.id.editText1);
+        final EditText searchEditText = (EditText) findViewById(R.id.editText1);
+
         searchEditText.clearFocus();
+        hideKeyboard();
+
         try {
             startActivity(launchIntent);
             arrayAdapter.notifyDataSetChanged();
