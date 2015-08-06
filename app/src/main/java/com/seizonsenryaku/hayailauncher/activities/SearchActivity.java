@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.seizonsenryaku.hayailauncher.AsyncImageIconLoader;
 import com.seizonsenryaku.hayailauncher.LaunchableActivity;
 import com.seizonsenryaku.hayailauncher.LaunchableActivityPrefs;
 import com.seizonsenryaku.hayailauncher.MyNotificationManager;
@@ -49,6 +50,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.seizonsenryaku.hayailauncher.AsyncImageIconLoader.*;
+
 public class SearchActivity extends Activity {
 
     // private static final int ACTIVITY_LIST_RESULT = 1;
@@ -59,6 +62,8 @@ public class SearchActivity extends Activity {
     private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
     private Context context;
+    private Drawable defaultAppIcon;
+    private AsyncImageIconLoader asyncImageIconLoader;
 
     private final OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
 
@@ -189,7 +194,10 @@ public class SearchActivity extends Activity {
         final Resources resources = getResources();
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
-
+        defaultAppIcon=getDrawable(R.drawable.ic_launcher);
+        asyncImageIconLoader=new AsyncImageIconLoader(pm,context,this,defaultAppIcon);
+        Thread thread = new Thread(asyncImageIconLoader);
+        thread.start();
     }
 
 
@@ -374,11 +382,16 @@ public class SearchActivity extends Activity {
             // ActivityInfo activityInfo =
             // launchableActivity.getActivityInfo();
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
-                Drawable icon = launchableActivity.getActivityIcon(pm, context);
 
-                ((ImageView) view
-                        .findViewById(R.id.appIcon))
-                        .setImageDrawable(icon);
+                ImageView imageView=(ImageView) view.findViewById(R.id.appIcon);
+                synchronized (asyncImageIconLoader) {
+                    if (!launchableActivity.isIconLoaded() ||
+                            imageView.getDrawable() != launchableActivity.getActivityIcon(pm, context)) {
+                        imageView.setImageDrawable(defaultAppIcon);
+                        asyncImageIconLoader.addTask(
+                                new AsyncImageIconLoader.Task(imageView, launchableActivity));
+                    }
+                }
             } else {
                 ((ImageView) view
                         .findViewById(R.id.appIcon))

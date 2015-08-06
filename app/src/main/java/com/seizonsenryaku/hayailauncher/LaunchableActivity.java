@@ -12,6 +12,8 @@ import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
+import java.util.concurrent.LinkedBlockingDeque;
+
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	private ActivityInfo activityInfo;
 	private int numberOfLaunches;
@@ -52,6 +54,10 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 	public CharSequence getActivityLabel() {
 		return activityLabel;
 	}
+
+    public boolean isIconLoaded(){
+        return activityIcon!=null;
+    }
 
 	public Drawable getActivityIcon(PackageManager pm,Context context ) {
 
