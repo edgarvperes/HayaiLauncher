@@ -50,8 +50,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import static com.seizonsenryaku.hayailauncher.AsyncImageIconLoader.*;
-
 public class SearchActivity extends Activity {
 
     // private static final int ACTIVITY_LIST_RESULT = 1;
@@ -126,9 +124,9 @@ public class SearchActivity extends Activity {
                 if (Character.isSpaceChar(character)) {
                     if (skippedFirstWord) {
                         trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
-                        if(wordSinceLastCapitalBuilder.length() > 1 &&
+                        if (wordSinceLastCapitalBuilder.length() > 1 &&
                                 wordSinceLastCapitalBuilder.length() !=
-                                        wordSinceLastSpaceBuilder.length()){
+                                        wordSinceLastSpaceBuilder.length()) {
                             trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
                                     launchableActivity);
                         }
@@ -145,11 +143,11 @@ public class SearchActivity extends Activity {
                 }
 
             }
-            if (skippedFirstWord && wordSinceLastSpaceBuilder.length()>0
+            if (skippedFirstWord && wordSinceLastSpaceBuilder.length() > 0
                     && activityLabel.length() > wordSinceLastSpaceBuilder.length()) {
                 trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
             }
-            if (wordSinceLastCapitalBuilder.length()>1
+            if (wordSinceLastCapitalBuilder.length() > 1
                     && !wordSinceLastCapitalBuilder.toString()
                     .equals(wordSinceLastSpaceBuilder.toString())) {
                 trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(), launchableActivity);
@@ -189,13 +187,13 @@ public class SearchActivity extends Activity {
             myNotificationManager.showNotification(this);
         }
 
-        context=getApplicationContext();
+        context = getApplicationContext();
 
         final Resources resources = getResources();
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
-        defaultAppIcon=getDrawable(R.drawable.ic_launcher);
-        asyncImageIconLoader=new AsyncImageIconLoader(pm,context,this,defaultAppIcon);
+        defaultAppIcon = getDrawable(R.drawable.ic_launcher);
+        asyncImageIconLoader = new AsyncImageIconLoader(pm, context, this, defaultAppIcon);
         Thread thread = new Thread(asyncImageIconLoader);
         thread.start();
     }
@@ -345,7 +343,7 @@ public class SearchActivity extends Activity {
         launchableActivityPrefs.writePreference(componentName.getClassName(),
                 launchableActivity.getNumberOfLaunches(),
                 launchableActivity.isFavorite());
-        EditText searchEditText=(EditText)findViewById(R.id.editText1);
+        EditText searchEditText = (EditText) findViewById(R.id.editText1);
         searchEditText.clearFocus();
         try {
             startActivity(launchIntent);
@@ -372,21 +370,24 @@ public class SearchActivity extends Activity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            View view;
-            if (convertView != null) {
-                view = convertView;
-            } else {
-                view = inflater.inflate(R.layout.app_grid_item, null);
-            }
-            LaunchableActivity launchableActivity = getItem(position);
-            // ActivityInfo activityInfo =
-            // launchableActivity.getActivityInfo();
-            if (sharedPreferences.getBoolean("pref_show_icon", true)) {
+            final View view =
+                    convertView != null ?
+                            convertView : inflater.inflate(R.layout.app_grid_item, null);
+            final LaunchableActivity launchableActivity = getItem(position);
+            final CharSequence label = launchableActivity.getActivityLabel();
 
-                ImageView imageView=(ImageView) view.findViewById(R.id.appIcon);
+
+            ((TextView) view
+                    .findViewById(R.id.appLabel))
+                    .setText(label);
+
+            if (sharedPreferences.getBoolean("pref_show_icon", true)) {
                 synchronized (asyncImageIconLoader) {
+                    final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
                     if (!launchableActivity.isIconLoaded() ||
-                            imageView.getDrawable() != launchableActivity.getActivityIcon(pm, context)) {
+                            imageView.getDrawable() !=
+                                    launchableActivity.getActivityIcon(pm, context)) {
+                        imageView.setTag(launchableActivity.getClassName());
                         imageView.setImageDrawable(defaultAppIcon);
                         asyncImageIconLoader.addTask(
                                 new AsyncImageIconLoader.Task(imageView, launchableActivity));
@@ -397,14 +398,6 @@ public class SearchActivity extends Activity {
                         .findViewById(R.id.appIcon))
                         .setImageDrawable(null);
             }
-            CharSequence label = launchableActivity.getActivityLabel();
-
-
-            ((TextView) view
-                    .findViewById(R.id.appLabel))
-                    .setText(label);
-
-
             view.findViewById(R.id.appFavorite)
                     .setVisibility(launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
             return view;

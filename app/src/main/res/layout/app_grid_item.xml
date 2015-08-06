@@ -12,7 +12,6 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:id="@+id/appIcon"
-            android:src="@drawable/ic_launcher"
             />
 
         <TextView

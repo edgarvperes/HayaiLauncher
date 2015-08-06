@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -13,10 +14,10 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class AsyncImageIconLoader implements Runnable {
     public static class Task {
-        ImageView imageView;
-        LaunchableActivity launchableActivity;
+        final ImageView imageView;
+        final LaunchableActivity launchableActivity;
 
-        public Task(ImageView imageView, LaunchableActivity launchableActivity) {
+        public Task(final ImageView imageView, final LaunchableActivity launchableActivity) {
             this.imageView = imageView;
             this.launchableActivity = launchableActivity;
         }
@@ -28,7 +29,8 @@ public class AsyncImageIconLoader implements Runnable {
     private final Activity activity;
     private final Drawable defaultAppIcon;
 
-    public AsyncImageIconLoader(PackageManager pm, Context context, Activity activity, Drawable defaultAppIcon) {
+    public AsyncImageIconLoader(final PackageManager pm, final Context context,
+                                final Activity activity, final Drawable defaultAppIcon) {
         tasks = new LinkedBlockingQueue<>();
         this.pm = pm;
         this.context = context;
@@ -47,8 +49,9 @@ public class AsyncImageIconLoader implements Runnable {
                         @Override
                         public void run() {
                             synchronized (AsyncImageIconLoader.this) {
-                                if (task.imageView.getDrawable() == defaultAppIcon)
-                                    task.imageView.setImageDrawable(activityIcon);
+                                if (task.imageView.getDrawable() == defaultAppIcon &&
+                                        task.imageView.getTag()==task.launchableActivity.getClassName())
+                                        task.imageView.setImageDrawable(activityIcon);
                             }
                         }
                 });
@@ -61,7 +64,7 @@ public class AsyncImageIconLoader implements Runnable {
         } while (true);
     }
 
-    public void addTask(Task task) {
+    public void addTask(final Task task) {
         try {
             tasks.put(task);
         } catch (InterruptedException e) {
