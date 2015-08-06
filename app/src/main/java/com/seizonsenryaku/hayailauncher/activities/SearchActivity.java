@@ -17,10 +17,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -123,13 +121,16 @@ public class SearchActivity extends Activity {
                 if (Character.isSpaceChar(character)) {
                     if (skippedFirstWord) {
                         trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
+                        if(wordSinceLastCapitalBuilder.length() > 1 &&
+                                wordSinceLastCapitalBuilder.length() !=
+                                        wordSinceLastSpaceBuilder.length()){
+                            trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
+                                    launchableActivity);
+                        }
                     } else {
                         skippedFirstWord = true;
                     }
-                    if(wordSinceLastCapitalBuilder.length() > 1 && wordSinceLastCapitalBuilder.length()!=wordSinceLastSpaceBuilder.length()){
-                            trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
-                                    launchableActivity);
-                    }
+
 
                     wordSinceLastCapitalBuilder.setLength(0);
                     wordSinceLastSpaceBuilder.setLength(0);
@@ -336,6 +337,8 @@ public class SearchActivity extends Activity {
         launchableActivityPrefs.writePreference(componentName.getClassName(),
                 launchableActivity.getNumberOfLaunches(),
                 launchableActivity.isFavorite());
+        EditText searchEditText=(EditText)findViewById(R.id.editText1);
+        searchEditText.clearFocus();
         try {
             startActivity(launchIntent);
             arrayAdapter.notifyDataSetChanged();

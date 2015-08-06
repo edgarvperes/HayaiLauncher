@@ -26,7 +26,8 @@
             android:textColorHint="#CCCCCC"
             android:textSize="18sp"
             android:inputType="textVisiblePassword"
-            android:textColor="@android:color/white">
+            android:textColor="@android:color/white"
+            android:selectAllOnFocus="true">
 
             <requestFocus />
         </EditText>
