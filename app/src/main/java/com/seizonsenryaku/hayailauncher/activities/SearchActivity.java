@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -101,10 +102,15 @@ public class SearchActivity extends Activity {
         final StringBuilder wordSinceLastCapitalBuilder = new StringBuilder(64);
 
         for (ResolveInfo info : infoList) {
-            final String activityLabel = info.activityInfo.loadLabel(pm).toString();
             final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, activityLabel);
+                    info.activityInfo, info.activityInfo.loadLabel(pm).toString());
 
+            //don't show this activity in the launcher
+            if(launchableActivity.getClassName().equals(this.getClass().getCanonicalName())) {
+                continue;
+            }
+            
+            final String activityLabel =launchableActivity.getActivityLabel().toString();
             final String activityLabelLower = activityLabel.toLowerCase();
             trie.put(activityLabelLower, launchableActivity);
 
