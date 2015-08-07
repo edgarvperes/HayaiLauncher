@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -26,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -41,11 +39,12 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.seizonsenryaku.hayailauncher.AsyncImageIconLoader;
+import com.seizonsenryaku.hayailauncher.ImageLoadingTask;
 import com.seizonsenryaku.hayailauncher.LaunchableActivity;
 import com.seizonsenryaku.hayailauncher.LaunchableActivityPrefs;
 import com.seizonsenryaku.hayailauncher.MyNotificationManager;
 import com.seizonsenryaku.hayailauncher.R;
+import com.seizonsenryaku.hayailauncher.SimpleTaskConsumer;
 import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
 import com.seizonsenryaku.hayailauncher.Trie;
 
@@ -65,7 +64,7 @@ public class SearchActivity extends Activity {
     private SharedPreferences sharedPreferences;
     private Context context;
     private Drawable defaultAppIcon;
-    private AsyncImageIconLoader asyncImageIconLoader;
+    private SimpleTaskConsumer simpleTaskConsumer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,16 +99,16 @@ public class SearchActivity extends Activity {
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString());
 
             //don't show this activity in the launcher
-            if(launchableActivity.getClassName().equals(this.getClass().getCanonicalName())) {
+            if (launchableActivity.getClassName().equals(this.getClass().getCanonicalName())) {
                 continue;
             }
 
-            final String activityLabel =launchableActivity.getActivityLabel().toString();
+            final String activityLabel = launchableActivity.getActivityLabel().toString();
             final String activityLabelLower = activityLabel.toLowerCase();
             trie.put(activityLabelLower, launchableActivity);
 
             boolean skippedFirstWord = false;
-            boolean previousCharWasUppercaseOrDigit=false;
+            boolean previousCharWasUppercaseOrDigit = false;
             for (int i = 0; i < activityLabel.length(); i++) {
                 final char character = activityLabel.charAt(i);
 
@@ -118,12 +117,12 @@ public class SearchActivity extends Activity {
                             && !activityLabel.startsWith(wordSinceLastCapitalBuilder.toString())) {
                         trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
                                 launchableActivity);
-                        if(!previousCharWasUppercaseOrDigit)
+                        if (!previousCharWasUppercaseOrDigit)
                             wordSinceLastCapitalBuilder.setLength(0);
                     }
-                    previousCharWasUppercaseOrDigit=true;
-                }else{
-                    previousCharWasUppercaseOrDigit=false;
+                    previousCharWasUppercaseOrDigit = true;
+                } else {
+                    previousCharWasUppercaseOrDigit = false;
                 }
                 if (Character.isSpaceChar(character)) {
                     if (skippedFirstWord) {
@@ -150,7 +149,7 @@ public class SearchActivity extends Activity {
                 trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
             }
             if (wordSinceLastCapitalBuilder.length() > 1
-                    && wordSinceLastCapitalBuilder.length()!=wordSinceLastSpaceBuilder.length()) {
+                    && wordSinceLastCapitalBuilder.length() != wordSinceLastSpaceBuilder.length()) {
                 trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(), launchableActivity);
             }
             wordSinceLastSpaceBuilder.setLength(0);
@@ -169,10 +168,10 @@ public class SearchActivity extends Activity {
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
 
-        ((GridView)appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
+        ((GridView) appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(scrollState!=SCROLL_STATE_IDLE){
+                if (scrollState != SCROLL_STATE_IDLE) {
                     hideKeyboard();
                 }
             }
@@ -206,17 +205,23 @@ public class SearchActivity extends Activity {
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
-        asyncImageIconLoader = new AsyncImageIconLoader(pm, context, this);
-        Thread thread = new Thread(asyncImageIconLoader);
+        simpleTaskConsumer = new SimpleTaskConsumer(pm, context, this);
+        Thread thread = new Thread(simpleTaskConsumer);
         thread.start();
     }
 
-    private void hideKeyboard(){
+    private void hideKeyboard() {
         final EditText searchEditText = (EditText) findViewById(R.id.editText1);
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
     }
-    
+
+    @Override
+    protected void onDestroy() {
+        simpleTaskConsumer.addTask(new SimpleTaskConsumer.DieTask());
+        super.onDestroy();
+    }
+
     public boolean showPopup(View v) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             PopupMenu popup = new PopupMenu(this, v);
@@ -405,14 +410,16 @@ public class SearchActivity extends Activity {
             final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
 
-                synchronized (asyncImageIconLoader) {
+                synchronized (simpleTaskConsumer) {
                     imageView.setTag(launchableActivity.getClassName());
 
-                    if(!launchableActivity.isIconLoaded()){
+                    if (!launchableActivity.isIconLoaded()) {
                         imageView.setImageDrawable(defaultAppIcon);
-                        asyncImageIconLoader.addTask(
-                                new AsyncImageIconLoader.Task(imageView, launchableActivity));
-                    }else {
+                        simpleTaskConsumer.addTask(
+                                new ImageLoadingTask(imageView, launchableActivity,
+                                        simpleTaskConsumer,
+                                        SearchActivity.this, pm, context));
+                    } else {
                         imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
                     }
                 }
