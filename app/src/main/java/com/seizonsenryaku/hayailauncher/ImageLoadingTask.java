@@ -9,7 +9,7 @@ import android.widget.ImageView;
 /**
  * Created by Edgar on 07-Aug-15.
  */
-public class ImageLoadingTask extends SimpleTaskConsumer.Task{
+public class ImageLoadingTask extends SimpleTaskConsumerManager.Task{
     private final ImageView imageView;
     private final LaunchableActivity launchableActivity;
     private final Object uiMutex;
@@ -30,7 +30,7 @@ public class ImageLoadingTask extends SimpleTaskConsumer.Task{
     }
 
 
-    public boolean doTask(){
+    public void doTask(){
         final Drawable activityIcon = launchableActivity.getActivityIcon(packageManager, context);
         activity.runOnUiThread(new Runnable() {
 
@@ -42,7 +42,6 @@ public class ImageLoadingTask extends SimpleTaskConsumer.Task{
                 }
             }
         });
-        return false;
     }
 
 }

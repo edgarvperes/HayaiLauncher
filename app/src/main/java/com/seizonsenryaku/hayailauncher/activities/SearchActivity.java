@@ -44,7 +44,7 @@ import com.seizonsenryaku.hayailauncher.LaunchableActivity;
 import com.seizonsenryaku.hayailauncher.LaunchableActivityPrefs;
 import com.seizonsenryaku.hayailauncher.MyNotificationManager;
 import com.seizonsenryaku.hayailauncher.R;
-import com.seizonsenryaku.hayailauncher.SimpleTaskConsumer;
+import com.seizonsenryaku.hayailauncher.SimpleTaskConsumerManager;
 import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
 import com.seizonsenryaku.hayailauncher.Trie;
 
@@ -64,7 +64,7 @@ public class SearchActivity extends Activity {
     private SharedPreferences sharedPreferences;
     private Context context;
     private Drawable defaultAppIcon;
-    private SimpleTaskConsumer simpleTaskConsumer;
+    private SimpleTaskConsumerManager imageLoadingConsumersManager;
     private Object uiMutex;
 
     @Override
@@ -206,10 +206,15 @@ public class SearchActivity extends Activity {
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
-        simpleTaskConsumer = new SimpleTaskConsumer();
+
         uiMutex=new Object();
-        Thread thread = new Thread(simpleTaskConsumer);
-        thread.start();
+        int numThreads = Runtime.getRuntime().availableProcessors() - 1;
+        if(numThreads<1) numThreads=1;
+        else if(numThreads>7) numThreads=7;
+        imageLoadingConsumersManager=new SimpleTaskConsumerManager(numThreads);
+
+
+
     }
 
     private void hideKeyboard() {
@@ -220,7 +225,7 @@ public class SearchActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        simpleTaskConsumer.destroy();
+        imageLoadingConsumersManager.destroyAllConsumers(false);
         super.onDestroy();
     }
 
@@ -417,7 +422,7 @@ public class SearchActivity extends Activity {
 
                     if (!launchableActivity.isIconLoaded()) {
                         imageView.setImageDrawable(defaultAppIcon);
-                        simpleTaskConsumer.addTask(
+                        imageLoadingConsumersManager.addTask(
                                 new ImageLoadingTask(imageView, launchableActivity,
                                         uiMutex,
                                         SearchActivity.this, pm, context));
