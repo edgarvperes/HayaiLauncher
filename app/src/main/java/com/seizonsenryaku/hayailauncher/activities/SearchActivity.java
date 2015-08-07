@@ -30,11 +30,13 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -167,6 +169,19 @@ public class SearchActivity extends Activity {
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
 
+        ((GridView)appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if(scrollState!=SCROLL_STATE_IDLE){
+                    hideKeyboard();
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
         appListView.setAdapter(arrayAdapter);
 
 
@@ -200,8 +215,8 @@ public class SearchActivity extends Activity {
         final EditText searchEditText = (EditText) findViewById(R.id.editText1);
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
-
     }
+    
     public boolean showPopup(View v) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             PopupMenu popup = new PopupMenu(this, v);
