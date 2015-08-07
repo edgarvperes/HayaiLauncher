@@ -65,15 +65,6 @@ public class SearchActivity extends Activity {
     private Drawable defaultAppIcon;
     private AsyncImageIconLoader asyncImageIconLoader;
 
-    private final OnLongClickListener onLongClickAppRow = new OnLongClickListener() {
-
-        @Override
-        public boolean onLongClick(View v) {
-            openContextMenu(v);
-            return true;
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -116,8 +107,7 @@ public class SearchActivity extends Activity {
             trie.put(activityLabelLower, launchableActivity);
 
             boolean skippedFirstWord = false;
-            wordSinceLastSpaceBuilder.setLength(0);
-            wordSinceLastCapitalBuilder.setLength(0);
+
             for (int i = 0; i < activityLabel.length(); i++) {
                 final char character = activityLabel.charAt(i);
                 if (Character.isUpperCase(character) || Character.isDigit(character)) {
@@ -125,8 +115,8 @@ public class SearchActivity extends Activity {
                             && !activityLabel.startsWith(wordSinceLastCapitalBuilder.toString())) {
                         trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
                                 launchableActivity);
+                        wordSinceLastCapitalBuilder.setLength(0);
                     }
-                    wordSinceLastCapitalBuilder.setLength(0);
                 }
                 if (Character.isSpaceChar(character)) {
                     if (skippedFirstWord) {
@@ -141,14 +131,12 @@ public class SearchActivity extends Activity {
                         skippedFirstWord = true;
                     }
 
-
                     wordSinceLastCapitalBuilder.setLength(0);
                     wordSinceLastSpaceBuilder.setLength(0);
                 } else {
                     wordSinceLastCapitalBuilder.append(character);
                     wordSinceLastSpaceBuilder.append(character);
                 }
-
             }
             if (skippedFirstWord && wordSinceLastSpaceBuilder.length() > 0
                     && activityLabel.length() > wordSinceLastSpaceBuilder.length()) {
@@ -158,6 +146,8 @@ public class SearchActivity extends Activity {
                     && wordSinceLastCapitalBuilder.length()!=wordSinceLastSpaceBuilder.length()) {
                 trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(), launchableActivity);
             }
+            wordSinceLastSpaceBuilder.setLength(0);
+            wordSinceLastCapitalBuilder.setLength(0);
         }
 
         activityInfos = new ArrayList<>(infoList.size());
@@ -172,9 +162,6 @@ public class SearchActivity extends Activity {
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
 
-        //View listHeader = getLayoutInflater().inflate(R.layout.list_header, appListView, false);
-
-        //appListView.addHeaderView(listHeader);
         appListView.setAdapter(arrayAdapter);
 
 
@@ -395,9 +382,9 @@ public class SearchActivity extends Activity {
                     .findViewById(R.id.appLabel))
                     .setText(label);
 
+            final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
                 synchronized (asyncImageIconLoader) {
-                    final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
                     imageView.setTag(launchableActivity.getClassName());
 
                     if(!launchableActivity.isIconLoaded()){
@@ -409,9 +396,7 @@ public class SearchActivity extends Activity {
                     }
                 }
             } else {
-                ((ImageView) view
-                        .findViewById(R.id.appIcon))
-                        .setImageDrawable(null);
+                imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
             }
             view.findViewById(R.id.appFavorite)
                     .setVisibility(launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
