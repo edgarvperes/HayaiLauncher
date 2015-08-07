@@ -107,16 +107,21 @@ public class SearchActivity extends Activity {
             trie.put(activityLabelLower, launchableActivity);
 
             boolean skippedFirstWord = false;
-
+            boolean previousCharWasUppercaseOrDigit=false;
             for (int i = 0; i < activityLabel.length(); i++) {
                 final char character = activityLabel.charAt(i);
+
                 if (Character.isUpperCase(character) || Character.isDigit(character)) {
                     if (wordSinceLastCapitalBuilder.length() > 1
                             && !activityLabel.startsWith(wordSinceLastCapitalBuilder.toString())) {
                         trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
                                 launchableActivity);
-                        wordSinceLastCapitalBuilder.setLength(0);
+                        if(!previousCharWasUppercaseOrDigit)
+                            wordSinceLastCapitalBuilder.setLength(0);
                     }
+                    previousCharWasUppercaseOrDigit=true;
+                }else{
+                    previousCharWasUppercaseOrDigit=false;
                 }
                 if (Character.isSpaceChar(character)) {
                     if (skippedFirstWord) {
@@ -384,6 +389,7 @@ public class SearchActivity extends Activity {
 
             final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
+
                 synchronized (asyncImageIconLoader) {
                     imageView.setTag(launchableActivity.getClassName());
 
