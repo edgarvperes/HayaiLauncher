@@ -27,15 +27,13 @@ public class AsyncImageIconLoader implements Runnable {
     private final PackageManager pm;
     private final Context context;
     private final Activity activity;
-    private final Drawable defaultAppIcon;
 
     public AsyncImageIconLoader(final PackageManager pm, final Context context,
-                                final Activity activity, final Drawable defaultAppIcon) {
+                                final Activity activity) {
         tasks = new LinkedBlockingQueue<>();
         this.pm = pm;
         this.context = context;
         this.activity = activity;
-        this.defaultAppIcon=defaultAppIcon;
     }
 
     @Override
@@ -49,8 +47,7 @@ public class AsyncImageIconLoader implements Runnable {
                         @Override
                         public void run() {
                             synchronized (AsyncImageIconLoader.this) {
-                                if (task.imageView.getDrawable() == defaultAppIcon &&
-                                        task.imageView.getTag()==task.launchableActivity.getClassName())
+                                if (task.imageView.getTag()==task.launchableActivity.getClassName())
                                         task.imageView.setImageDrawable(activityIcon);
                             }
                         }

@@ -199,8 +199,8 @@ public class SearchActivity extends Activity {
         final Resources resources = getResources();
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
-        defaultAppIcon = getDrawable(R.drawable.ic_launcher);
-        asyncImageIconLoader = new AsyncImageIconLoader(pm, context, this, defaultAppIcon);
+        defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
+        asyncImageIconLoader = new AsyncImageIconLoader(pm, context, this);
         Thread thread = new Thread(asyncImageIconLoader);
         thread.start();
     }
@@ -399,13 +399,14 @@ public class SearchActivity extends Activity {
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
                 synchronized (asyncImageIconLoader) {
                     final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
-                    if (!launchableActivity.isIconLoaded() ||
-                            imageView.getDrawable() !=
-                                    launchableActivity.getActivityIcon(pm, context)) {
-                        imageView.setTag(launchableActivity.getClassName());
+                    imageView.setTag(launchableActivity.getClassName());
+
+                    if(!launchableActivity.isIconLoaded()){
                         imageView.setImageDrawable(defaultAppIcon);
                         asyncImageIconLoader.addTask(
                                 new AsyncImageIconLoader.Task(imageView, launchableActivity));
+                    }else {
+                        imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
                     }
                 }
             } else {
