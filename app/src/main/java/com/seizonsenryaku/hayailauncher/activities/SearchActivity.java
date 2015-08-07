@@ -65,6 +65,7 @@ public class SearchActivity extends Activity {
     private Context context;
     private Drawable defaultAppIcon;
     private SimpleTaskConsumer simpleTaskConsumer;
+    private Object uiMutex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +207,7 @@ public class SearchActivity extends Activity {
 
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
         simpleTaskConsumer = new SimpleTaskConsumer(pm, context, this);
+        uiMutex=new Object();
         Thread thread = new Thread(simpleTaskConsumer);
         thread.start();
     }
@@ -218,7 +220,7 @@ public class SearchActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        simpleTaskConsumer.addTask(new SimpleTaskConsumer.DieTask());
+        simpleTaskConsumer.destroy();
         super.onDestroy();
     }
 
@@ -410,15 +412,16 @@ public class SearchActivity extends Activity {
             final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
 
-                synchronized (simpleTaskConsumer) {
+                synchronized (uiMutex) {
                     imageView.setTag(launchableActivity.getClassName());
 
                     if (!launchableActivity.isIconLoaded()) {
                         imageView.setImageDrawable(defaultAppIcon);
                         simpleTaskConsumer.addTask(
                                 new ImageLoadingTask(imageView, launchableActivity,
-                                        simpleTaskConsumer,
+                                        uiMutex,
                                         SearchActivity.this, pm, context));
+
                     } else {
                         imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
                     }

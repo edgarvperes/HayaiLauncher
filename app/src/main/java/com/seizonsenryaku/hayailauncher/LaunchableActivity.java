@@ -16,6 +16,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     private String activityLabel;
     private Drawable activityIcon;
     private boolean favorite;
+
     private ComponentName componentName;
     //This limitation is needed to speedup the compareTo function.
     private static final int MAX_LAUNCHES = 16383;

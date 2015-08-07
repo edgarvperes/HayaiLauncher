@@ -3,9 +3,6 @@ package com.seizonsenryaku.hayailauncher;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
-import android.widget.ImageView;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -43,11 +40,18 @@ public class SimpleTaskConsumer implements Runnable {
         } while (!shouldDie);
     }
 
-    public void addTask(final Task task) {
+    public synchronized void addTask(final Task task) {
         try {
             tasks.put(task);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    public synchronized void removeAllTasks(){
+        tasks.clear();
+    }
+    public synchronized void destroy(){
+        removeAllTasks();
+        tasks.add(new DieTask());
     }
 }

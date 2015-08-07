@@ -10,12 +10,12 @@ import android.widget.ImageView;
  * Created by Edgar on 07-Aug-15.
  */
 public class ImageLoadingTask extends SimpleTaskConsumer.Task{
-    final ImageView imageView;
-    final LaunchableActivity launchableActivity;
-    final Object uiMutex;
-    final Activity activity;
-    final PackageManager packageManager;
-    final Context context;
+    private final ImageView imageView;
+    private final LaunchableActivity launchableActivity;
+    private final Object uiMutex;
+    private final Activity activity;
+    private final PackageManager packageManager;
+    private final Context context;
 
     public ImageLoadingTask(final ImageView imageView, final LaunchableActivity launchableActivity,
                             final Object uiMutex, final Activity activity,
