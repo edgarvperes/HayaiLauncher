@@ -120,7 +120,7 @@ public class SearchActivity extends Activity {
             wordSinceLastCapitalBuilder.setLength(0);
             for (int i = 0; i < activityLabel.length(); i++) {
                 final char character = activityLabel.charAt(i);
-                if (Character.isUpperCase(character)) {
+                if (Character.isUpperCase(character) || Character.isDigit(character)) {
                     if (wordSinceLastCapitalBuilder.length() > 1
                             && !activityLabel.startsWith(wordSinceLastCapitalBuilder.toString())) {
                         trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
@@ -155,8 +155,7 @@ public class SearchActivity extends Activity {
                 trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
             }
             if (wordSinceLastCapitalBuilder.length() > 1
-                    && !wordSinceLastCapitalBuilder.toString()
-                    .equals(wordSinceLastSpaceBuilder.toString())) {
+                    && wordSinceLastCapitalBuilder.length()!=wordSinceLastSpaceBuilder.length()) {
                 trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(), launchableActivity);
             }
         }
