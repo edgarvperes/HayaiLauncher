@@ -206,7 +206,7 @@ public class SearchActivity extends Activity {
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
-        simpleTaskConsumer = new SimpleTaskConsumer(pm, context, this);
+        simpleTaskConsumer = new SimpleTaskConsumer();
         uiMutex=new Object();
         Thread thread = new Thread(simpleTaskConsumer);
         thread.start();

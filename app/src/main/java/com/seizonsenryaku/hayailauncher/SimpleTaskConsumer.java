@@ -21,8 +21,7 @@ public class SimpleTaskConsumer implements Runnable {
 
     private final LinkedBlockingQueue<Task> tasks;
 
-    public SimpleTaskConsumer(final PackageManager pm, final Context context,
-                              final Activity activity) {
+    public SimpleTaskConsumer() {
         tasks = new LinkedBlockingQueue<>();
     }
 
