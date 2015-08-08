@@ -14,17 +14,17 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
-    private ActivityInfo activityInfo;
+    private final ActivityInfo activityInfo;
+    private final String activityLabel;
+    private final ComponentName componentName;
     private int numberOfLaunches;
-    private String activityLabel;
     private Drawable activityIcon;
     private boolean favorite;
 
-    private ComponentName componentName;
     //This limitation is needed to speedup the compareTo function.
     private static final int MAX_LAUNCHES = 16383;
 
-    public LaunchableActivity(ActivityInfo activityInfo, String activityLabel) {
+    public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel) {
         this.activityInfo = activityInfo;
         this.activityLabel = activityLabel;
         componentName = new ComponentName(activityInfo.packageName, activityInfo.name);
@@ -35,7 +35,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
             numberOfLaunches++;
     }
 
-    public void setNumberOfLaunches(int numberOfLaunches) {
+    public void setNumberOfLaunches(final int numberOfLaunches) {
         this.numberOfLaunches = numberOfLaunches;
     }
 
@@ -59,9 +59,10 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         return activityIcon != null;
     }
 
-    public Drawable getActivityIcon(PackageManager pm, Context context, float iconSizePixels) {
-        Drawable _activityIcon=activityIcon;
-        if (_activityIcon == null) {
+    public synchronized Drawable getActivityIcon(final PackageManager pm, final Context context,
+                                                 final float iconSizePixels) {
+        if (!isIconLoaded()) {
+            Drawable _activityIcon=null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 final ActivityManager activityManager =
                         (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -85,19 +86,17 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
             //rescaling the icon
             //TODO do this when it is not a bitmap drawable
             if(_activityIcon instanceof BitmapDrawable){
-                activityIcon=new BitmapDrawable(
+                _activityIcon=new BitmapDrawable(
                         Bitmap.createScaledBitmap(((BitmapDrawable) _activityIcon).getBitmap()
                         ,(int)iconSizePixels,(int)iconSizePixels,false));
-            }else{
-                activityIcon=_activityIcon;
             }
+            activityIcon=_activityIcon;
         }
-
         return activityIcon;
     }
 
     @Override
-    public int compareTo(@NonNull LaunchableActivity another) {
+    public int compareTo(@NonNull final LaunchableActivity another) {
 
         //Criteria 1 (Bit 1) indicates whether the activity is flagged as favorite or not.
         //Criteria 2 (Bits 2 to 16) indicates the number of launches
@@ -106,7 +105,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         //
         int anotherN = (another.favorite ? 0x40000000
                 : 0) + (another.numberOfLaunches << 16);
-        int thisN = (this.favorite ? 0x40000000
+        final int thisN = (this.favorite ? 0x40000000
                 : 0) + (this.numberOfLaunches << 16);
 
 
