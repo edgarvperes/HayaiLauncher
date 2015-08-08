@@ -2,6 +2,7 @@ package com.seizonsenryaku.hayailauncher.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -71,7 +72,6 @@ public class SearchActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
 
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -223,7 +223,8 @@ public class SearchActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        imageLoadingConsumersManager.destroyAllConsumers(false);
+        if(imageLoadingConsumersManager!=null)
+            imageLoadingConsumersManager.destroyAllConsumers(false);
         super.onDestroy();
     }
 

@@ -27,7 +27,7 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
     }
 
     public ImageLoadingTask(final ImageView imageView, final LaunchableActivity launchableActivity,
-                            SharedData sharedData) {
+                            final SharedData sharedData) {
         this.imageView = imageView;
         this.launchableActivity = launchableActivity;
         this.sharedData=sharedData;
