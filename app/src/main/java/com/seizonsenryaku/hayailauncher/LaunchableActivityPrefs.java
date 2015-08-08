@@ -36,9 +36,9 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase arg0) {
-        arg0.execSQL(TABLE_CREATE);
-
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(TABLE_CREATE);
+        db.close();
     }
 
     public void writePreference(String className, int number, boolean favorite) {
@@ -66,6 +66,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             statement.executeInsert();
 
         }
+        db.close();
     }
 
     public void deletePreference(String className) {
@@ -74,6 +75,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 + TABLE_NAME + " WHERE " + KEY_CLASSNAME + "=?");
         statement.bindString(1, className);
         statement.executeInsert();
+        db.close();
 
     }
 
@@ -97,7 +99,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 activityPrefMap.put(activityPref.className, activityPref);
             } while (cursor.moveToNext());
         }
-
+        db.close();
         for (LaunchableActivity activity : activityList) {
             ActivityPref activityPref = activityPrefMap.get(activity.getClassName());
             if (activityPref != null) {
@@ -135,6 +137,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         } else {
             numberOfLaunches = favorite = 0;
         }
+        db.close();
         launchableActivity.setNumberOfLaunches((int) numberOfLaunches);
         launchableActivity.setFavorite(favorite == 1);
 
