@@ -62,7 +62,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     public synchronized Drawable getActivityIcon(final PackageManager pm, final Context context,
                                                  final float iconSizePixels) {
         if (!isIconLoaded()) {
-            Drawable _activityIcon=null;
+            Drawable _activityIcon = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 final ActivityManager activityManager =
                         (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -83,14 +83,16 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                 _activityIcon = activityInfo.loadIcon(pm);
             }
 
-            //rescaling the icon
-            //TODO do this when it is not a bitmap drawable
-            if(_activityIcon instanceof BitmapDrawable){
-                _activityIcon=new BitmapDrawable(
-                        Bitmap.createScaledBitmap(((BitmapDrawable) _activityIcon).getBitmap()
-                        ,(int)iconSizePixels,(int)iconSizePixels,false));
+            //rescaling the icon if it is bigger than the target size
+            //TODO do this when it is not a bitmap drawable?
+            if (_activityIcon instanceof BitmapDrawable) {
+                if (_activityIcon.getIntrinsicHeight() > iconSizePixels &&
+                        _activityIcon.getIntrinsicWidth() > iconSizePixels) {
+                    _activityIcon = new BitmapDrawable(
+                            Bitmap.createScaledBitmap(((BitmapDrawable) _activityIcon).getBitmap()
+                                    , (int) iconSizePixels, (int) iconSizePixels, false));
             }
-            activityIcon=_activityIcon;
+            activityIcon = _activityIcon;
         }
         return activityIcon;
     }
