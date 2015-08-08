@@ -18,11 +18,13 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
         private final Activity activity;
         private final PackageManager packageManager;
         private final Context context;
-
-        public SharedData(Activity activity, PackageManager packageManager, Context context) {
+        private final float iconSizePixels;
+        public SharedData(final Activity activity, final PackageManager packageManager,
+                          final Context context,final float iconSizePixels) {
             this.activity = activity;
             this.packageManager = packageManager;
             this.context = context;
+            this.iconSizePixels=iconSizePixels;
         }
     }
 
@@ -36,7 +38,8 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
 
     public void doTask() {
         final Drawable activityIcon =
-                launchableActivity.getActivityIcon(sharedData.packageManager, sharedData.context);
+                launchableActivity.getActivityIcon(sharedData.packageManager, sharedData.context,
+                        sharedData.iconSizePixels);
         sharedData.activity.runOnUiThread(new Runnable() {
 
             @Override

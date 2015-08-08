@@ -2,7 +2,6 @@ package com.seizonsenryaku.hayailauncher.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -18,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -67,7 +67,7 @@ public class SearchActivity extends Activity {
     private Drawable defaultAppIcon;
     private SimpleTaskConsumerManager imageLoadingConsumersManager;
     private ImageLoadingTask.SharedData imageTasksSharedData;
-
+    private float iconSizePixels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -203,6 +203,7 @@ public class SearchActivity extends Activity {
         context = getApplicationContext();
 
         final Resources resources = getResources();
+        iconSizePixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, resources.getDisplayMetrics());
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
@@ -211,7 +212,7 @@ public class SearchActivity extends Activity {
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > 7) numThreads = 7;
         imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
-        imageTasksSharedData=new ImageLoadingTask.SharedData(this,pm,context);
+        imageTasksSharedData=new ImageLoadingTask.SharedData(this,pm,context,iconSizePixels);
 
     }
 
@@ -425,10 +426,10 @@ public class SearchActivity extends Activity {
                                     imageTasksSharedData));
 
                 } else {
-                    imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
+                    imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context, iconSizePixels));
                 }
             } else {
-                imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
+                imageView.setImageDrawable(defaultAppIcon);
             }
             view.findViewById(R.id.appFavorite)
                     .setVisibility(launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
