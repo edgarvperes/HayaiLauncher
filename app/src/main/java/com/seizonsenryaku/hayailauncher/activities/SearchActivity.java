@@ -65,7 +65,6 @@ public class SearchActivity extends Activity {
     private Context context;
     private Drawable defaultAppIcon;
     private SimpleTaskConsumerManager imageLoadingConsumersManager;
-    private Object uiMutex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,12 +206,10 @@ public class SearchActivity extends Activity {
 
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
 
-        uiMutex=new Object();
         int numThreads = Runtime.getRuntime().availableProcessors() - 1;
-        if(numThreads<1) numThreads=1;
-        else if(numThreads>7) numThreads=7;
-        imageLoadingConsumersManager=new SimpleTaskConsumerManager(numThreads);
-
+        if (numThreads < 1) numThreads = 1;
+        else if (numThreads > 7) numThreads = 7;
+        imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
 
 
     }
@@ -417,19 +414,16 @@ public class SearchActivity extends Activity {
             final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
 
-                synchronized (uiMutex) {
-                    imageView.setTag(launchableActivity.getClassName());
+                imageView.setTag(launchableActivity.getClassName());
 
-                    if (!launchableActivity.isIconLoaded()) {
-                        imageView.setImageDrawable(defaultAppIcon);
-                        imageLoadingConsumersManager.addTask(
-                                new ImageLoadingTask(imageView, launchableActivity,
-                                        uiMutex,
-                                        SearchActivity.this, pm, context));
+                if (!launchableActivity.isIconLoaded()) {
+                    imageView.setImageDrawable(defaultAppIcon);
+                    imageLoadingConsumersManager.addTask(
+                            new ImageLoadingTask(imageView, launchableActivity,
+                                    SearchActivity.this, pm, context));
 
-                    } else {
-                        imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
-                    }
+                } else {
+                    imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
                 }
             } else {
                 imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));

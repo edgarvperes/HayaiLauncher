@@ -37,6 +37,7 @@ public class SimpleTaskConsumerManager {
 
             } while (!consumersShouldDie);
             numThreadsAlive--;
+
         }
     }
 
