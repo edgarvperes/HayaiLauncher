@@ -41,43 +41,69 @@ ADDED from AndroidManifest.xml:17:9
 		ADDED from AndroidManifest.xml:20:13
 	android:label
 		ADDED from AndroidManifest.xml:19:13
-	android:alwaysRetainTaskState
+	android:excludeFromRecents
 		ADDED from AndroidManifest.xml:21:13
+	android:launchMode
+		ADDED from AndroidManifest.xml:23:13
+	android:alwaysRetainTaskState
+		ADDED from AndroidManifest.xml:22:13
 	android:name
 		ADDED from AndroidManifest.xml:18:13
 intent-filter#android.appwidget.action.APPWIDGET_UPDATE+android.intent.action.MAIN+android.intent.category.DEFAULT+android.intent.category.HOME+android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:22:13
+ADDED from AndroidManifest.xml:26:13
 action#android.intent.action.MAIN
-ADDED from AndroidManifest.xml:23:17
-	android:name
-		ADDED from AndroidManifest.xml:23:25
-category#android.intent.category.LAUNCHER
-ADDED from AndroidManifest.xml:25:17
-	android:name
-		ADDED from AndroidManifest.xml:25:27
-action#android.appwidget.action.APPWIDGET_UPDATE
 ADDED from AndroidManifest.xml:27:17
 	android:name
 		ADDED from AndroidManifest.xml:27:25
-category#android.intent.category.HOME
+category#android.intent.category.LAUNCHER
 ADDED from AndroidManifest.xml:29:17
 	android:name
 		ADDED from AndroidManifest.xml:29:27
+action#android.appwidget.action.APPWIDGET_UPDATE
+ADDED from AndroidManifest.xml:31:17
+	android:name
+		ADDED from AndroidManifest.xml:31:25
+category#android.intent.category.HOME
+ADDED from AndroidManifest.xml:33:17
+	android:name
+		ADDED from AndroidManifest.xml:33:27
 category#android.intent.category.DEFAULT
-ADDED from AndroidManifest.xml:30:17
+ADDED from AndroidManifest.xml:34:17
 	android:name
-		ADDED from AndroidManifest.xml:30:27
+		ADDED from AndroidManifest.xml:34:27
 activity#com.seizonsenryaku.hayailauncher.activities.SettingsActivity
-ADDED from AndroidManifest.xml:33:9
+ADDED from AndroidManifest.xml:37:9
 	android:label
-		ADDED from AndroidManifest.xml:35:13
+		ADDED from AndroidManifest.xml:39:13
 	android:theme
-		ADDED from AndroidManifest.xml:36:13
-	android:name
-		ADDED from AndroidManifest.xml:34:13
-activity#com.seizonsenryaku.hayailauncher.activities.AboutActivity
-ADDED from AndroidManifest.xml:38:9
-	android:label
 		ADDED from AndroidManifest.xml:40:13
 	android:name
-		ADDED from AndroidManifest.xml:39:13
+		ADDED from AndroidManifest.xml:38:13
+activity#com.seizonsenryaku.hayailauncher.activities.AboutActivity
+ADDED from AndroidManifest.xml:42:9
+	android:label
+		ADDED from AndroidManifest.xml:44:13
+	android:name
+		ADDED from AndroidManifest.xml:43:13
+receiver#com.seizonsenryaku.hayailauncher.PackageChangedReceiverService
+ADDED from AndroidManifest.xml:46:9
+	android:name
+		ADDED from AndroidManifest.xml:46:19
+intent-filter#android.intent.action.PACKAGE_CHANGED+android.intent.action.PACKAGE_REMOVED+android.intent.action.PACKAGE_REPLACED
+ADDED from AndroidManifest.xml:47:13
+action#android.intent.action.PACKAGE_CHANGED
+ADDED from AndroidManifest.xml:48:17
+	android:name
+		ADDED from AndroidManifest.xml:48:25
+action#android.intent.action.PACKAGE_REMOVED
+ADDED from AndroidManifest.xml:49:17
+	android:name
+		ADDED from AndroidManifest.xml:49:25
+action#android.intent.action.PACKAGE_REPLACED
+ADDED from AndroidManifest.xml:50:17
+	android:name
+		ADDED from AndroidManifest.xml:50:25
+data
+ADDED from AndroidManifest.xml:51:17
+	android:scheme
+		ADDED from AndroidManifest.xml:51:23

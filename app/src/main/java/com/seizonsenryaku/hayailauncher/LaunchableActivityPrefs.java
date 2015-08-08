@@ -38,7 +38,6 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE);
-        db.close();
     }
 
     public void writePreference(String className, int number, boolean favorite) {
@@ -47,9 +46,10 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 "SELECT COUNT(*) FROM %s WHERE %s = ?", TABLE_NAME,
                 KEY_CLASSNAME));
         countStatement.bindString(1, className);
-        long count = countStatement.simpleQueryForLong();
+        final long count = countStatement.simpleQueryForLong();
+        final SQLiteStatement statement;
         if (count <= 0) {
-            SQLiteStatement statement = db.compileStatement("INSERT INTO "
+            statement = db.compileStatement("INSERT INTO "
                     + TABLE_NAME + " (" + KEY_CLASSNAME + ", "
                     + KEY_NUMBEROFLAUNCHES + "," + KEY_FAVORITE + ") VALUES(?,?,?)");
             statement.bindString(1, className);
@@ -57,7 +57,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             statement.bindLong(3, favorite ? 1L : 0L);
             statement.executeInsert();
         } else {
-            SQLiteStatement statement = db.compileStatement("UPDATE "
+            statement = db.compileStatement("UPDATE "
                     + TABLE_NAME + " SET " + KEY_NUMBEROFLAUNCHES + "=? , " + KEY_FAVORITE + "=? WHERE "
                     + KEY_CLASSNAME + "=?");
             statement.bindLong(1, number);
@@ -66,6 +66,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             statement.executeInsert();
 
         }
+        statement.close();
         db.close();
     }
 
@@ -75,6 +76,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 + TABLE_NAME + " WHERE " + KEY_CLASSNAME + "=?");
         statement.bindString(1, className);
         statement.executeInsert();
+        statement.close();
         db.close();
 
     }
@@ -99,6 +101,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 activityPrefMap.put(activityPref.className, activityPref);
             } while (cursor.moveToNext());
         }
+        cursor.close();
         db.close();
         for (LaunchableActivity activity : activityList) {
             ActivityPref activityPref = activityPrefMap.get(activity.getClassName());
@@ -137,6 +140,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         } else {
             numberOfLaunches = favorite = 0;
         }
+        cursor.close();
         db.close();
         launchableActivity.setNumberOfLaunches((int) numberOfLaunches);
         launchableActivity.setFavorite(favorite == 1);
