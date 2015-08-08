@@ -18,7 +18,10 @@
             android:name="com.seizonsenryaku.hayailauncher.activities.SearchActivity"
             android:label="@string/title_activity_search"
             android:screenOrientation="sensorPortrait"
-            android:alwaysRetainTaskState="true">
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTop">
+
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,6 +42,15 @@
             android:name="com.seizonsenryaku.hayailauncher.activities.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
+        <receiver android:name=".PackageChangedReceiverService">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_CHANGED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <data android:scheme="package"></data>
+            </intent-filter>
+        </receiver>
     </application>
+
 
 </manifest>

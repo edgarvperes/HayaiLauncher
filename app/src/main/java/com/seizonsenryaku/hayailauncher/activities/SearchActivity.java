@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -86,6 +87,64 @@ public class SearchActivity extends Activity {
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         final PackageManager pm = getPackageManager();
+
+        loadLaunchableApps(pm);
+
+        AdapterView appListView = (AdapterView) findViewById(R.id.appsContainer);
+        registerForContextMenu(appListView);
+
+        arrayAdapter = new ActivityInfoArrayAdapter(this,
+                R.layout.app_grid_item, activityInfos);
+
+        ((GridView) appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState != SCROLL_STATE_IDLE) {
+                    hideKeyboard();
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+        appListView.setAdapter(arrayAdapter);
+
+
+        appListView.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                launchActivity(activityInfos.get(position));
+            }
+
+        });
+
+        if (sharedPreferences.getBoolean(
+                SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
+            MyNotificationManager myNotificationManager = new MyNotificationManager();
+            myNotificationManager.showNotification(this);
+        }
+
+        context = getApplicationContext();
+
+        final Resources resources = getResources();
+        iconSizePixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, resources.getDisplayMetrics());
+        StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
+
+        defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
+
+        int numThreads = Runtime.getRuntime().availableProcessors() - 1;
+        if (numThreads < 1) numThreads = 1;
+        else if (numThreads > 7) numThreads = 7;
+        imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
+        imageTasksSharedData=new ImageLoadingTask.SharedData(this,pm,context,iconSizePixels);
+
+    }
+
+    private void loadLaunchableApps(final PackageManager pm) {
+
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -162,64 +221,21 @@ public class SearchActivity extends Activity {
         launchableActivityPrefs.setAllPreferences(activityInfos);
 
         Collections.sort(activityInfos);
-        AdapterView appListView = (AdapterView) findViewById(R.id.appsContainer);
-
-        registerForContextMenu(appListView);
-
-        arrayAdapter = new ActivityInfoArrayAdapter(this,
-                R.layout.app_grid_item, activityInfos);
-
-        ((GridView) appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState != SCROLL_STATE_IDLE) {
-                    hideKeyboard();
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-        appListView.setAdapter(arrayAdapter);
-
-
-        appListView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                launchActivity(activityInfos.get(position));
-            }
-
-        });
-
-        if (sharedPreferences.getBoolean(
-                SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
-            MyNotificationManager myNotificationManager = new MyNotificationManager();
-            myNotificationManager.showNotification(this);
-        }
-
-        context = getApplicationContext();
-
-        final Resources resources = getResources();
-        iconSizePixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, resources.getDisplayMetrics());
-        StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
-
-        defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
-
-        int numThreads = Runtime.getRuntime().availableProcessors() - 1;
-        if (numThreads < 1) numThreads = 1;
-        else if (numThreads > 7) numThreads = 7;
-        imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
-        imageTasksSharedData=new ImageLoadingTask.SharedData(this,pm,context,iconSizePixels);
-
     }
 
     private void hideKeyboard() {
         final EditText searchEditText = (EditText) findViewById(R.id.editText1);
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(sharedPreferences.getBoolean("package_changed",false)){
+            sharedPreferences.edit().putBoolean("package_changed",false).apply();
+            refreshAppList();
+        }
     }
 
     @Override
@@ -354,7 +370,6 @@ public class SearchActivity extends Activity {
         }
 
     }
-
     public void launchActivity(LaunchableActivity launchableActivity) {
 
         ComponentName componentName = launchableActivity.getComponent();
@@ -450,6 +465,7 @@ public class SearchActivity extends Activity {
             Collections.sort(activityInfos);
             arrayAdapter.notifyDataSetChanged();
         }
+
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count,
