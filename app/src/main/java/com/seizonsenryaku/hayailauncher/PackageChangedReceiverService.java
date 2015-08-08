@@ -16,11 +16,11 @@ import com.seizonsenryaku.hayailauncher.activities.SearchActivity;
 public class PackageChangedReceiverService extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
-            final String packageName = intent.getData().getSchemeSpecificPart();
+            final String packageChangedName = intent.getData().getSchemeSpecificPart();
 
-            if (packageName != null && packageName.length() > 0) {
+            if (packageChangedName != null && !packageChangedName.isEmpty()) {
                 Log.d("Received thing", "EXTRA_CHANGED_COMPONENT_NAME_LIST=" +
-                        packageName);
+                        packageChangedName);
                 final SharedPreferences sharedPreferences = context.getSharedPreferences(
                         context.getPackageName() + "_preferences",
                         Context.MODE_PRIVATE);
