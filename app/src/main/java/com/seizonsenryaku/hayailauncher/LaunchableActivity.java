@@ -91,6 +91,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                     _activityIcon = new BitmapDrawable(
                             Bitmap.createScaledBitmap(((BitmapDrawable) _activityIcon).getBitmap()
                                     , (int) iconSizePixels, (int) iconSizePixels, false));
+                }
             }
             activityIcon = _activityIcon;
         }
