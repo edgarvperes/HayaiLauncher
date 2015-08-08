@@ -65,6 +65,7 @@ public class SearchActivity extends Activity {
     private Context context;
     private Drawable defaultAppIcon;
     private SimpleTaskConsumerManager imageLoadingConsumersManager;
+    private ImageLoadingTask.SharedData imageTasksSharedData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +211,7 @@ public class SearchActivity extends Activity {
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > 7) numThreads = 7;
         imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
-
+        imageTasksSharedData=new ImageLoadingTask.SharedData(this,pm,context);
 
     }
 
@@ -420,7 +421,7 @@ public class SearchActivity extends Activity {
                     imageView.setImageDrawable(defaultAppIcon);
                     imageLoadingConsumersManager.addTask(
                             new ImageLoadingTask(imageView, launchableActivity,
-                                    SearchActivity.this, pm, context));
+                                    imageTasksSharedData));
 
                 } else {
                     imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context));
