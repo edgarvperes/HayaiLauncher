@@ -17,7 +17,8 @@
         <activity
             android:name="com.seizonsenryaku.hayailauncher.activities.SearchActivity"
             android:label="@string/title_activity_search"
-            android:screenOrientation="sensorPortrait"
+            android:screenOrientation="portrait"
+            android:excludeFromRecents="true"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleTop">
 
