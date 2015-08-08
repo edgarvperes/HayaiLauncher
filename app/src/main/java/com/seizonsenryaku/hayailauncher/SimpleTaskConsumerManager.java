@@ -82,8 +82,9 @@ public class SimpleTaskConsumerManager {
         consumersShouldDie = true;
         if (!finishCurrentTasks) removeAllTasks();
         int threadsToKill = numThreadsAlive;
+        DieTask dieTask= new DieTask();
         for (int i = 0; i < threadsToKill; i++) {
-            tasks.add(new DieTask());
+            tasks.add(dieTask);
         }
     }
 
