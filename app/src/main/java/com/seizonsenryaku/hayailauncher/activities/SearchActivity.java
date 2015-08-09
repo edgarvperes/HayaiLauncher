@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -80,6 +81,7 @@ public class SearchActivity extends Activity {
 
         //fields:
         searchEditText = (EditText) findViewById(R.id.editText1);
+        //noinspection unchecked
         appListView = (AdapterView<ArrayAdapter<LaunchableActivity>>)
                 findViewById(R.id.appsContainer);
         overflowButton = findViewById(R.id.overflow_button);
@@ -89,6 +91,7 @@ public class SearchActivity extends Activity {
                 .getDefaultSharedPreferences(this);
         launchableActivityPrefs = new LaunchableActivityPrefs(this);
 
+        //noinspection deprecation
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
         iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
                 * resources.getDisplayMetrics().density + 0.5f);
@@ -105,9 +108,7 @@ public class SearchActivity extends Activity {
         StatusBarColorHelper.setStatusBarColor(resources,
                 this, resources.getColor(R.color.indigo_700));
 
-        //display soft keyboard
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        showKeyboard();
     }
 
     private void setupViews() {
@@ -130,6 +131,7 @@ public class SearchActivity extends Activity {
 
             }
         });
+        //noinspection unchecked
         appListView.setAdapter(arrayAdapter);
 
 
@@ -152,7 +154,7 @@ public class SearchActivity extends Activity {
         }
     }
 
-    private void setupImageLoadingThreads(final PackageManager pm, Resources resources) {
+    private void setupImageLoadingThreads(final PackageManager pm, final Resources resources) {
         int numThreads = Runtime.getRuntime().availableProcessors() - 1;
         final int maxThreads = resources.getInteger(R.integer.max_imageloading_threads);
         if (numThreads < 1) numThreads = 1;
@@ -242,11 +244,15 @@ public class SearchActivity extends Activity {
         Collections.sort(activityInfos);
     }
 
-    private void hideKeyboard() {
+    private void showKeyboard() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
 
+    private void hideKeyboard() {
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
     }
+
 
     @Override
     protected void onPostResume() {
@@ -292,7 +298,7 @@ public class SearchActivity extends Activity {
         }
     }
 
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
+    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             if (!showPopup(overflowButton)) {
                 openOptionsMenu();
@@ -447,7 +453,7 @@ public class SearchActivity extends Activity {
 
             final View view =
                     convertView != null ?
-                            convertView : inflater.inflate(R.layout.app_grid_item, null);
+                            convertView : inflater.inflate(R.layout.app_grid_item, parent);
             final LaunchableActivity launchableActivity = getItem(position);
             final CharSequence label = launchableActivity.getActivityLabel();
             final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
