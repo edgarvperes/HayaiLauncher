@@ -234,10 +234,18 @@ public class SearchActivity extends Activity {
     protected void onPostResume() {
         super.onPostResume();
         if(sharedPreferences.getBoolean("package_changed",false)){
-            sharedPreferences.edit().putBoolean("package_changed",false).apply();
+            SharedPreferences.Editor editor=sharedPreferences.edit();
+            editor.putBoolean("package_changed",false).apply();
+            String[] packageChangedNames=sharedPreferences.getString("package_changed_name", "")
+                    .split(" ");
+            //TODO do something with the package names instead of refreshing the entire app list
             refreshAppList();
+
+            editor.putString("package_changed_name","");
+
         }
     }
+
 
     @Override
     protected void onDestroy() {
@@ -433,7 +441,7 @@ public class SearchActivity extends Activity {
             final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
 
-                imageView.setTag(launchableActivity.getClassName());
+                imageView.setTag(launchableActivity.getComponent());
 
                 if (!launchableActivity.isIconLoaded()) {
                     imageView.setImageDrawable(defaultAppIcon);
@@ -442,7 +450,8 @@ public class SearchActivity extends Activity {
                                     imageTasksSharedData));
 
                 } else {
-                    imageView.setImageDrawable(launchableActivity.getActivityIcon(pm, context, iconSizePixels));
+                    imageView.setImageDrawable(
+                            launchableActivity.getActivityIcon(pm, context, iconSizePixels));
                 }
             } else {
                 imageView.setImageDrawable(defaultAppIcon);

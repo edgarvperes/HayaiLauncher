@@ -10,6 +10,9 @@ import android.util.Log;
 
 import com.seizonsenryaku.hayailauncher.activities.SearchActivity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Created by Edgar on 08-Aug-15.
  */
@@ -24,7 +27,14 @@ public class PackageChangedReceiverService extends BroadcastReceiver {
                 final SharedPreferences sharedPreferences = context.getSharedPreferences(
                         context.getPackageName() + "_preferences",
                         Context.MODE_PRIVATE);
-                sharedPreferences.edit().putBoolean("package_changed", true).apply();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("package_changed", true);
+                String packageChangedNames=
+                        (sharedPreferences.getString("package_changed_names",
+                                "")+" "+packageChangedName).trim();
+
+                editor.putString("package_changed_name", packageChangedNames);
+                editor.apply();
             }
         }
 
