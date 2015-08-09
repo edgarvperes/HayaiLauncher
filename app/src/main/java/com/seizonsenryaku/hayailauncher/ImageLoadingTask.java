@@ -14,17 +14,18 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
     private final LaunchableActivity launchableActivity;
     private final SharedData sharedData;
 
-    public static class SharedData{
+    public static class SharedData {
         private final Activity activity;
         private final PackageManager packageManager;
         private final Context context;
-        private final float iconSizePixels;
+        private final int iconSizePixels;
+
         public SharedData(final Activity activity, final PackageManager packageManager,
-                          final Context context,final float iconSizePixels) {
+                          final Context context, final int iconSizePixels) {
             this.activity = activity;
             this.packageManager = packageManager;
             this.context = context;
-            this.iconSizePixels=iconSizePixels;
+            this.iconSizePixels = iconSizePixels;
         }
     }
 
@@ -32,7 +33,7 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
                             final SharedData sharedData) {
         this.imageView = imageView;
         this.launchableActivity = launchableActivity;
-        this.sharedData=sharedData;
+        this.sharedData = sharedData;
     }
 
 

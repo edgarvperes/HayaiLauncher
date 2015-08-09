@@ -68,7 +68,7 @@ public class SearchActivity extends Activity {
     private Drawable defaultAppIcon;
     private SimpleTaskConsumerManager imageLoadingConsumersManager;
     private ImageLoadingTask.SharedData imageTasksSharedData;
-    private float iconSizePixels;
+    private int iconSizePixels;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -130,7 +130,8 @@ public class SearchActivity extends Activity {
         context = getApplicationContext();
 
         final Resources resources = getResources();
-        iconSizePixels = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, resources.getDisplayMetrics());
+        iconSizePixels = (int)(48f * resources.getDisplayMetrics().density + 0.5f);
+
         StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
 
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);

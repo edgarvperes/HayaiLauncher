@@ -60,7 +60,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     }
 
     public synchronized Drawable getActivityIcon(final PackageManager pm, final Context context,
-                                                 final float iconSizePixels) {
+                                                 final int iconSizePixels) {
         if (!isIconLoaded()) {
             Drawable _activityIcon = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
@@ -90,7 +90,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                         _activityIcon.getIntrinsicWidth() > iconSizePixels) {
                     _activityIcon = new BitmapDrawable(
                             Bitmap.createScaledBitmap(((BitmapDrawable) _activityIcon).getBitmap()
-                                    , (int) iconSizePixels, (int) iconSizePixels, false));
+                                    , iconSizePixels, iconSizePixels, false));
                 }
             }
             activityIcon = _activityIcon;
@@ -106,13 +106,12 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         //Criteria 3 (Bits 17 to 31) indicates string difference (can be at most Character.MAX_VALUE)
 
         //
-        int anotherN = (another.favorite ? 0x40000000
-                : 0) + (another.numberOfLaunches << 16);
         final int thisN = (this.favorite ? 0x40000000
                 : 0) + (this.numberOfLaunches << 16);
 
-
-        anotherN += this.activityLabel.compareTo(another.activityLabel);
+        final int anotherN = (another.favorite ? 0x40000000
+                : 0) + (another.numberOfLaunches << 16) +
+                activityLabel.compareTo(another.activityLabel);
 
         return anotherN - thisN;
     }
