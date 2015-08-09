@@ -17,8 +17,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -57,8 +55,6 @@ import java.util.List;
 
 public class SearchActivity extends Activity {
 
-    // private static final int ACTIVITY_LIST_RESULT = 1;
-
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
@@ -69,32 +65,56 @@ public class SearchActivity extends Activity {
     private SimpleTaskConsumerManager imageLoadingConsumersManager;
     private ImageLoadingTask.SharedData imageTasksSharedData;
     private int iconSizePixels;
+    private EditText searchEditText;
+    private AdapterView appListView;
+    private View overflowButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        sharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         setContentView(R.layout.activity_search);
 
-        launchableActivityPrefs = new LaunchableActivityPrefs(this);
-        final EditText editText = (EditText) findViewById(R.id.editText1);
-        editText.requestFocus();
-        editText.addTextChangedListener(textWatcher);
-
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         final PackageManager pm = getPackageManager();
+        final Resources resources = getResources();
 
+        //fields:
+        searchEditText = (EditText) findViewById(R.id.editText1);
+        appListView = (AdapterView<ArrayAdapter<LaunchableActivity>>)
+                findViewById(R.id.appsContainer);
+        overflowButton = findViewById(R.id.overflow_button);
+
+        context = getApplicationContext();
+        sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(this);
+        launchableActivityPrefs = new LaunchableActivityPrefs(this);
+
+        defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
+        iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
+                * resources.getDisplayMetrics().density + 0.5f);
+
+        setupPreferences();
         loadLaunchableApps(pm);
-
-        AdapterView appListView = (AdapterView) findViewById(R.id.appsContainer);
-        registerForContextMenu(appListView);
+        setupImageLoadingThreads(pm, resources);
 
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
+        setupViews();
+
+        //change status bar color. only needed on kitkat atm.
+        StatusBarColorHelper.setStatusBarColor(resources,
+                this, resources.getColor(R.color.indigo_700));
+
+        //display soft keyboard
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
+
+    private void setupViews() {
+        searchEditText.requestFocus();
+        searchEditText.addTextChangedListener(textWatcher);
+
+        registerForContextMenu(appListView);
 
         ((GridView) appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
@@ -105,7 +125,8 @@ public class SearchActivity extends Activity {
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
 
             }
         });
@@ -120,28 +141,24 @@ public class SearchActivity extends Activity {
             }
 
         });
+    }
 
+    private void setupPreferences() {
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         if (sharedPreferences.getBoolean(
                 SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
             MyNotificationManager myNotificationManager = new MyNotificationManager();
             myNotificationManager.showNotification(this);
         }
+    }
 
-        context = getApplicationContext();
-
-        final Resources resources = getResources();
-        iconSizePixels = (int)(48f * resources.getDisplayMetrics().density + 0.5f);
-
-        StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
-
-        defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
-
+    private void setupImageLoadingThreads(final PackageManager pm, Resources resources) {
         int numThreads = Runtime.getRuntime().availableProcessors() - 1;
+        final int maxThreads = resources.getInteger(R.integer.max_imageloading_threads);
         if (numThreads < 1) numThreads = 1;
-        else if (numThreads > 7) numThreads = 7;
+        else if (numThreads > maxThreads) numThreads = maxThreads;
         imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
-        imageTasksSharedData=new ImageLoadingTask.SharedData(this,pm,context,iconSizePixels);
-
+        imageTasksSharedData = new ImageLoadingTask.SharedData(this, pm, context, iconSizePixels);
     }
 
     private void loadLaunchableApps(final PackageManager pm) {
@@ -187,7 +204,8 @@ public class SearchActivity extends Activity {
                 }
                 if (Character.isSpaceChar(character)) {
                     if (skippedFirstWord) {
-                        trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
+                        trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(),
+                                launchableActivity);
                         if (wordSinceLastCapitalBuilder.length() > 1 &&
                                 wordSinceLastCapitalBuilder.length() !=
                                         wordSinceLastSpaceBuilder.length()) {
@@ -225,7 +243,7 @@ public class SearchActivity extends Activity {
     }
 
     private void hideKeyboard() {
-        final EditText searchEditText = (EditText) findViewById(R.id.editText1);
+
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).
                 hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
     }
@@ -233,15 +251,15 @@ public class SearchActivity extends Activity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if(sharedPreferences.getBoolean("package_changed",false)){
-            SharedPreferences.Editor editor=sharedPreferences.edit();
-            editor.putBoolean("package_changed",false).apply();
-            String[] packageChangedNames=sharedPreferences.getString("package_changed_name", "")
+        if (sharedPreferences.getBoolean("package_changed", false)) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("package_changed", false).apply();
+            String[] packageChangedNames = sharedPreferences.getString("package_changed_name", "")
                     .split(" ");
             //TODO do something with the package names instead of refreshing the entire app list
             refreshAppList();
 
-            editor.putString("package_changed_name","");
+            editor.putString("package_changed_name", "");
 
         }
     }
@@ -249,7 +267,7 @@ public class SearchActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        if(imageLoadingConsumersManager!=null)
+        if (imageLoadingConsumersManager != null)
             imageLoadingConsumersManager.destroyAllConsumers(false);
         super.onDestroy();
     }
@@ -276,7 +294,7 @@ public class SearchActivity extends Activity {
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if (!showPopup(findViewById(R.id.overflow_button))) {
+            if (!showPopup(overflowButton)) {
                 openOptionsMenu();
             }
             return true;
@@ -374,11 +392,12 @@ public class SearchActivity extends Activity {
     }
 
     public void onClickSettingsButton(View view) {
-        if (!showPopup(findViewById(R.id.overflow_button))) {
+        if (!showPopup(overflowButton)) {
             openOptionsMenu();
         }
 
     }
+
     public void launchActivity(LaunchableActivity launchableActivity) {
 
         ComponentName componentName = launchableActivity.getComponent();
@@ -397,7 +416,6 @@ public class SearchActivity extends Activity {
         launchableActivityPrefs.writePreference(componentName.getClassName(),
                 launchableActivity.getNumberOfLaunches(),
                 launchableActivity.isFavorite());
-        final EditText searchEditText = (EditText) findViewById(R.id.editText1);
 
         searchEditText.clearFocus();
         hideKeyboard();
