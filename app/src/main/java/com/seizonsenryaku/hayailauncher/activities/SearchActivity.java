@@ -147,7 +147,7 @@ public class SearchActivity extends Activity {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         if (sharedPreferences.getBoolean(
                 SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
-            MyNotificationManager myNotificationManager = new MyNotificationManager();
+            final MyNotificationManager myNotificationManager = new MyNotificationManager();
             myNotificationManager.showNotification(this);
         }
     }
@@ -252,7 +252,7 @@ public class SearchActivity extends Activity {
     protected void onPostResume() {
         super.onPostResume();
         if (sharedPreferences.getBoolean("package_changed", false)) {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
+            final SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("package_changed", false).apply();
             String[] packageChangedNames = sharedPreferences.getString("package_changed_name", "")
                     .split(" ");
@@ -274,9 +274,9 @@ public class SearchActivity extends Activity {
 
     public boolean showPopup(View v) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            PopupMenu popup = new PopupMenu(this, v);
+            final PopupMenu popup = new PopupMenu(this, v);
             popup.setOnMenuItemClickListener(new PopupEventListener());
-            MenuInflater inflater = popup.getMenuInflater();
+            final MenuInflater inflater = popup.getMenuInflater();
             inflater.inflate(R.menu.search_activity_menu, popup.getMenu());
             popup.show();
             return true;
@@ -323,14 +323,14 @@ public class SearchActivity extends Activity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
+                final Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.action_refresh_app_list:
                 refreshAppList();
                 return true;
             case R.id.action_about:
-                Intent intent_about = new Intent(this, AboutActivity.class);
+                final Intent intent_about = new Intent(this, AboutActivity.class);
                 startActivity(intent_about);
                 return true;
             default:
@@ -341,10 +341,10 @@ public class SearchActivity extends Activity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
+        final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
                 .getMenuInfo();
-        View rowView = info.targetView;
-        LaunchableActivity launchableActivity = trie.get(((TextView) rowView
+        final View rowView = info.targetView;
+        final LaunchableActivity launchableActivity = trie.get(((TextView) rowView
                 .findViewById(R.id.appLabel)).getText().toString()
                 .toLowerCase());
         switch (item.getItemId()) {
@@ -354,11 +354,11 @@ public class SearchActivity extends Activity {
 
             case R.id.appmenu_favorite:
 
-                int prevIndex = Collections.binarySearch(activityInfos,
+                final int prevIndex = Collections.binarySearch(activityInfos,
                         launchableActivity);
                 activityInfos.remove(prevIndex);
                 launchableActivity.setFavorite(!launchableActivity.isFavorite());
-                int newIndex = -(Collections.binarySearch(activityInfos,
+                final int newIndex = -(Collections.binarySearch(activityInfos,
                         launchableActivity) + 1);
                 activityInfos.add(newIndex, launchableActivity);
                 launchableActivityPrefs.writePreference(launchableActivity.getClassName(),
@@ -367,7 +367,7 @@ public class SearchActivity extends Activity {
                 arrayAdapter.notifyDataSetChanged();
                 break;
             case R.id.appmenu_info:
-                Intent intent = new Intent(
+                final Intent intent = new Intent(
                         android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 intent.setData(Uri.parse("package:"
                         + launchableActivity.getComponent().getPackageName()));
@@ -398,19 +398,19 @@ public class SearchActivity extends Activity {
 
     }
 
-    public void launchActivity(LaunchableActivity launchableActivity) {
+    public void launchActivity(final LaunchableActivity launchableActivity) {
 
-        ComponentName componentName = launchableActivity.getComponent();
-        Intent launchIntent = new Intent(Intent.ACTION_MAIN);
+        final ComponentName componentName = launchableActivity.getComponent();
+        final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
         launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchIntent.setComponent(componentName);
 
-        int prevIndex = Collections.binarySearch(activityInfos,
+        final int prevIndex = Collections.binarySearch(activityInfos,
                 launchableActivity);
         activityInfos.remove(prevIndex);
         launchableActivity.incrementLaunches();
-        int newIndex = -(Collections.binarySearch(activityInfos,
+        final int newIndex = -(Collections.binarySearch(activityInfos,
                 launchableActivity) + 1);
         activityInfos.add(newIndex, launchableActivity);
         launchableActivityPrefs.writePreference(componentName.getClassName(),
@@ -432,11 +432,11 @@ public class SearchActivity extends Activity {
     }
 
     class ActivityInfoArrayAdapter extends ArrayAdapter<LaunchableActivity> {
-        LayoutInflater inflater;
-        PackageManager pm;
+        final LayoutInflater inflater;
+        final PackageManager pm;
 
-        public ActivityInfoArrayAdapter(Context context, int resource,
-                                        List<LaunchableActivity> activityInfos) {
+        public ActivityInfoArrayAdapter(final Context context, final int resource,
+                                        final List<LaunchableActivity> activityInfos) {
             super(context, resource, activityInfos);
             inflater = getLayoutInflater();
             pm = getPackageManager();
@@ -450,38 +450,38 @@ public class SearchActivity extends Activity {
                             convertView : inflater.inflate(R.layout.app_grid_item, null);
             final LaunchableActivity launchableActivity = getItem(position);
             final CharSequence label = launchableActivity.getActivityLabel();
+            final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
+            final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
+            final View appFavoriteView = view.findViewById(R.id.appFavorite);
+
+            appLabelView.setText(label);
 
 
-            ((TextView) view
-                    .findViewById(R.id.appLabel))
-                    .setText(label);
-
-            final ImageView imageView = (ImageView) view.findViewById(R.id.appIcon);
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
 
-                imageView.setTag(launchableActivity.getComponent());
+                appIconView.setTag(launchableActivity.getComponent());
 
                 if (!launchableActivity.isIconLoaded()) {
-                    imageView.setImageDrawable(defaultAppIcon);
+                    appIconView.setImageDrawable(defaultAppIcon);
                     imageLoadingConsumersManager.addTask(
-                            new ImageLoadingTask(imageView, launchableActivity,
+                            new ImageLoadingTask(appIconView, launchableActivity,
                                     imageTasksSharedData));
 
                 } else {
-                    imageView.setImageDrawable(
+                    appIconView.setImageDrawable(
                             launchableActivity.getActivityIcon(pm, context, iconSizePixels));
                 }
             } else {
-                imageView.setImageDrawable(defaultAppIcon);
+                appIconView.setImageDrawable(defaultAppIcon);
             }
-            view.findViewById(R.id.appFavorite)
-                    .setVisibility(launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
+            appFavoriteView.setVisibility(
+                    launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
             return view;
         }
 
     }
 
-    TextWatcher textWatcher = new TextWatcher() {
+    final TextWatcher textWatcher = new TextWatcher() {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
