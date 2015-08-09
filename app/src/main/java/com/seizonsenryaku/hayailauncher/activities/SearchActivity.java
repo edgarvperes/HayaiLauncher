@@ -81,9 +81,8 @@ public class SearchActivity extends Activity {
 
         //fields:
         searchEditText = (EditText) findViewById(R.id.editText1);
-        //noinspection unchecked
-        appListView = (AdapterView<ArrayAdapter<LaunchableActivity>>)
-                findViewById(R.id.appsContainer);
+
+        appListView = (AdapterView) findViewById(R.id.appsContainer);
         overflowButton = findViewById(R.id.overflow_button);
 
         context = getApplicationContext();
@@ -453,7 +452,7 @@ public class SearchActivity extends Activity {
 
             final View view =
                     convertView != null ?
-                            convertView : inflater.inflate(R.layout.app_grid_item, parent);
+                            convertView : inflater.inflate(R.layout.app_grid_item, parent, false);
             final LaunchableActivity launchableActivity = getItem(position);
             final CharSequence label = launchableActivity.getActivityLabel();
             final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
