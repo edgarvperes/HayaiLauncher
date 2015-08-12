@@ -29,11 +29,11 @@ public class PackageChangedReceiverService extends BroadcastReceiver {
                         Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("package_changed", true);
-                String packageChangedNames=
-                        (sharedPreferences.getString("package_changed_names",
-                                "")+" "+packageChangedName).trim();
-
-                editor.putString("package_changed_name", packageChangedNames);
+                String packageChangedNames=sharedPreferences.getString("package_changed_names","");
+                if(!packageChangedNames.contains(packageChangedName)) {
+                    packageChangedNames += " " + packageChangedName;
+                    editor.putString("package_changed_name", packageChangedNames.trim());
+                }
                 editor.apply();
             }
         }
