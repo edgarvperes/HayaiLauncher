@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -40,6 +41,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.seizonsenryaku.hayailauncher.ImageLoadingTask;
 import com.seizonsenryaku.hayailauncher.LaunchableActivity;
@@ -72,8 +74,12 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     private int iconSizePixels;
     private EditText searchEditText;
     private AdapterView appListView;
-    private View overflowButton;
     private PackageManager pm;
+    private View overflowButtonTopleft;
+
+    //used only in function GetSubwords. they are here as class fields to avoid object recreation.
+    private StringBuilder wordSinceLastSpaceBuilder;
+    private StringBuilder wordSinceLastCapitalBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +93,12 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         //fields:
         launchableActivityPackageNameHashMap = new HashMap<>();
         trie = new Trie<>();
+        wordSinceLastSpaceBuilder = new StringBuilder(64);
+        wordSinceLastCapitalBuilder = new StringBuilder(64);
 
         searchEditText = (EditText) findViewById(R.id.editText1);
         appListView = (AdapterView) findViewById(R.id.appsContainer);
-        overflowButton = findViewById(R.id.overflow_button);
-
+        overflowButtonTopleft=findViewById(R.id.overflow_button_topleft);
 
         context = getApplicationContext();
         sharedPreferences = PreferenceManager
@@ -171,11 +178,8 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         imageTasksSharedData = new ImageLoadingTask.SharedData(this, pm, context, iconSizePixels);
     }
 
-    private void updateApps(List<ResolveInfo> infoList) {
-        final StringBuilder wordSinceLastSpaceBuilder = new StringBuilder(64);
-        final StringBuilder wordSinceLastCapitalBuilder = new StringBuilder(64);
-
-        ArrayList<LaunchableActivity> updatedActivityInfos = new ArrayList<>();
+    private void updateApps(final List<ResolveInfo> infoList) {
+        final ArrayList<LaunchableActivity> updatedActivityInfos = new ArrayList<>();
         for (ResolveInfo info : infoList) {
             final String className = info.activityInfo.name;
             //don't show this activity in the launcher
@@ -190,57 +194,14 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
             final String activityLabelLower = activityLabel.toLowerCase();
             trie.put(activityLabelLower, launchableActivity);
             updatedActivityInfos.add(launchableActivity);
-            boolean skippedFirstWord = false;
-            boolean previousCharWasUppercaseOrDigit = false;
-            for (int i = 0; i < activityLabel.length(); i++) {
-                final char character = activityLabel.charAt(i);
 
-                if (Character.isUpperCase(character) || Character.isDigit(character)) {
-                    if (wordSinceLastCapitalBuilder.length() > 1
-                            && !activityLabel.startsWith(wordSinceLastCapitalBuilder.toString())) {
-                        trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
-                                launchableActivity);
-                        if (!previousCharWasUppercaseOrDigit)
-                            wordSinceLastCapitalBuilder.setLength(0);
-                    }
-                    previousCharWasUppercaseOrDigit = true;
-                } else {
-                    previousCharWasUppercaseOrDigit = false;
-                }
-                if (Character.isSpaceChar(character)) {
-                    if (skippedFirstWord) {
-                        trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(),
-                                launchableActivity);
-                        if (wordSinceLastCapitalBuilder.length() > 1 &&
-                                wordSinceLastCapitalBuilder.length() !=
-                                        wordSinceLastSpaceBuilder.length()) {
-                            trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(),
-                                    launchableActivity);
-                        }
-                    } else {
-                        skippedFirstWord = true;
-                    }
-
-                    wordSinceLastCapitalBuilder.setLength(0);
-                    wordSinceLastSpaceBuilder.setLength(0);
-                } else {
-                    wordSinceLastCapitalBuilder.append(character);
-                    wordSinceLastSpaceBuilder.append(character);
-                }
+            final List<String> subwords = getAllSubwords(activityLabel);
+            for (String subword : subwords) {
+                trie.put(subword, launchableActivity);
             }
-            if (skippedFirstWord && wordSinceLastSpaceBuilder.length() > 0
-                    && activityLabel.length() > wordSinceLastSpaceBuilder.length()) {
-                trie.put(wordSinceLastSpaceBuilder.toString().toLowerCase(), launchableActivity);
-            }
-            if (wordSinceLastCapitalBuilder.length() > 1
-                    && wordSinceLastCapitalBuilder.length() != wordSinceLastSpaceBuilder.length()) {
-                trie.put(wordSinceLastCapitalBuilder.toString().toLowerCase(), launchableActivity);
-            }
-            wordSinceLastSpaceBuilder.setLength(0);
-            wordSinceLastCapitalBuilder.setLength(0);
         }
 
-        for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
+    for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
             final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
 
             List<LaunchableActivity> launchableActivitiesToUpdate =
@@ -250,25 +211,89 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
             } else {
                 launchableActivitiesToUpdate = new LinkedList<>();
             }
+
             launchableActivitiesToUpdate.add(updatedLaunchableActivity);
             launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
         }
         Log.d("SearchActivity", "updated activities: " + updatedActivityInfos.size());
         launchableActivityPrefs.setAllPreferences(updatedActivityInfos);
-        activityInfos.addAll(updatedActivityInfos);
-
-        Collections.sort(activityInfos);
-        arrayAdapter.notifyDataSetChanged();
+        updateVisibleApps();
 
     }
 
+
+    private List<String> getAllSubwords(String line){
+        boolean skippedFirstWord = false;
+        boolean previousCharWasUppercaseOrDigit = false;
+        final ArrayList<String> subwords=new ArrayList<>();
+
+        for (int i = 0; i < line.length(); i++) {
+            final char character = line.charAt(i);
+
+            if (Character.isUpperCase(character) || Character.isDigit(character)) {
+                if (wordSinceLastCapitalBuilder.length() > 1
+                        && !line.startsWith(wordSinceLastCapitalBuilder.toString())) {
+                    subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
+                    if (!previousCharWasUppercaseOrDigit)
+                        wordSinceLastCapitalBuilder.setLength(0);
+                }
+                previousCharWasUppercaseOrDigit = true;
+            } else {
+                previousCharWasUppercaseOrDigit = false;
+            }
+            if (Character.isSpaceChar(character)) {
+                if (skippedFirstWord) {
+                    subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
+                    if (wordSinceLastCapitalBuilder.length() > 1 &&
+                            wordSinceLastCapitalBuilder.length() !=
+                                    wordSinceLastSpaceBuilder.length()) {
+                        subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
+                    }
+                } else {
+                    skippedFirstWord = true;
+                }
+
+                wordSinceLastCapitalBuilder.setLength(0);
+                wordSinceLastSpaceBuilder.setLength(0);
+            } else {
+                wordSinceLastCapitalBuilder.append(character);
+                wordSinceLastSpaceBuilder.append(character);
+            }
+        }
+        if (skippedFirstWord && wordSinceLastSpaceBuilder.length() > 0
+                && line.length() > wordSinceLastSpaceBuilder.length()) {
+            subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
+        }
+        if (wordSinceLastCapitalBuilder.length() > 1
+                && wordSinceLastCapitalBuilder.length() != wordSinceLastSpaceBuilder.length()) {
+            subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
+        }
+        wordSinceLastSpaceBuilder.setLength(0);
+        wordSinceLastCapitalBuilder.setLength(0);
+        return subwords;
+    }
+
+    private void updateVisibleApps() {
+        final HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(searchEditText.getText()
+                .toString().toLowerCase().trim());
+        activityInfos.clear();
+        activityInfos.addAll(infoList);
+        Collections.sort(activityInfos);
+        arrayAdapter.notifyDataSetChanged();
+    }
+
     private void removeActivitiesFromPackage(String packageName) {
-        List<LaunchableActivity> launchableActivitiesToRemove =
+        final List<LaunchableActivity> launchableActivitiesToRemove =
                 launchableActivityPackageNameHashMap.get(packageName);
         for (LaunchableActivity launchableActivityToRemove : launchableActivitiesToRemove) {
             final String className=launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
-            trie.remove(launchableActivityToRemove.getActivityLabel(), launchableActivityToRemove);
+            String activityLabel=launchableActivityToRemove.getActivityLabel().toString();
+            trie.remove(activityLabel.toLowerCase(),launchableActivityToRemove);
+            final List<String> subwords = getAllSubwords(activityLabel);
+            for(String subword:subwords){
+                trie.remove(subword, launchableActivityToRemove);
+            }
             activityInfos.remove(launchableActivityToRemove);
             launchableActivityPrefs.deletePreference(className);
         }
@@ -277,8 +302,6 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     }
 
     private void loadLaunchableApps() {
-
-
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -304,6 +327,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
                 .split(" ");
         editor.putString("package_changed_name", "");
         editor.apply();
+
         for (String packageName : packageChangedNames) {
             packageName = packageName.trim();
             if (packageName.isEmpty()) continue;
@@ -369,7 +393,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if (!showPopup(overflowButton)) {
+            if (!showPopup(overflowButtonTopleft)) {
                 openOptionsMenu();
             }
             return true;
@@ -403,6 +427,9 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
                 return true;
             case R.id.action_refresh_app_list:
                 recreate();
+                return true;
+            case R.id.action_system_settings:
+                startActivity(new Intent(Settings.ACTION_SETTINGS));
                 return true;
             case R.id.action_about:
                 final Intent intent_about = new Intent(this, AboutActivity.class);
@@ -466,7 +493,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     }
 
     public void onClickSettingsButton(View view) {
-        if (!showPopup(overflowButton)) {
+        if (!showPopup(overflowButtonTopleft)) {
             openOptionsMenu();
         }
 
@@ -480,28 +507,29 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchIntent.setComponent(componentName);
 
-        final int prevIndex = Collections.binarySearch(activityInfos,
-                launchableActivity);
-        activityInfos.remove(prevIndex);
-        launchableActivity.incrementLaunches();
-        final int newIndex = -(Collections.binarySearch(activityInfos,
-                launchableActivity) + 1);
-        activityInfos.add(newIndex, launchableActivity);
-        launchableActivityPrefs.writePreference(componentName.getClassName(),
-                launchableActivity.getNumberOfLaunches(),
-                launchableActivity.isFavorite());
 
         searchEditText.clearFocus();
         hideKeyboard();
 
+
         try {
             startActivity(launchIntent);
+            final int prevIndex = Collections.binarySearch(activityInfos,
+                    launchableActivity);
+            activityInfos.remove(prevIndex);
+            launchableActivity.incrementLaunches();
+            final int newIndex = -(Collections.binarySearch(activityInfos,
+                    launchableActivity) + 1);
+            activityInfos.add(newIndex, launchableActivity);
+            launchableActivityPrefs.writePreference(componentName.getClassName(),
+                    launchableActivity.getNumberOfLaunches(),
+                    launchableActivity.isFavorite());
             arrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {
             //this should only happen when the launcher still hasn't updated the file list after
             //an activity removal.
-            //recreate this activity just to be safe.
-            recreate();
+            Toast.makeText(context, getString(R.string.activity_not_found),
+                    Toast.LENGTH_SHORT).show();
         }
 
 
@@ -562,12 +590,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                                   int count) {
-            HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(s
-                    .toString().toLowerCase().trim());
-            activityInfos.clear();
-            activityInfos.addAll(infoList);
-            Collections.sort(activityInfos);
-            arrayAdapter.notifyDataSetChanged();
+            updateVisibleApps();
         }
 
 

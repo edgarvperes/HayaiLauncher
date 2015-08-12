@@ -31,7 +31,10 @@
 
             <requestFocus />
         </EditText>
-
+        <View
+            android:id="@+id/overflow_button_topleft"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
         <ImageButton
             android:layout_width="48dp"
             android:layout_height="48dp"
