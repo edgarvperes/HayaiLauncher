@@ -273,6 +273,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
             activityInfos.remove(launchableActivityToRemove);
         }
         launchableActivityPackageNameHashMap.remove(packageName);
+        arrayAdapter.notifyDataSetChanged();
     }
 
     private void loadLaunchableApps() {
