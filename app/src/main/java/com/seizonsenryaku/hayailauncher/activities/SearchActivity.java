@@ -301,7 +301,6 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
     private void handlePackageChanged() {
         final SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("package_changed", false);
         final String[] packageChangedNames = sharedPreferences.getString("package_changed_name", "")
                 .split(" ");
         editor.putString("package_changed_name", "");

@@ -27,8 +27,7 @@ public class PackageChangedReceiverService extends BroadcastReceiver {
                 final SharedPreferences sharedPreferences = context.getSharedPreferences(
                         context.getPackageName() + "_preferences",
                         Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("package_changed", true);
+                final SharedPreferences.Editor editor = sharedPreferences.edit();
                 String packageChangedNames=sharedPreferences.getString("package_changed_names","");
                 if(!packageChangedNames.contains(packageChangedName)) {
                     packageChangedNames += " " + packageChangedName;
