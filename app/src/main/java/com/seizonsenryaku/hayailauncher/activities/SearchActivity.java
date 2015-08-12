@@ -59,7 +59,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SearchActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SearchActivity extends Activity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
@@ -77,7 +78,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     private PackageManager pm;
     private View overflowButtonTopleft;
 
-    //used only in function GetSubwords. they are here as class fields to avoid object recreation.
+    //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
 
@@ -98,7 +99,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
         searchEditText = (EditText) findViewById(R.id.editText1);
         appListView = (AdapterView) findViewById(R.id.appsContainer);
-        overflowButtonTopleft=findViewById(R.id.overflow_button_topleft);
+        overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
 
         context = getApplicationContext();
         sharedPreferences = PreferenceManager
@@ -115,7 +116,6 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
         loadLaunchableApps();
         setupImageLoadingThreads(resources);
-
 
         setupViews();
 
@@ -162,8 +162,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
     private void setupPreferences() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        if (sharedPreferences.getBoolean(
-                SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
+        if (sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
             final MyNotificationManager myNotificationManager = new MyNotificationManager();
             myNotificationManager.showNotification(this);
         }
@@ -201,7 +200,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
             }
         }
 
-    for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
+        for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
             final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
 
             List<LaunchableActivity> launchableActivitiesToUpdate =
@@ -222,10 +221,10 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     }
 
 
-    private List<String> getAllSubwords(String line){
+    private List<String> getAllSubwords(String line) {
         boolean skippedFirstWord = false;
         boolean previousCharWasUppercaseOrDigit = false;
-        final ArrayList<String> subwords=new ArrayList<>();
+        final ArrayList<String> subwords = new ArrayList<>();
 
         for (int i = 0; i < line.length(); i++) {
             final char character = line.charAt(i);
@@ -286,12 +285,12 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         final List<LaunchableActivity> launchableActivitiesToRemove =
                 launchableActivityPackageNameHashMap.get(packageName);
         for (LaunchableActivity launchableActivityToRemove : launchableActivitiesToRemove) {
-            final String className=launchableActivityToRemove.getClassName();
+            final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
-            String activityLabel=launchableActivityToRemove.getActivityLabel().toString();
-            trie.remove(activityLabel.toLowerCase(),launchableActivityToRemove);
+            String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
+            trie.remove(activityLabel.toLowerCase(), launchableActivityToRemove);
             final List<String> subwords = getAllSubwords(activityLabel);
-            for(String subword:subwords){
+            for (String subword : subwords) {
                 trie.remove(subword, launchableActivityToRemove);
             }
             activityInfos.remove(launchableActivityToRemove);
@@ -403,7 +402,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
+        final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_activity_menu, menu);
         return true;
 
@@ -413,7 +412,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
+        final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app, menu);
     }
 
@@ -486,7 +485,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             super.recreate();
         } else {
-            Intent intentRefresh = new Intent(this, SearchActivity.class);
+            final Intent intentRefresh = new Intent(this, SearchActivity.class);
             finish();
             startActivity(intentRefresh);
         }
@@ -595,12 +594,14 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {//do nothing
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            //do nothing
         }
 
 
         @Override
-        public void afterTextChanged(Editable s) {//do nothing
+        public void afterTextChanged(Editable s) {
+            //do nothing
         }
 
 

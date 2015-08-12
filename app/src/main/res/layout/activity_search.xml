@@ -41,7 +41,7 @@
             android:id="@+id/overflow_button"
             android:src="@drawable/ic_more_vert_white_24dp"
             android:background="@android:color/transparent"
-            android:onClick="onClickSettingsButton" 
+            android:onClick="onClickSettingsButton"
             android:contentDescription="@string/application_icon_content_description"/>
 
 
