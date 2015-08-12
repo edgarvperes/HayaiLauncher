@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -420,17 +419,14 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
                 .getMenuInfo();
         final View rowView = info.targetView;
-        //TODO try remove trie search from here? (get it from view tag?)
-        final LaunchableActivity launchableActivity = trie.get(((TextView) rowView
-                .findViewById(R.id.appLabel)).getText().toString()
-                .toLowerCase());
+        final LaunchableActivity launchableActivity =
+                (LaunchableActivity)rowView.findViewById(R.id.appIcon).getTag();
         switch (item.getItemId()) {
             case R.id.appmenu_launch:
                 launchActivity(launchableActivity);
                 return true;
 
             case R.id.appmenu_favorite:
-
                 final int prevIndex = Collections.binarySearch(activityInfos,
                         launchableActivity);
                 activityInfos.remove(prevIndex);
@@ -443,6 +439,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
                         launchableActivity.isFavorite());
                 arrayAdapter.notifyDataSetChanged();
                 break;
+
             case R.id.appmenu_info:
                 final Intent intent = new Intent(
                         android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -536,7 +533,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
             if (sharedPreferences.getBoolean("pref_show_icon", true)) {
 
-                appIconView.setTag(launchableActivity.getComponent());
+                appIconView.setTag(launchableActivity);
 
                 if (!launchableActivity.isIconLoaded()) {
                     appIconView.setImageDrawable(defaultAppIcon);

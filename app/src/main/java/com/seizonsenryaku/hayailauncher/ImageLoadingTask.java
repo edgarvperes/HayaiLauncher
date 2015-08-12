@@ -45,7 +45,7 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
 
             @Override
             public void run() {
-                if (imageView.getTag() == launchableActivity.getComponent())
+                if (imageView.getTag() == launchableActivity)
                     imageView.setImageDrawable(activityIcon);
             }
         });
