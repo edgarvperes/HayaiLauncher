@@ -329,6 +329,10 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
     }
 
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(false);
+    }
 
     @Override
     protected void onDestroy() {
