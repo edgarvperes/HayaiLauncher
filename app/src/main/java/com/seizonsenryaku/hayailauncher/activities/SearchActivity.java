@@ -62,7 +62,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
-    private HashMap<String,List<LaunchableActivity>> launchableActivityPackageNameHashMap;
+    private HashMap<String, List<LaunchableActivity>> launchableActivityPackageNameHashMap;
     private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
     private Context context;
@@ -85,7 +85,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         final Resources resources = getResources();
 
         //fields:
-        launchableActivityPackageNameHashMap=new HashMap<>();
+        launchableActivityPackageNameHashMap = new HashMap<>();
         trie = new Trie<>();
 
         searchEditText = (EditText) findViewById(R.id.editText1);
@@ -171,13 +171,13 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         imageTasksSharedData = new ImageLoadingTask.SharedData(this, pm, context, iconSizePixels);
     }
 
-    private void updateApps(List<ResolveInfo> infoList){
+    private void updateApps(List<ResolveInfo> infoList) {
         final StringBuilder wordSinceLastSpaceBuilder = new StringBuilder(64);
         final StringBuilder wordSinceLastCapitalBuilder = new StringBuilder(64);
 
         ArrayList<LaunchableActivity> updatedActivityInfos = new ArrayList<>();
         for (ResolveInfo info : infoList) {
-            final String className=info.activityInfo.name;
+            final String className = info.activityInfo.name;
             //don't show this activity in the launcher
             if (className.equals(this.getClass().getCanonicalName())) {
                 continue;
@@ -241,15 +241,15 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         }
 
 
-        for(LaunchableActivity updatedLaunchableActivity:updatedActivityInfos){
-            final String packageName=updatedLaunchableActivity.getComponent().getPackageName();
+        for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
+            final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
 
-            List<LaunchableActivity> launchableActivitiesToUpdate=
+            List<LaunchableActivity> launchableActivitiesToUpdate =
                     launchableActivityPackageNameHashMap.get(packageName);
-            if(launchableActivitiesToUpdate!=null) {
+            if (launchableActivitiesToUpdate != null) {
                 removeActivitiesFromPackage(packageName);
-            }else{
-                launchableActivitiesToUpdate=new LinkedList<>();
+            } else {
+                launchableActivitiesToUpdate = new LinkedList<>();
             }
             launchableActivitiesToUpdate.add(updatedLaunchableActivity);
             launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
@@ -264,19 +264,20 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     }
 
     private void removeActivitiesFromPackage(String packageName) {
-        List<LaunchableActivity> launchableActivitiesToRemove=
+        List<LaunchableActivity> launchableActivitiesToRemove =
                 launchableActivityPackageNameHashMap.get(packageName);
-        for(LaunchableActivity launchableActivityToRemove:launchableActivitiesToRemove) {
-            Log.d("SearchActivity", "removing activity " + launchableActivityToRemove.getClassName());
+        for (LaunchableActivity launchableActivityToRemove : launchableActivitiesToRemove) {
+            final String className=launchableActivityToRemove.getClassName();
+            Log.d("SearchActivity", "removing activity " + className);
             trie.remove(launchableActivityToRemove.getActivityLabel(), launchableActivityToRemove);
             activityInfos.remove(launchableActivityToRemove);
+            launchableActivityPrefs.deletePreference(className);
         }
         launchableActivityPackageNameHashMap.remove(packageName);
         arrayAdapter.notifyDataSetChanged();
     }
 
     private void loadLaunchableApps() {
-
 
 
         final Intent intent = new Intent();
@@ -304,22 +305,22 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
                 .split(" ");
         editor.putString("package_changed_name", "");
         editor.apply();
-        for(String packageName:packageChangedNames){
-            packageName=packageName.trim();
-            if(packageName.isEmpty()) continue;
+        for (String packageName : packageChangedNames) {
+            packageName = packageName.trim();
+            if (packageName.isEmpty()) continue;
 
             final Intent intent = new Intent();
             intent.setAction(Intent.ACTION_MAIN);
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.setPackage(packageName);
-            Log.d("SearchActivity","changed: "+packageName);
+            Log.d("SearchActivity", "changed: " + packageName);
             final List<ResolveInfo> infoList = pm.queryIntentActivities(intent,
                     0);
-            if(infoList.isEmpty()){
+            if (infoList.isEmpty()) {
                 Log.d("SearchActivity", "No activities in list. Uninstall detected!");
                 removeActivitiesFromPackage(packageName);
-            }else{
-                Log.d("SearchActivity","Activities in list. Install/update detected!");
+            } else {
+                Log.d("SearchActivity", "Activities in list. Install/update detected!");
                 updateApps(infoList);
             }
 
@@ -354,7 +355,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals("package_changed_name") && !sharedPreferences.getString(key,"").isEmpty()){
+        if (key.equals("package_changed_name") && !sharedPreferences.getString(key, "").isEmpty()) {
             handlePackageChanged();
         }
     }
@@ -402,7 +403,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
                 startActivity(intent);
                 return true;
             case R.id.action_refresh_app_list:
-                refreshAppList();
+                recreate();
                 return true;
             case R.id.action_about:
                 final Intent intent_about = new Intent(this, AboutActivity.class);
@@ -418,14 +419,13 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
     public boolean onContextItemSelected(MenuItem item) {
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
                 .getMenuInfo();
-        final View rowView = info.targetView;
+        final View itemView = info.targetView;
         final LaunchableActivity launchableActivity =
-                (LaunchableActivity)rowView.findViewById(R.id.appIcon).getTag();
+                (LaunchableActivity) itemView.findViewById(R.id.appIcon).getTag();
         switch (item.getItemId()) {
             case R.id.appmenu_launch:
                 launchActivity(launchableActivity);
                 return true;
-
             case R.id.appmenu_favorite:
                 final int prevIndex = Collections.binarySearch(activityInfos,
                         launchableActivity);
@@ -455,9 +455,10 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         return false;
     }
 
-    private void refreshAppList() {
+    @Override
+    public void recreate() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            recreate();
+            super.recreate();
         } else {
             Intent intentRefresh = new Intent(this, SearchActivity.class);
             finish();
@@ -498,8 +499,10 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
             startActivity(launchIntent);
             arrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {
-            launchableActivityPrefs.deletePreference(componentName.getClassName());
-            refreshAppList();
+            //this should only happen when the launcher still hasn't updated the file list after
+            //an activity removal.
+            //recreate this activity just to be safe.
+            recreate();
         }
 
 
@@ -570,17 +573,15 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
 
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count,
-                                      int after) {
-            // TODO Auto-generated method stub
-
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {//do nothing
         }
+
 
         @Override
-        public void afterTextChanged(Editable s) {
-            // TODO Auto-generated method stub
-
+        public void afterTextChanged(Editable s) {//do nothing
         }
+
+
     };
 
 }
