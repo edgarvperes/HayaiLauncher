@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import java.util.AbstractMap;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -41,12 +42,13 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
     }
 
     public void writePreference(String className, int number, boolean favorite) {
-        SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement countStatement = db.compileStatement(String.format(
+        final SQLiteDatabase db = getWritableDatabase();
+        final SQLiteStatement countStatement = db.compileStatement(String.format(
                 "SELECT COUNT(*) FROM %s WHERE %s = ?", TABLE_NAME,
                 KEY_CLASSNAME));
         countStatement.bindString(1, className);
         final long count = countStatement.simpleQueryForLong();
+        countStatement.close();
         final SQLiteStatement statement;
         if (count <= 0) {
             statement = db.compileStatement("INSERT INTO "
@@ -55,7 +57,6 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             statement.bindString(1, className);
             statement.bindLong(2, number);
             statement.bindLong(3, favorite ? 1L : 0L);
-            statement.executeInsert();
         } else {
             statement = db.compileStatement("UPDATE "
                     + TABLE_NAME + " SET " + KEY_NUMBEROFLAUNCHES + "=? , " + KEY_FAVORITE + "=? WHERE "
@@ -63,16 +64,15 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             statement.bindLong(1, number);
             statement.bindLong(2, favorite ? 1L : 0L);
             statement.bindString(3, className);
-            statement.executeInsert();
-
         }
+        statement.executeInsert();
         statement.close();
         db.close();
     }
 
     public void deletePreference(String className) {
-        SQLiteDatabase db = getWritableDatabase();
-        SQLiteStatement statement = db.compileStatement("DELETE FROM "
+        final SQLiteDatabase db = getWritableDatabase();
+        final SQLiteStatement statement = db.compileStatement("DELETE FROM "
                 + TABLE_NAME + " WHERE " + KEY_CLASSNAME + "=?");
         statement.bindString(1, className);
         statement.executeInsert();
@@ -83,14 +83,13 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 
     public void setAllPreferences(List<LaunchableActivity> activityList) {
 
-        SQLiteDatabase db = getReadableDatabase();
+        final SQLiteDatabase db = getReadableDatabase();
 
-        Cursor cursor = db.query(TABLE_NAME,
+        final Cursor cursor = db.query(TABLE_NAME,
                 new String[]{KEY_CLASSNAME, KEY_NUMBEROFLAUNCHES, KEY_FAVORITE},
                 null, null, null, null, null);
 
-
-        HashMap<String, ActivityPref> activityPrefMap = new HashMap<>(cursor.getCount());
+        final AbstractMap<String, ActivityPref> activityPrefMap = new HashMap<>(cursor.getCount());
 
         if (cursor.moveToFirst()) {
             do {
@@ -106,51 +105,24 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         for (LaunchableActivity activity : activityList) {
             ActivityPref activityPref = activityPrefMap.get(activity.getClassName());
             if (activityPref != null) {
-                activityPref.wasUsed=true;
+                activityPref.wasUsed = true;
                 activity.setNumberOfLaunches(activityPref.numberOfLaunches);
                 activity.setFavorite(activityPref.favorite);
             }
         }
 
-        Collection<ActivityPref> allLoadedPrefs=activityPrefMap.values();
-        for(ActivityPref activityPref:allLoadedPrefs){
-            if(!activityPref.wasUsed){
+        final Collection<ActivityPref> allLoadedPrefs = activityPrefMap.values();
+
+        for (ActivityPref activityPref : allLoadedPrefs) {
+            if (!activityPref.wasUsed) {
                 deletePreference(activityPref.className);
             }
         }
 
     }
 
-
-    public void setPreferences(LaunchableActivity launchableActivity) {
-        long numberOfLaunches;
-        int favorite;
-        SQLiteDatabase db = getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_NAME,
-                new String[]{KEY_NUMBEROFLAUNCHES, KEY_FAVORITE},
-                KEY_CLASSNAME + "=?", new String[]{launchableActivity.getClassName()}, null, null,
-                null);
-
-
-        if (cursor.moveToFirst()) {
-            favorite = cursor.getInt(cursor.getColumnIndex(KEY_FAVORITE));
-            numberOfLaunches = cursor.getInt(cursor.getColumnIndex(KEY_NUMBEROFLAUNCHES));
-
-        } else {
-            numberOfLaunches = favorite = 0;
-        }
-        cursor.close();
-        db.close();
-        launchableActivity.setNumberOfLaunches((int) numberOfLaunches);
-        launchableActivity.setFavorite(favorite == 1);
-
-    }
-
     @Override
-    public void onUpgrade(SQLiteDatabase arg0, int arg1, int arg2) {
-        // TODO Auto-generated method stub
-
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //does nothing
     }
-
 }
