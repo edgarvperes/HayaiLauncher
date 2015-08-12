@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
@@ -51,14 +52,18 @@ import com.seizonsenryaku.hayailauncher.Trie;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 
-public class SearchActivity extends Activity {
+public class SearchActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
+    private HashMap<String,List<LaunchableActivity>> launchableActivityPackageNameHashMap;
     private LaunchableActivityPrefs launchableActivityPrefs;
     private SharedPreferences sharedPreferences;
     private Context context;
@@ -69,6 +74,7 @@ public class SearchActivity extends Activity {
     private EditText searchEditText;
     private AdapterView appListView;
     private View overflowButton;
+    private PackageManager pm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,18 +82,22 @@ public class SearchActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        final PackageManager pm = getPackageManager();
+        pm = getPackageManager();
         final Resources resources = getResources();
 
         //fields:
-        searchEditText = (EditText) findViewById(R.id.editText1);
+        launchableActivityPackageNameHashMap=new HashMap<>();
+        trie = new Trie<>();
 
+        searchEditText = (EditText) findViewById(R.id.editText1);
         appListView = (AdapterView) findViewById(R.id.appsContainer);
         overflowButton = findViewById(R.id.overflow_button);
+
 
         context = getApplicationContext();
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
         launchableActivityPrefs = new LaunchableActivityPrefs(this);
 
         //noinspection deprecation
@@ -96,11 +106,11 @@ public class SearchActivity extends Activity {
                 * resources.getDisplayMetrics().density + 0.5f);
 
         setupPreferences();
-        loadLaunchableApps(pm);
-        setupImageLoadingThreads(pm, resources);
 
-        arrayAdapter = new ActivityInfoArrayAdapter(this,
-                R.layout.app_grid_item, activityInfos);
+        loadLaunchableApps();
+        setupImageLoadingThreads(resources);
+
+
         setupViews();
 
         //change status bar color. only needed on kitkat atm.
@@ -153,39 +163,34 @@ public class SearchActivity extends Activity {
         }
     }
 
-    private void setupImageLoadingThreads(final PackageManager pm, final Resources resources) {
-        int numThreads = Runtime.getRuntime().availableProcessors() - 1;
+    private void setupImageLoadingThreads(final Resources resources) {
         final int maxThreads = resources.getInteger(R.integer.max_imageloading_threads);
+        int numThreads = Runtime.getRuntime().availableProcessors() - 1;
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > maxThreads) numThreads = maxThreads;
         imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
         imageTasksSharedData = new ImageLoadingTask.SharedData(this, pm, context, iconSizePixels);
     }
 
-    private void loadLaunchableApps(final PackageManager pm) {
-
-        final Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
-        trie = new Trie<>();
-
+    private void updateApps(List<ResolveInfo> infoList){
         final StringBuilder wordSinceLastSpaceBuilder = new StringBuilder(64);
         final StringBuilder wordSinceLastCapitalBuilder = new StringBuilder(64);
 
+        ArrayList<LaunchableActivity> updatedActivityInfos = new ArrayList<>();
         for (ResolveInfo info : infoList) {
-            final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, info.activityInfo.loadLabel(pm).toString());
-
+            final String className=info.activityInfo.name;
             //don't show this activity in the launcher
-            if (launchableActivity.getClassName().equals(this.getClass().getCanonicalName())) {
+            if (className.equals(this.getClass().getCanonicalName())) {
                 continue;
             }
+
+            final LaunchableActivity launchableActivity = new LaunchableActivity(
+                    info.activityInfo, info.activityInfo.loadLabel(pm).toString());
 
             final String activityLabel = launchableActivity.getActivityLabel().toString();
             final String activityLabelLower = activityLabel.toLowerCase();
             trie.put(activityLabelLower, launchableActivity);
-
+            updatedActivityInfos.add(launchableActivity);
             boolean skippedFirstWord = false;
             boolean previousCharWasUppercaseOrDigit = false;
             for (int i = 0; i < activityLabel.length(); i++) {
@@ -236,11 +241,52 @@ public class SearchActivity extends Activity {
             wordSinceLastCapitalBuilder.setLength(0);
         }
 
-        activityInfos = new ArrayList<>(infoList.size());
-        activityInfos.addAll(trie.getAllStartingWith(""));
-        launchableActivityPrefs.setAllPreferences(activityInfos);
+
+        for(LaunchableActivity updatedLaunchableActivity:updatedActivityInfos){
+            final String packageName=updatedLaunchableActivity.getComponent().getPackageName();
+
+            List<LaunchableActivity> launchableActivitiesToUpdate=
+                    launchableActivityPackageNameHashMap.get(packageName);
+            if(launchableActivitiesToUpdate!=null) {
+                removeActivitiesFromPackage(packageName);
+            }else{
+                launchableActivitiesToUpdate=new LinkedList<>();
+            }
+            launchableActivitiesToUpdate.add(updatedLaunchableActivity);
+            launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
+        }
+        Log.d("SearchActivity", "updated activities: " + updatedActivityInfos.size());
+        launchableActivityPrefs.setAllPreferences(updatedActivityInfos);
+        activityInfos.addAll(updatedActivityInfos);
 
         Collections.sort(activityInfos);
+        arrayAdapter.notifyDataSetChanged();
+
+    }
+
+    private void removeActivitiesFromPackage(String packageName) {
+        List<LaunchableActivity> launchableActivitiesToRemove=
+                launchableActivityPackageNameHashMap.get(packageName);
+        for(LaunchableActivity launchableActivityToRemove:launchableActivitiesToRemove) {
+            Log.d("SearchActivity", "removing activity " + launchableActivityToRemove.getClassName());
+            trie.remove(launchableActivityToRemove.getActivityLabel(), launchableActivityToRemove);
+            activityInfos.remove(launchableActivityToRemove);
+        }
+        launchableActivityPackageNameHashMap.remove(packageName);
+    }
+
+    private void loadLaunchableApps() {
+
+
+
+        final Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
+        activityInfos = new ArrayList<>(infoList.size());
+        arrayAdapter = new ActivityInfoArrayAdapter(this,
+                R.layout.app_grid_item, activityInfos);
+        updateApps(infoList);
     }
 
     private void showKeyboard() {
@@ -252,21 +298,35 @@ public class SearchActivity extends Activity {
                 hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
     }
 
+    private void handlePackageChanged() {
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("package_changed", false);
+        final String[] packageChangedNames = sharedPreferences.getString("package_changed_name", "")
+                .split(" ");
+        editor.putString("package_changed_name", "");
+        editor.apply();
+        for(String packageName:packageChangedNames){
+            packageName=packageName.trim();
+            if(packageName.isEmpty()) continue;
 
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-        if (sharedPreferences.getBoolean("package_changed", false)) {
-            final SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("package_changed", false).apply();
-            String[] packageChangedNames = sharedPreferences.getString("package_changed_name", "")
-                    .split(" ");
-            //TODO do something with the package names instead of refreshing the entire app list
-            refreshAppList();
-
-            editor.putString("package_changed_name", "");
+            final Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_LAUNCHER);
+            intent.setPackage(packageName);
+            Log.d("SearchActivity","changed: "+packageName);
+            final List<ResolveInfo> infoList = pm.queryIntentActivities(intent,
+                    0);
+            if(infoList.isEmpty()){
+                Log.d("SearchActivity", "No activities in list. Uninstall detected!");
+                removeActivitiesFromPackage(packageName);
+            }else{
+                Log.d("SearchActivity","Activities in list. Install/update detected!");
+                updateApps(infoList);
+            }
 
         }
+
+
     }
 
 
@@ -287,6 +347,13 @@ public class SearchActivity extends Activity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.equals("package_changed_name") && !sharedPreferences.getString(key,"").isEmpty()){
+            handlePackageChanged();
+        }
     }
 
     @TargetApi(11)
@@ -349,6 +416,7 @@ public class SearchActivity extends Activity {
         final AdapterContextMenuInfo info = (AdapterContextMenuInfo) item
                 .getMenuInfo();
         final View rowView = info.targetView;
+        //TODO try remove trie search from here? (get it from view tag?)
         final LaunchableActivity launchableActivity = trie.get(((TextView) rowView
                 .findViewById(R.id.appLabel)).getText().toString()
                 .toLowerCase());

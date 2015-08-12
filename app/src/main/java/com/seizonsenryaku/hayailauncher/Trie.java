@@ -1,12 +1,13 @@
 package com.seizonsenryaku.hayailauncher;
 
+import android.util.Log;
 import android.util.SparseArray;
 
 import java.util.HashSet;
 
 public class Trie<T> {
 
-	private class Node {
+	private final class Node {
 		final SparseArray<Node> children;
 		public T object;
 
@@ -16,18 +17,37 @@ public class Trie<T> {
 
 	}
 
-	private Node root;
+	private final Node root;
 
 	public Trie() {
 		root = new Node();
 	}
 
 	public void put(CharSequence charSequence, T object) {
+		Log.d("TRIE",charSequence.toString());
 		addRec(charSequence, root, object);
 	}
 
 	public T get(CharSequence charSequence) {
-		return getRec(charSequence, root);
+		final Node node = getNodeRec(charSequence, root);
+		return node!=null ? node.object : null;
+	}
+
+	public boolean remove(CharSequence charSequence, T object){
+		Node ancestor=root;
+		Node node;
+		do{
+			node=getNodeRec(charSequence, ancestor);
+			if(node==null)
+				return false;
+			if(node.object==object)
+				node.object=null;
+			else {
+				charSequence = charSequence + " ";
+				ancestor=node;
+			}
+		}while(node.object != null);
+		return true;
 	}
 
 	public HashSet<T> getAllStartingWith(CharSequence charSequence) {
@@ -59,7 +79,7 @@ public class Trie<T> {
 		}
 	}
 
-	private T getRec(CharSequence charSequence, Node ancestor) {
+	private Node getNodeRec(CharSequence charSequence, Node ancestor) {
 		final int length = charSequence.length();
 		if (length > 0) {
 			final char currentLetter = charSequence.charAt(0);
@@ -67,9 +87,9 @@ public class Trie<T> {
 			if (child == null) {
 				return null;
 			}
-			return getRec(charSequence.subSequence(1, length), child);
+			return getNodeRec(charSequence.subSequence(1, length), child);
 		} else {
-			return ancestor.object;
+			return ancestor;
 		}
 
 	}

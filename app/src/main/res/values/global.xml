@@ -2,5 +2,4 @@
 <resources>
     <integer name="max_imageloading_threads">7</integer>
     <integer name="icon_size">48</integer>
-    <string name="icon_size_dp">48dp</string>
 </resources>
