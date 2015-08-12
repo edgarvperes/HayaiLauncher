@@ -240,7 +240,6 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
             wordSinceLastCapitalBuilder.setLength(0);
         }
 
-
         for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
             final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
 
@@ -360,7 +359,7 @@ public class SearchActivity extends Activity implements SharedPreferences.OnShar
         }
     }
 
-    @TargetApi(11)
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     class PopupEventListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
