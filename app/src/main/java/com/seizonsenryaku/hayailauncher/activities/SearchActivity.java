@@ -222,9 +222,6 @@ public class SearchActivity extends Activity
 
 
     private List<String> getAllSubwords(String line) {
-        if(line.toLowerCase().contains("youtube")){
-            Log.d("BREAKPOINT","breakpoint here");
-        }
         boolean skippedFirstWord = false;
         final ArrayList<String> subwords = new ArrayList<>();
 
