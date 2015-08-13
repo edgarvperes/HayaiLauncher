@@ -150,7 +150,7 @@ public class SearchActivity extends Activity
         appListView.setAdapter(arrayAdapter);
 
 
-        appListView.setOnItemClickListener(new OnItemClickListener() {
+        appListView .setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -294,7 +294,8 @@ public class SearchActivity extends Activity
                 trie.remove(subword, launchableActivityToRemove);
             }
             activityInfos.remove(launchableActivityToRemove);
-            launchableActivityPrefs.deletePreference(className);
+            //TODO DEBUGME if uncommented the next line causes a crash.
+            //launchableActivityPrefs.deletePreference(className);
         }
         launchableActivityPackageNameHashMap.remove(packageName);
         arrayAdapter.notifyDataSetChanged();
@@ -429,6 +430,9 @@ public class SearchActivity extends Activity
                 return true;
             case R.id.action_system_settings:
                 startActivity(new Intent(Settings.ACTION_SETTINGS));
+                return true;
+            case R.id.action_manage_apps:
+                startActivity(new Intent(Settings.ACTION_APPLICATION_SETTINGS));
                 return true;
             case R.id.action_about:
                 final Intent intent_about = new Intent(this, AboutActivity.class);
