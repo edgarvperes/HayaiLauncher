@@ -222,8 +222,10 @@ public class SearchActivity extends Activity
 
 
     private List<String> getAllSubwords(String line) {
+        if(line.toLowerCase().contains("youtube")){
+            Log.d("BREAKPOINT","breakpoint here");
+        }
         boolean skippedFirstWord = false;
-        boolean previousCharWasUppercaseOrDigit = false;
         final ArrayList<String> subwords = new ArrayList<>();
 
         for (int i = 0; i < line.length(); i++) {
@@ -233,12 +235,9 @@ public class SearchActivity extends Activity
                 if (wordSinceLastCapitalBuilder.length() > 1
                         && !line.startsWith(wordSinceLastCapitalBuilder.toString())) {
                     subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
-                    if (!previousCharWasUppercaseOrDigit)
-                        wordSinceLastCapitalBuilder.setLength(0);
+                }else{
+                    wordSinceLastCapitalBuilder.setLength(0);
                 }
-                previousCharWasUppercaseOrDigit = true;
-            } else {
-                previousCharWasUppercaseOrDigit = false;
             }
             if (Character.isSpaceChar(character)) {
                 if (skippedFirstWord) {
@@ -248,8 +247,6 @@ public class SearchActivity extends Activity
                                     wordSinceLastSpaceBuilder.length()) {
                         subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
                     }
-                } else {
-                    skippedFirstWord = true;
                 }
 
                 wordSinceLastCapitalBuilder.setLength(0);
