@@ -292,7 +292,7 @@ public class SearchActivity extends Activity
         intent.addCategory(Intent.CATEGORY_HOME);
         ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return resolveInfo != null &&
-                context.getPackageName() == resolveInfo.activityInfo.packageName;
+                context.getPackageName().equals(resolveInfo.activityInfo.packageName);
 
     }
     private void loadLaunchableApps() {
