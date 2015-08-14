@@ -150,7 +150,7 @@ public class SearchActivity extends Activity
         appListView.setAdapter(arrayAdapter);
 
 
-        appListView .setOnItemClickListener(new OnItemClickListener() {
+        appListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -210,7 +210,7 @@ public class SearchActivity extends Activity
                 launchableActivitiesToUpdate = new LinkedList<>();
             }
             launchableActivitiesToUpdate.add(updatedLaunchableActivity);
-            launchableActivityPackageNameHashMap.put(packageName,launchableActivitiesToUpdate);
+            launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
         }
         Log.d("SearchActivity", "updated activities: " + updatedActivityInfos.size());
         launchableActivityPrefs.setAllPreferences(updatedActivityInfos);
@@ -232,14 +232,14 @@ public class SearchActivity extends Activity
 
             }
             if (Character.isSpaceChar(character)) {
-                    subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
-                    if (wordSinceLastCapitalBuilder.length() > 1 &&
-                            wordSinceLastCapitalBuilder.length() !=
-                                    wordSinceLastSpaceBuilder.length()) {
-                        subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
-                    }
-                    wordSinceLastCapitalBuilder.setLength(0);
-                    wordSinceLastSpaceBuilder.setLength(0);
+                subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
+                if (wordSinceLastCapitalBuilder.length() > 1 &&
+                        wordSinceLastCapitalBuilder.length() !=
+                                wordSinceLastSpaceBuilder.length()) {
+                    subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
+                }
+                wordSinceLastCapitalBuilder.setLength(0);
+                wordSinceLastSpaceBuilder.setLength(0);
             } else {
                 wordSinceLastCapitalBuilder.append(character);
                 wordSinceLastSpaceBuilder.append(character);
@@ -269,9 +269,11 @@ public class SearchActivity extends Activity
     private void removeActivitiesFromPackage(String packageName) {
         final List<LaunchableActivity> launchableActivitiesToRemove =
                 launchableActivityPackageNameHashMap.remove(packageName);
-        if(launchableActivitiesToRemove==null){
+        if (launchableActivitiesToRemove == null) {
             return;
         }
+        boolean activityListChanged = false;
+
         for (LaunchableActivity launchableActivityToRemove : launchableActivitiesToRemove) {
             final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
@@ -280,21 +282,26 @@ public class SearchActivity extends Activity
             for (String subword : subwords) {
                 trie.remove(subword, launchableActivityToRemove);
             }
-            activityInfos.remove(launchableActivityToRemove);
+            if (activityInfos.remove(launchableActivityToRemove))
+                activityListChanged = true;
             //TODO DEBUGME if uncommented the next line causes a crash.
             //launchableActivityPrefs.deletePreference(className);
         }
-        arrayAdapter.notifyDataSetChanged();
+
+        if (activityListChanged)
+            arrayAdapter.notifyDataSetChanged();
     }
 
-    private boolean isCurrentLauncher(){
-        Intent intent = new Intent(Intent.ACTION_MAIN);
+    private boolean isCurrentLauncher() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        final ResolveInfo resolveInfo =
+                pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return resolveInfo != null &&
                 context.getPackageName().equals(resolveInfo.activityInfo.packageName);
 
     }
+
     private void loadLaunchableApps() {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
@@ -331,14 +338,17 @@ public class SearchActivity extends Activity
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.setPackage(packageName);
             Log.d("SearchActivity", "changed: " + packageName);
-            final List<ResolveInfo> infoList = pm.queryIntentActivities(intent,
-                    0);
+            final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
+
+            //we don't actually need to run removeActivitiesFromPackage if the package
+            // is being installed
+            removeActivitiesFromPackage(packageName);
+
+
             if (infoList.isEmpty()) {
                 Log.d("SearchActivity", "No activities in list. Uninstall detected!");
-                removeActivitiesFromPackage(packageName);
             } else {
                 Log.d("SearchActivity", "Activities in list. Install/update detected!");
-                removeActivitiesFromPackage(packageName);
                 updateApps(infoList);
             }
 
@@ -349,7 +359,7 @@ public class SearchActivity extends Activity
 
     @Override
     public void onBackPressed() {
-        if(!isCurrentLauncher())
+        if (!isCurrentLauncher())
             moveTaskToBack(false);
     }
 
@@ -410,8 +420,8 @@ public class SearchActivity extends Activity
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if(menuInfo instanceof AdapterContextMenuInfo){
-            AdapterContextMenuInfo adapterMenuInfo=(AdapterContextMenuInfo)menuInfo;
+        if (menuInfo instanceof AdapterContextMenuInfo) {
+            AdapterContextMenuInfo adapterMenuInfo = (AdapterContextMenuInfo) menuInfo;
             menu.setHeaderTitle(
                     ((LaunchableActivity) adapterMenuInfo.targetView
                             .findViewById(R.id.appIcon).getTag()).getActivityLabel());
