@@ -469,8 +469,14 @@ public class SearchActivity extends Activity
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
-            // default:
-            // return super.onContextItemSelected(item);
+            case R.id.appmenu_onplaystore:
+                final Intent intentPlayStore = new Intent(Intent.ACTION_VIEW);
+                intentPlayStore.setData(Uri.parse("market://details?id="+
+                        launchableActivity.getComponent().getPackageName()));
+                startActivity(intentPlayStore);
+                return true;
+            default:
+                return false;
         }
 
         return false;

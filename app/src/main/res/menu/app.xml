@@ -14,4 +14,9 @@
         android:id="@+id/appmenu_info"
         android:title="@string/appmenu_info"
         />
+
+    <item
+        android:id="@+id/appmenu_onplaystore"
+        android:title="@string/appmenu_onplaystore"
+        />
 </menu>

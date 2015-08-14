@@ -25,4 +25,5 @@
 \nAutores:
 \n\tEdgar Villani Peres (seizonsenryaku)</string>
     <string name="action_manage_apps">Gerenciar apps</string>
+    <string name="appmenu_onplaystore">Página na Google Play Store</string>
 </resources>
