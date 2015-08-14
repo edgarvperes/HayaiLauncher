@@ -330,6 +330,7 @@ public class SearchActivity extends Activity
                 removeActivitiesFromPackage(packageName);
             } else {
                 Log.d("SearchActivity", "Activities in list. Install/update detected!");
+                removeActivitiesFromPackage(packageName);
                 updateApps(infoList);
             }
 
@@ -365,6 +366,7 @@ public class SearchActivity extends Activity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("package_changed_name") && !sharedPreferences.getString(key, "").isEmpty()) {
+            //does this need to run in uiThread?
             handlePackageChanged();
         }
     }
@@ -471,7 +473,7 @@ public class SearchActivity extends Activity
                 return true;
             case R.id.appmenu_onplaystore:
                 final Intent intentPlayStore = new Intent(Intent.ACTION_VIEW);
-                intentPlayStore.setData(Uri.parse("market://details?id="+
+                intentPlayStore.setData(Uri.parse("market://details?id=" +
                         launchableActivity.getComponent().getPackageName()));
                 startActivity(intentPlayStore);
                 return true;
