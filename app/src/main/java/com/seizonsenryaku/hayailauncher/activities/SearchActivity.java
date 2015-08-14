@@ -399,6 +399,12 @@ public class SearchActivity extends Activity
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        if(menuInfo instanceof AdapterContextMenuInfo){
+            AdapterContextMenuInfo adapterMenuInfo=(AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle(
+                    ((LaunchableActivity) adapterMenuInfo.targetView
+                            .findViewById(R.id.appIcon).getTag()).getActivityLabel());
+        }
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app, menu);
     }
