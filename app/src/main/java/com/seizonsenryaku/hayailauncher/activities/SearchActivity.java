@@ -287,6 +287,14 @@ public class SearchActivity extends Activity
         arrayAdapter.notifyDataSetChanged();
     }
 
+    private boolean isCurrentLauncher(){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        ResolveInfo resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return resolveInfo != null &&
+                context.getPackageName() == resolveInfo.activityInfo.packageName;
+
+    }
     private void loadLaunchableApps() {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
@@ -341,7 +349,8 @@ public class SearchActivity extends Activity
 
     @Override
     public void onBackPressed() {
-        moveTaskToBack(false);
+        if(!isCurrentLauncher())
+            moveTaskToBack(false);
     }
 
     @Override
