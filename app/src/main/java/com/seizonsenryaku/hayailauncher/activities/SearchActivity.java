@@ -197,20 +197,20 @@ public class SearchActivity extends Activity
                 trie.put(subword, launchableActivity);
             }
         }
-
+        for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
+            final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
+            launchableActivityPackageNameHashMap.remove(packageName);
+        }
         for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
             final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
 
             List<LaunchableActivity> launchableActivitiesToUpdate =
-                    launchableActivityPackageNameHashMap.get(packageName);
-            if (launchableActivitiesToUpdate != null) {
-                removeActivitiesFromPackage(packageName);
-            } else {
+                    launchableActivityPackageNameHashMap.remove(packageName);
+            if (launchableActivitiesToUpdate == null) {
                 launchableActivitiesToUpdate = new LinkedList<>();
             }
-
             launchableActivitiesToUpdate.add(updatedLaunchableActivity);
-            launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
+            launchableActivityPackageNameHashMap.put(packageName,launchableActivitiesToUpdate);
         }
         Log.d("SearchActivity", "updated activities: " + updatedActivityInfos.size());
         launchableActivityPrefs.setAllPreferences(updatedActivityInfos);
@@ -268,7 +268,10 @@ public class SearchActivity extends Activity
 
     private void removeActivitiesFromPackage(String packageName) {
         final List<LaunchableActivity> launchableActivitiesToRemove =
-                launchableActivityPackageNameHashMap.get(packageName);
+                launchableActivityPackageNameHashMap.remove(packageName);
+        if(launchableActivitiesToRemove==null){
+            return;
+        }
         for (LaunchableActivity launchableActivityToRemove : launchableActivitiesToRemove) {
             final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
@@ -281,7 +284,6 @@ public class SearchActivity extends Activity
             //TODO DEBUGME if uncommented the next line causes a crash.
             //launchableActivityPrefs.deletePreference(className);
         }
-        launchableActivityPackageNameHashMap.remove(packageName);
         arrayAdapter.notifyDataSetChanged();
     }
 
