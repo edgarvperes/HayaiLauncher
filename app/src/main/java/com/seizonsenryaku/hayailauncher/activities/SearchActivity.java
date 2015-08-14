@@ -549,13 +549,11 @@ public class SearchActivity extends Activity
 
     class ActivityInfoArrayAdapter extends ArrayAdapter<LaunchableActivity> {
         final LayoutInflater inflater;
-        final PackageManager pm;
 
         public ActivityInfoArrayAdapter(final Context context, final int resource,
                                         final List<LaunchableActivity> activityInfos) {
             super(context, resource, activityInfos);
             inflater = getLayoutInflater();
-            pm = getPackageManager();
         }
 
         @Override
