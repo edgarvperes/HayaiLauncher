@@ -190,8 +190,6 @@ public class SearchActivity extends Activity
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString());
 
             final String activityLabel = launchableActivity.getActivityLabel().toString();
-            final String activityLabelLower = activityLabel.toLowerCase();
-            trie.put(activityLabelLower, launchableActivity);
             updatedActivityInfos.add(launchableActivity);
 
             final List<String> subwords = getAllSubwords(activityLabel);
@@ -222,39 +220,32 @@ public class SearchActivity extends Activity
 
 
     private List<String> getAllSubwords(String line) {
-        boolean skippedFirstWord = false;
         final ArrayList<String> subwords = new ArrayList<>();
-
         for (int i = 0; i < line.length(); i++) {
             final char character = line.charAt(i);
 
             if (Character.isUpperCase(character) || Character.isDigit(character)) {
-                if (wordSinceLastCapitalBuilder.length() > 1
-                        && !line.startsWith(wordSinceLastCapitalBuilder.toString())) {
+                if (wordSinceLastCapitalBuilder.length() > 1) {
                     subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
-                }else{
-                    wordSinceLastCapitalBuilder.setLength(0);
                 }
+                wordSinceLastCapitalBuilder.setLength(0);
+
             }
             if (Character.isSpaceChar(character)) {
-                if (skippedFirstWord) {
                     subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
                     if (wordSinceLastCapitalBuilder.length() > 1 &&
                             wordSinceLastCapitalBuilder.length() !=
                                     wordSinceLastSpaceBuilder.length()) {
                         subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
                     }
-                }
-
-                wordSinceLastCapitalBuilder.setLength(0);
-                wordSinceLastSpaceBuilder.setLength(0);
+                    wordSinceLastCapitalBuilder.setLength(0);
+                    wordSinceLastSpaceBuilder.setLength(0);
             } else {
                 wordSinceLastCapitalBuilder.append(character);
                 wordSinceLastSpaceBuilder.append(character);
             }
         }
-        if (skippedFirstWord && wordSinceLastSpaceBuilder.length() > 0
-                && line.length() > wordSinceLastSpaceBuilder.length()) {
+        if (wordSinceLastSpaceBuilder.length() > 0) {
             subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
         }
         if (wordSinceLastCapitalBuilder.length() > 1
@@ -282,7 +273,6 @@ public class SearchActivity extends Activity
             final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
             String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
-            trie.remove(activityLabel.toLowerCase(), launchableActivityToRemove);
             final List<String> subwords = getAllSubwords(activityLabel);
             for (String subword : subwords) {
                 trie.remove(subword, launchableActivityToRemove);
