@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -129,7 +130,19 @@ public class SearchActivity extends Activity
     private void setupViews() {
         searchEditText.requestFocus();
         searchEditText.addTextChangedListener(textWatcher);
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
 
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_GO){
+                    if(!activityInfos.isEmpty()) {
+                        launchActivity(activityInfos.get(0));
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
         registerForContextMenu(appListView);
 
         ((GridView) appListView).setOnScrollListener(new AbsListView.OnScrollListener() {

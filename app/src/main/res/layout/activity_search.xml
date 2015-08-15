@@ -26,6 +26,8 @@
             android:textColorHint="#CCCCCC"
             android:textSize="18sp"
             android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:imeOptions="actionGo"
             android:textColor="@android:color/white"
             android:selectAllOnFocus="true">
 
