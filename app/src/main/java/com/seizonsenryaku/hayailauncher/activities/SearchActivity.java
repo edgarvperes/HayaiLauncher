@@ -30,6 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -129,7 +130,19 @@ public class SearchActivity extends Activity
     private void setupViews() {
         searchEditText.requestFocus();
         searchEditText.addTextChangedListener(textWatcher);
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
 
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_GO){
+                    if(!activityInfos.isEmpty()) {
+                        launchActivity(activityInfos.get(0));
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
         registerForContextMenu(appListView);
 
         ((GridView) appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -150,7 +163,7 @@ public class SearchActivity extends Activity
         appListView.setAdapter(arrayAdapter);
 
 
-        appListView .setOnItemClickListener(new OnItemClickListener() {
+        appListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -190,8 +203,6 @@ public class SearchActivity extends Activity
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString());
 
             final String activityLabel = launchableActivity.getActivityLabel().toString();
-            final String activityLabelLower = activityLabel.toLowerCase();
-            trie.put(activityLabelLower, launchableActivity);
             updatedActivityInfos.add(launchableActivity);
 
             final List<String> subwords = getAllSubwords(activityLabel);
@@ -199,18 +210,18 @@ public class SearchActivity extends Activity
                 trie.put(subword, launchableActivity);
             }
         }
-
+        for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
+            final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
+            launchableActivityPackageNameHashMap.remove(packageName);
+        }
         for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
             final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
 
             List<LaunchableActivity> launchableActivitiesToUpdate =
-                    launchableActivityPackageNameHashMap.get(packageName);
-            if (launchableActivitiesToUpdate != null) {
-                removeActivitiesFromPackage(packageName);
-            } else {
+                    launchableActivityPackageNameHashMap.remove(packageName);
+            if (launchableActivitiesToUpdate == null) {
                 launchableActivitiesToUpdate = new LinkedList<>();
             }
-
             launchableActivitiesToUpdate.add(updatedLaunchableActivity);
             launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
         }
@@ -222,33 +233,24 @@ public class SearchActivity extends Activity
 
 
     private List<String> getAllSubwords(String line) {
-        if(line.toLowerCase().contains("youtube")){
-            Log.d("BREAKPOINT","breakpoint here");
-        }
-        boolean skippedFirstWord = false;
         final ArrayList<String> subwords = new ArrayList<>();
-
         for (int i = 0; i < line.length(); i++) {
             final char character = line.charAt(i);
 
             if (Character.isUpperCase(character) || Character.isDigit(character)) {
-                if (wordSinceLastCapitalBuilder.length() > 1
-                        && !line.startsWith(wordSinceLastCapitalBuilder.toString())) {
+                if (wordSinceLastCapitalBuilder.length() > 1) {
                     subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
-                }else{
-                    wordSinceLastCapitalBuilder.setLength(0);
                 }
+                wordSinceLastCapitalBuilder.setLength(0);
+
             }
             if (Character.isSpaceChar(character)) {
-                if (skippedFirstWord) {
-                    subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
-                    if (wordSinceLastCapitalBuilder.length() > 1 &&
-                            wordSinceLastCapitalBuilder.length() !=
-                                    wordSinceLastSpaceBuilder.length()) {
-                        subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
-                    }
+                subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
+                if (wordSinceLastCapitalBuilder.length() > 1 &&
+                        wordSinceLastCapitalBuilder.length() !=
+                                wordSinceLastSpaceBuilder.length()) {
+                    subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
                 }
-
                 wordSinceLastCapitalBuilder.setLength(0);
                 wordSinceLastSpaceBuilder.setLength(0);
             } else {
@@ -256,8 +258,7 @@ public class SearchActivity extends Activity
                 wordSinceLastSpaceBuilder.append(character);
             }
         }
-        if (skippedFirstWord && wordSinceLastSpaceBuilder.length() > 0
-                && line.length() > wordSinceLastSpaceBuilder.length()) {
+        if (wordSinceLastSpaceBuilder.length() > 0) {
             subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
         }
         if (wordSinceLastCapitalBuilder.length() > 1
@@ -280,22 +281,38 @@ public class SearchActivity extends Activity
 
     private void removeActivitiesFromPackage(String packageName) {
         final List<LaunchableActivity> launchableActivitiesToRemove =
-                launchableActivityPackageNameHashMap.get(packageName);
+                launchableActivityPackageNameHashMap.remove(packageName);
+        if (launchableActivitiesToRemove == null) {
+            return;
+        }
+        boolean activityListChanged = false;
+
         for (LaunchableActivity launchableActivityToRemove : launchableActivitiesToRemove) {
             final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
             String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
-            trie.remove(activityLabel.toLowerCase(), launchableActivityToRemove);
             final List<String> subwords = getAllSubwords(activityLabel);
             for (String subword : subwords) {
                 trie.remove(subword, launchableActivityToRemove);
             }
-            activityInfos.remove(launchableActivityToRemove);
+            if (activityInfos.remove(launchableActivityToRemove))
+                activityListChanged = true;
             //TODO DEBUGME if uncommented the next line causes a crash.
             //launchableActivityPrefs.deletePreference(className);
         }
-        launchableActivityPackageNameHashMap.remove(packageName);
-        arrayAdapter.notifyDataSetChanged();
+
+        if (activityListChanged)
+            arrayAdapter.notifyDataSetChanged();
+    }
+
+    private boolean isCurrentLauncher() {
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        final ResolveInfo resolveInfo =
+                pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        return resolveInfo != null &&
+                context.getPackageName().equals(resolveInfo.activityInfo.packageName);
+
     }
 
     private void loadLaunchableApps() {
@@ -334,11 +351,15 @@ public class SearchActivity extends Activity
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.setPackage(packageName);
             Log.d("SearchActivity", "changed: " + packageName);
-            final List<ResolveInfo> infoList = pm.queryIntentActivities(intent,
-                    0);
+            final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
+
+            //we don't actually need to run removeActivitiesFromPackage if the package
+            // is being installed
+            removeActivitiesFromPackage(packageName);
+
+
             if (infoList.isEmpty()) {
                 Log.d("SearchActivity", "No activities in list. Uninstall detected!");
-                removeActivitiesFromPackage(packageName);
             } else {
                 Log.d("SearchActivity", "Activities in list. Install/update detected!");
                 updateApps(infoList);
@@ -351,7 +372,8 @@ public class SearchActivity extends Activity
 
     @Override
     public void onBackPressed() {
-        moveTaskToBack(false);
+        if (!isCurrentLauncher())
+            moveTaskToBack(false);
     }
 
     @Override
@@ -376,6 +398,7 @@ public class SearchActivity extends Activity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("package_changed_name") && !sharedPreferences.getString(key, "").isEmpty()) {
+            //does this need to run in uiThread?
             handlePackageChanged();
         }
     }
@@ -410,6 +433,12 @@ public class SearchActivity extends Activity
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        if (menuInfo instanceof AdapterContextMenuInfo) {
+            AdapterContextMenuInfo adapterMenuInfo = (AdapterContextMenuInfo) menuInfo;
+            menu.setHeaderTitle(
+                    ((LaunchableActivity) adapterMenuInfo.targetView
+                            .findViewById(R.id.appIcon).getTag()).getActivityLabel());
+        }
         final MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app, menu);
     }
@@ -474,8 +503,14 @@ public class SearchActivity extends Activity
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 return true;
-            // default:
-            // return super.onContextItemSelected(item);
+            case R.id.appmenu_onplaystore:
+                final Intent intentPlayStore = new Intent(Intent.ACTION_VIEW);
+                intentPlayStore.setData(Uri.parse("market://details?id=" +
+                        launchableActivity.getComponent().getPackageName()));
+                startActivity(intentPlayStore);
+                return true;
+            default:
+                return false;
         }
 
         return false;
@@ -537,13 +572,11 @@ public class SearchActivity extends Activity
 
     class ActivityInfoArrayAdapter extends ArrayAdapter<LaunchableActivity> {
         final LayoutInflater inflater;
-        final PackageManager pm;
 
         public ActivityInfoArrayAdapter(final Context context, final int resource,
                                         final List<LaunchableActivity> activityInfos) {
             super(context, resource, activityInfos);
             inflater = getLayoutInflater();
-            pm = getPackageManager();
         }
 
         @Override

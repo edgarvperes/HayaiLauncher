@@ -43,7 +43,7 @@ public class Trie<T> {
 			if(node.object==object)
 				node.object=null;
 			else {
-				charSequence = charSequence + " ";
+				charSequence = " ";
 				ancestor=node;
 			}
 		}while(node.object != null);
