@@ -26,4 +26,5 @@
 \n\tEdgar Villani Peres (seizonsenryaku)</string>
     <string name="action_manage_apps">Gerenciar apps</string>
     <string name="appmenu_onplaystore">Abrir na Play Store</string>
+    <string name="launch">Abrir</string>
 </resources>

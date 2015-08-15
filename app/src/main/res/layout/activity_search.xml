@@ -28,6 +28,7 @@
             android:inputType="textVisiblePassword"
             android:singleLine="true"
             android:imeOptions="actionGo"
+            android:imeActionLabel="@string/launch"
             android:textColor="@android:color/white"
             android:selectAllOnFocus="true">
 
