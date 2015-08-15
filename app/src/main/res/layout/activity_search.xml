@@ -2,6 +2,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
+    android:background="#000000"
      >
     <View
         android:id="@+id/statusBarDummyView"
@@ -11,16 +12,15 @@
     <LinearLayout
         android:id="@+id/customActionBar"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:paddingLeft="16dp"
-        android:background="@color/indigo_500">
+        android:layout_height="56dp"
+        android:paddingLeft="32dp">
 
         <EditText
             android:id="@+id/editText1"
             android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1"
-            android:background="@drawable/textfield_default_holo_dark"
+            android:background="@null"
             android:ems="10"
             android:hint="@string/search_view_hint"
             android:textColorHint="#CCCCCC"
@@ -51,7 +51,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:background="@android:color/black"
         >
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/appsContainer"
@@ -61,12 +60,9 @@
         android:fastScrollAlwaysVisible="true"
         android:clipToPadding="false"
         android:fadingEdge="none"
-        android:paddingTop="8dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="32dp"
-        android:columnWidth="60dp"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
+        android:columnWidth="64dp"
+        android:verticalSpacing="16dp"
+        android:horizontalSpacing="16dp"
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:choiceMode="singleChoice"

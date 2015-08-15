@@ -14,4 +14,11 @@
     <color name="indigo_A200">#536dfe</color>
     <color name="indigo_A400">#3d5afe</color>
     <color name="indigo_A700">#304ffe</color>
+    <color name="transparent">#7FC0C0C0</color>
+
+    <color name="primary">#607D8B</color>
+    <color name="dark">#455A64</color>
+    <color name="background">#CFD8DC</color>
+
+    <color name="white">#FFFFFF</color>
 </resources>
