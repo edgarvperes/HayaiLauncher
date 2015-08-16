@@ -644,22 +644,16 @@ public class SearchActivity extends Activity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-/*
-            final View view =
-                    convertView != null ?
-                            convertView : inflater.inflate(R.layout.app_grid_item, parent, false); */
+            final View view =  convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false) ;
 
             if ((position) < column_count) {
-                View v =  inflater.inflate(R.layout.app_grid_item, parent, false);
-
-                AbsListView.LayoutParams params = (AbsListView.LayoutParams) v.getLayoutParams();
+                AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
                 params.height = 240;
-                v.setLayoutParams(params);
+                view.setLayoutParams(params);
 
-                v.setVisibility(View.INVISIBLE);
-                return v;
+                view.setVisibility(View.INVISIBLE);
             } else {
-                final View view =  convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false) ;
+
 
                 AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -694,8 +688,8 @@ public class SearchActivity extends Activity
                 }
                 appFavoriteView.setVisibility(
                         launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
-                return view;
             }
+            return view;
         }
 
     }
