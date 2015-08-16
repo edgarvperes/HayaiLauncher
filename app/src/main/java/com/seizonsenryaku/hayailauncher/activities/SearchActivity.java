@@ -19,6 +19,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -29,7 +30,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -40,7 +40,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -83,6 +85,7 @@ public class SearchActivity extends Activity
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
 
+    int column_count;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -99,10 +102,21 @@ public class SearchActivity extends Activity
         wordSinceLastCapitalBuilder = new StringBuilder(64);
 
         searchEditText = (EditText) findViewById(R.id.editText1);
-        appListView = (AdapterView) findViewById(R.id.appsContainer);
+        appListView = (GridView) findViewById(R.id.appsContainer);
+
         overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
 
         context = getApplicationContext();
+
+
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        float itemWidth = 72;
+        column_count =  Math.round(dpWidth/itemWidth) - 1;
+
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -124,13 +138,28 @@ public class SearchActivity extends Activity
         StatusBarColorHelper.setStatusBarColor(resources,
                 this, resources.getColor(R.color.indigo_700));
 
+
+
     }
 
     @Override
     protected void onStart() {
+
+
+        //searchEditText.clearFocus();
+        //searchEditText.requestFocus();
+
         super.onStart();
+
+
+    }
+
+    @Override
+        protected void onResume() {
+
         searchEditText.clearFocus();
         searchEditText.requestFocus();
+        super.onResume();
     }
 
     @Override
@@ -192,7 +221,11 @@ public class SearchActivity extends Activity
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                launchActivity(activityInfos.get(position));
+                if(position < column_count){
+
+                } else {
+                    launchActivity(activityInfos.get(position - column_count));
+                }
             }
 
         });
@@ -598,45 +631,71 @@ public class SearchActivity extends Activity
 
         public ActivityInfoArrayAdapter(final Context context, final int resource,
                                         final List<LaunchableActivity> activityInfos) {
+
             super(context, resource, activityInfos);
             inflater = getLayoutInflater();
         }
 
         @Override
+        public int getCount() {
+            return super.getCount() + column_count;
+        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
+/*
             final View view =
                     convertView != null ?
-                            convertView : inflater.inflate(R.layout.app_grid_item, parent, false);
-            final LaunchableActivity launchableActivity = getItem(position);
-            final CharSequence label = launchableActivity.getActivityLabel();
-            final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
-            final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
-            final View appFavoriteView = view.findViewById(R.id.appFavorite);
+                            convertView : inflater.inflate(R.layout.app_grid_item, parent, false); */
 
-            appLabelView.setText(label);
+            if ((position) < column_count) {
+                View v =  inflater.inflate(R.layout.app_grid_item, parent, false);
 
+                AbsListView.LayoutParams params = (AbsListView.LayoutParams) v.getLayoutParams();
+                params.height = 240;
+                v.setLayoutParams(params);
 
-            if (sharedPreferences.getBoolean("pref_show_icon", true)) {
-
-                appIconView.setTag(launchableActivity);
-
-                if (!launchableActivity.isIconLoaded()) {
-                    appIconView.setImageDrawable(defaultAppIcon);
-                    imageLoadingConsumersManager.addTask(
-                            new ImageLoadingTask(appIconView, launchableActivity,
-                                    imageTasksSharedData));
-
-                } else {
-                    appIconView.setImageDrawable(
-                            launchableActivity.getActivityIcon(pm, context, iconSizePixels));
-                }
+                v.setVisibility(View.INVISIBLE);
+                return v;
             } else {
-                appIconView.setImageDrawable(defaultAppIcon);
+                final View view =  convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false) ;
+
+                AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
+                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                view.setLayoutParams(params);
+
+                view.setVisibility(View.VISIBLE);
+                final LaunchableActivity launchableActivity = getItem(position - column_count);
+                final CharSequence label = launchableActivity.getActivityLabel();
+                final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
+                final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
+                final View appFavoriteView = view.findViewById(R.id.appFavorite);
+
+                appLabelView.setText(label);
+
+
+                if (sharedPreferences.getBoolean("pref_show_icon", true)) {
+
+                    appIconView.setTag(launchableActivity);
+
+                    if (!launchableActivity.isIconLoaded()) {
+                        appIconView.setImageDrawable(defaultAppIcon);
+                        imageLoadingConsumersManager.addTask(
+                                new ImageLoadingTask(appIconView, launchableActivity,
+                                        imageTasksSharedData));
+
+                    } else {
+                        appIconView.setImageDrawable(
+                                launchableActivity.getActivityIcon(pm, context, iconSizePixels));
+                    }
+                } else {
+                    appIconView.setImageDrawable(defaultAppIcon);
+                }
+                appFavoriteView.setVisibility(
+                        launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
+                return view;
             }
-            appFavoriteView.setVisibility(
-                    launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
-            return view;
         }
 
     }

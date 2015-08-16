@@ -15,6 +15,9 @@
         <!--   theme UI controls like checkboxes and text fields
         <item name="android:colorAccent">@color/accent</item>
         -->
+
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
     <style name="AppSettingsTheme" parent="@android:style/Theme.Material">
