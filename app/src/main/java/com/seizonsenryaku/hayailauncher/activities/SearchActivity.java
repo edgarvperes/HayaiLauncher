@@ -124,11 +124,22 @@ public class SearchActivity extends Activity
         StatusBarColorHelper.setStatusBarColor(resources,
                 this, resources.getColor(R.color.indigo_700));
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        searchEditText.clearFocus();
+        searchEditText.requestFocus();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
         showKeyboard();
     }
 
     private void setupViews() {
-        searchEditText.requestFocus();
         searchEditText.addTextChangedListener(textWatcher);
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
 
@@ -327,7 +338,8 @@ public class SearchActivity extends Activity
     }
 
     private void showKeyboard() {
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
+                .showSoftInput(searchEditText, 0);
     }
 
     private void hideKeyboard() {
@@ -542,10 +554,7 @@ public class SearchActivity extends Activity
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         launchIntent.setComponent(componentName);
 
-
-        searchEditText.clearFocus();
         hideKeyboard();
-
 
         try {
             startActivity(launchIntent);
