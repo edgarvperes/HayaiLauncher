@@ -141,6 +141,7 @@ public class SearchActivity extends Activity
 
     private void setupViews() {
         searchEditText.addTextChangedListener(textWatcher);
+        searchEditText.setImeActionLabel(getString(R.string.launch),EditorInfo.IME_ACTION_GO);
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
 
             @Override
