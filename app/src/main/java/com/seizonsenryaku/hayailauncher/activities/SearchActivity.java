@@ -136,7 +136,13 @@ public class SearchActivity extends Activity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        showKeyboard();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                showKeyboard();
+            }
+        });
+
     }
 
     private void setupViews() {
