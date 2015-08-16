@@ -40,6 +40,6 @@
         android:text="Small Text Line gqp"
         android:id="@+id/appLabel"
         android:ellipsize="end"
-        android:textColor="#FFFFFF"
+        android:textColor="#000000"
         android:maxLines="2"/>
 </LinearLayout>

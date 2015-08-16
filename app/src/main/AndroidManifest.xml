@@ -20,7 +20,9 @@
             android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:alwaysRetainTaskState="true"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize"
+            >
 
 
             <intent-filter>

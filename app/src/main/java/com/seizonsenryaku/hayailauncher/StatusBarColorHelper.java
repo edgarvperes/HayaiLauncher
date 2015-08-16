@@ -16,19 +16,19 @@ public class StatusBarColorHelper {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
 
         final Window window = activity.getWindow();
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-            //LOLLIPOP+ path
-            window.setStatusBarColor(color);
-        } else {
             //KITKAT path
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-            int statusBarHeight = getStatusBarHeight(resources);
+
+        if(Build.VERSION.SDK_INT > 11) {
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+        }
+
+        int statusBarHeight = getStatusBarHeight(resources);
             View statusBarDummy = activity.findViewById(R.id.statusBarDummyView);
             statusBarDummy.getLayoutParams().height=statusBarHeight;
-            statusBarDummy.setBackgroundColor(color);
-        }
+
     }
 
     private static int getStatusBarHeight(Resources resources) {

@@ -1,26 +1,22 @@
 <resources>
 
     <!--
-        Base application theme for API 14+. This theme completely replaces
+        Base application theme for API 13+. This theme completely replaces
         AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
+        res/values-v11/styles.xml on API 13+ devices.
     -->
-    <style name="AppBaseTheme" parent="@android:style/Theme.Material.NoActionBar">
+    <style name="AppBaseTheme" parent="@android:style/Theme.Holo.NoActionBar">
 
-        <!-- Main theme colors -->
-        <!--   your app branding color for the app bar -->
-        <item name="android:colorPrimary">@color/indigo_500</item>
-        <!--   darker variant for the status bar and contextual app bars -->
-        <item name="android:colorPrimaryDark">@color/indigo_700</item>
-        <!--   theme UI controls like checkboxes and text fields
-        <item name="android:colorAccent">@color/accent</item>
-        -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
     </style>
+    <style name="AppSettingsTheme" parent="@android:style/Theme.Holo">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
 
-    <style name="AppSettingsTheme" parent="@android:style/Theme.Material">
-        <item name="android:colorPrimary">@color/indigo_500</item>
-        <!--   darker variant for the status bar and contextual app bars -->
-        <item name="android:colorPrimaryDark">@color/indigo_700</item>
 
     </style>
 

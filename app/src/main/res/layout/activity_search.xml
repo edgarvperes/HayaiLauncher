@@ -1,58 +1,21 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000000"
+    android:background="#F5F5F5"
      >
     <View
         android:id="@+id/statusBarDummyView"
         android:layout_width="match_parent"
         android:layout_height="0dp"/>
 
-    <LinearLayout
-        android:id="@+id/customActionBar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:paddingLeft="32dp">
 
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="0dip"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:background="@null"
-            android:ems="10"
-            android:hint="@string/search_view_hint"
-            android:textColorHint="#CCCCCC"
-            android:textSize="18sp"
-            android:inputType="textVisiblePassword"
-            android:singleLine="true"
-            android:imeOptions="actionGo"
-            android:textColor="@android:color/white"
-            android:selectAllOnFocus="true">
-
-            <requestFocus />
-        </EditText>
-        <View
-            android:id="@+id/overflow_button_topleft"
-            android:layout_width="0dp"
-            android:layout_height="0dp"/>
-        <ImageButton
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:id="@+id/overflow_button"
-            android:src="@drawable/ic_more_vert_white_24dp"
-            android:background="@android:color/transparent"
-            android:onClick="onClickSettingsButton"
-            android:contentDescription="@string/application_icon_content_description"/>
-
-
-
-    </LinearLayout>
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         >
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/appsContainer"
@@ -67,6 +30,82 @@
         android:gravity="center"
         android:choiceMode="singleChoice"
         android:numColumns="auto_fit"
+        android:scrollbars="none"
         />
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/customActionBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:paddingLeft="16dp"
+        android:background="@drawable/search_box_bg"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:background="@null"
+            android:ems="10"
+            android:hint="@string/search_view_hint"
+            android:textColorHint="#CCCCCC"
+            android:textSize="18sp"
+            android:inputType="textVisiblePassword"
+            android:singleLine="true"
+            android:imeOptions="actionGo"
+            android:textColor="@android:color/black"
+            android:selectAllOnFocus="true">
+
+            <requestFocus />
+        </EditText>
+        <View
+            android:id="@+id/overflow_button_topleft"
+            android:layout_width="0dp"
+            android:layout_height="0dp"/>
+        <ImageButton
+            android:layout_marginTop="4dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:id="@+id/overflow_button"
+            android:src="@drawable/ic_more_vert_white_24dp"
+            android:background="@android:color/transparent"
+            android:onClick="onClickSettingsButton"
+            android:contentDescription="@string/application_icon_content_description"
+            android:tint="#9E9E9E" />
+
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:fitsSystemWindows="true"
+        >
+    <ImageButton
+        android:id="@+id/action_about"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_search_black_36dp"
+        android:tint="#FFFFFF"
+        android:background="@drawable/action_button_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        />
+    </RelativeLayout>
+</RelativeLayout>
