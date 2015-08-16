@@ -136,7 +136,7 @@ public class SearchActivity extends Activity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Thread thread = new Thread(new Runnable() {
+        Thread keyboardEventPosterThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -147,6 +147,7 @@ public class SearchActivity extends Activity
                 });
             }
         });
+        keyboardEventPosterThread.start();
 
 
     }
