@@ -18,6 +18,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -80,17 +81,24 @@ public class SearchActivity extends Activity
     private AdapterView appListView;
     private PackageManager pm;
     private View overflowButtonTopleft;
+    private int column_count;
+    private int everythingOnTopHeight;
 
     //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
 
-    int column_count;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        final View everything_on_top=findViewById(R.id.everything_on_top);
+        final ViewGroup.MarginLayoutParams paramsEverythingOnTop =
+                (ViewGroup.MarginLayoutParams) everything_on_top.getLayoutParams();
+        everythingOnTopHeight = paramsEverythingOnTop.height;
 
         pm = getPackageManager();
         final Resources resources = getResources();
@@ -114,7 +122,8 @@ public class SearchActivity extends Activity
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
-        float itemWidth = 72;
+        float itemWidth = 72;//TODO remove magic number
+
         column_count =  Math.round(dpWidth/itemWidth) - 1;
 
         sharedPreferences = PreferenceManager
@@ -125,7 +134,7 @@ public class SearchActivity extends Activity
         //noinspection deprecation
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
         iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
-                * resources.getDisplayMetrics().density + 0.5f);
+                * displayMetrics.density + 0.5f);
 
         setupPreferences();
 
@@ -156,7 +165,6 @@ public class SearchActivity extends Activity
 
     @Override
         protected void onResume() {
-
         searchEditText.clearFocus();
         searchEditText.requestFocus();
         super.onResume();
@@ -221,9 +229,7 @@ public class SearchActivity extends Activity
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position < column_count){
-
-                } else {
+                if(position >= column_count){
                     launchActivity(activityInfos.get(position - column_count));
                 }
             }
@@ -646,16 +652,13 @@ public class SearchActivity extends Activity
 
             final View view =  convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false) ;
 
-            if ((position) < column_count) {
-                AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                params.height = 240;
+            if (position < column_count) {
+                final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
+                params.height = everythingOnTopHeight;//TODO remove magic number
                 view.setLayoutParams(params);
-
                 view.setVisibility(View.INVISIBLE);
             } else {
-
-
-                AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
+                final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 view.setLayoutParams(params);
 
