@@ -32,5 +32,6 @@
 \n\tEdgar Villani Peres (seizonsenryaku)</string>
     <string name="action_manage_apps">Manage apps</string>
     <string name="appmenu_onplaystore">See on Play Store</string>
+    <string name="pref_basetheme" >Base Theme</string>
 
 </resources>
