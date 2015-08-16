@@ -58,8 +58,6 @@
         android:id="@+id/appsContainer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scrollbarStyle="outsideOverlay"
-        android:fastScrollAlwaysVisible="true"
         android:clipToPadding="false"
         android:fadingEdge="none"
         android:columnWidth="64dp"
@@ -68,7 +66,6 @@
         android:stretchMode="columnWidth"
         android:gravity="center"
         android:choiceMode="singleChoice"
-        android:fastScrollEnabled="true"
         android:numColumns="auto_fit"
         />
     </LinearLayout>
