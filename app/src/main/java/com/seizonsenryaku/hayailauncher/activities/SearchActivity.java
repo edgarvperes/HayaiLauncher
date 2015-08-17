@@ -383,11 +383,8 @@ public class SearchActivity extends Activity
 
     }
 
-    private String stripAccents(final String s)
-    {
-        String normalized = Normalizer.normalize(s, Normalizer.Form.NFKD);
-
-        return pattern.matcher(normalized).replaceAll("");
+    private String stripAccents(final String s) {
+        return pattern.matcher(Normalizer.normalize(s, Normalizer.Form.NFKD)).replaceAll("");
     }
 
     private void loadLaunchableApps() {
