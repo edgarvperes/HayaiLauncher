@@ -56,16 +56,19 @@ import com.seizonsenryaku.hayailauncher.SimpleTaskConsumerManager;
 import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
 import com.seizonsenryaku.hayailauncher.Trie;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
+
 
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
-
+    private final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
@@ -229,7 +232,7 @@ public class SearchActivity extends Activity
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position >= column_count){
+                if (position >= column_count) {
                     launchActivity(activityInfos.get(position - column_count));
                 }
             }
@@ -269,7 +272,7 @@ public class SearchActivity extends Activity
             final String activityLabel = launchableActivity.getActivityLabel().toString();
             updatedActivityInfos.add(launchableActivity);
 
-            final List<String> subwords = getAllSubwords(activityLabel);
+            final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
             for (String subword : subwords) {
                 trie.put(subword, launchableActivity);
             }
@@ -335,8 +338,9 @@ public class SearchActivity extends Activity
     }
 
     private void updateVisibleApps() {
-        final HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(searchEditText.getText()
-                .toString().toLowerCase().trim());
+        final HashSet<LaunchableActivity> infoList =
+                trie.getAllStartingWith(stripAccents(searchEditText.getText()
+                        .toString().toLowerCase().trim()));
         activityInfos.clear();
         activityInfos.addAll(infoList);
         Collections.sort(activityInfos);
@@ -355,9 +359,9 @@ public class SearchActivity extends Activity
             final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
             String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
-            final List<String> subwords = getAllSubwords(activityLabel);
+            final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
             for (String subword : subwords) {
-                trie.remove(subword, launchableActivityToRemove);
+                trie.remove(subword,launchableActivityToRemove);
             }
             if (activityInfos.remove(launchableActivityToRemove))
                 activityListChanged = true;
@@ -377,6 +381,13 @@ public class SearchActivity extends Activity
         return resolveInfo != null &&
                 context.getPackageName().equals(resolveInfo.activityInfo.packageName);
 
+    }
+
+    private String stripAccents(final String s)
+    {
+        String normalized = Normalizer.normalize(s, Normalizer.Form.NFKD);
+
+        return pattern.matcher(normalized).replaceAll("");
     }
 
     private void loadLaunchableApps() {
@@ -654,7 +665,7 @@ public class SearchActivity extends Activity
 
             if (position < column_count) {
                 final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                params.height = everythingOnTopHeight;//TODO remove magic number
+                params.height = everythingOnTopHeight;
                 view.setLayoutParams(params);
                 view.setVisibility(View.INVISIBLE);
             } else {
