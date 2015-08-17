@@ -398,17 +398,7 @@ public class SearchActivity extends Activity
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString());
             launchablesFromResolve.add(launchableActivity);
         }
-
-        //lets try to create a custom launchable
-
-        //the component name is used for the "app info"/ "see on playstore" options.
-        final ComponentName customComponentName= new ComponentName("com.android.settings","BatteryInfo");
-        final Intent customIntent = new Intent(Intent.ACTION_POWER_USAGE_SUMMARY);
-        final String customComponentLabel="Battery";//yeah, good luck getting the localized versions
-        final LaunchableActivity launchableActivity = new LaunchableActivity(customComponentName,
-                "Battery",defaultAppIcon,customIntent);
-        launchablesFromResolve.add(launchableActivity);
-        updateApps(launchablesFromResolve);
+        
     }
 
     private void showKeyboard() {
