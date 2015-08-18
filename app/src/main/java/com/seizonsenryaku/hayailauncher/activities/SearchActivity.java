@@ -39,8 +39,10 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -56,6 +58,7 @@ import com.seizonsenryaku.hayailauncher.R;
 import com.seizonsenryaku.hayailauncher.SimpleTaskConsumerManager;
 import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
 import com.seizonsenryaku.hayailauncher.Trie;
+import com.seizonsenryaku.hayailauncher.util.ContentShare;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -85,6 +88,7 @@ public class SearchActivity extends Activity
     private AdapterView appListView;
     private PackageManager pm;
     private View overflowButtonTopleft;
+    private ImageButton shareButton;
     private int column_count;
     private int everythingOnTopHeight;
 
@@ -99,10 +103,8 @@ public class SearchActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        final View everything_on_top=findViewById(R.id.everything_on_top);
-        final ViewGroup.MarginLayoutParams paramsEverythingOnTop =
-                (ViewGroup.MarginLayoutParams) everything_on_top.getLayoutParams();
-        everythingOnTopHeight = paramsEverythingOnTop.height;
+
+
 
         pm = getPackageManager();
         final Resources resources = getResources();
@@ -117,6 +119,9 @@ public class SearchActivity extends Activity
         appListView = (GridView) findViewById(R.id.appsContainer);
 
         overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
+
+        shareButton = (ImageButton) findViewById(R.id.share_button);
+
 
         context = getApplicationContext();
 
@@ -152,7 +157,6 @@ public class SearchActivity extends Activity
         //change status bar color. only needed on kitkat atm.
         StatusBarColorHelper.setStatusBarColor(resources,
                 this, resources.getColor(R.color.indigo_700));
-
 
 
     }
@@ -196,6 +200,9 @@ public class SearchActivity extends Activity
     }
 
     private void setupViews() {
+
+
+
         searchEditText.addTextChangedListener(textWatcher);
         searchEditText.setImeActionLabel(getString(R.string.launch),EditorInfo.IME_ACTION_GO);
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
@@ -241,7 +248,18 @@ public class SearchActivity extends Activity
             }
 
         });
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                ContentShare.shareText(SearchActivity.this,searchEditText.getText().toString());
+            }
+        });
     }
+
+
+
+
+
 
     private void setupPreferences() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
@@ -398,7 +416,8 @@ public class SearchActivity extends Activity
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString());
             launchablesFromResolve.add(launchableActivity);
         }
-        
+
+        updateApps(launchablesFromResolve);
     }
 
     private void showKeyboard() {
@@ -664,7 +683,7 @@ public class SearchActivity extends Activity
 
             if (position < column_count) {
                 final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                params.height = everythingOnTopHeight;
+                params.height = 3*StatusBarColorHelper.getStatusBarHeight(getResources()) + 2*56;
                 view.setLayoutParams(params);
                 view.setVisibility(View.INVISIBLE);
             } else {
