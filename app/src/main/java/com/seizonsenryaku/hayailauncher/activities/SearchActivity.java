@@ -398,7 +398,7 @@ public class SearchActivity extends Activity
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString());
             launchablesFromResolve.add(launchableActivity);
         }
-        
+        updateApps(launchablesFromResolve);
     }
 
     private void showKeyboard() {
