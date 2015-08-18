@@ -3,6 +3,7 @@ package com.seizonsenryaku.hayailauncher;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -11,12 +12,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
     private final ActivityInfo activityInfo;
     private final String activityLabel;
     private final ComponentName componentName;
+    private final Intent launchIntent;
     private int numberOfLaunches;
     private Drawable activityIcon;
     private boolean favorite;
@@ -24,12 +25,32 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     //This limitation is needed to speedup the compareTo function.
     private static final int MAX_LAUNCHES = 16383;
 
+    public Intent getLaunchIntent(){
+        if(launchIntent!=null)
+            return launchIntent;
+
+        final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
+        launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchIntent.setComponent(componentName);
+        return launchIntent;
+    }
     public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel) {
         this.activityInfo = activityInfo;
         this.activityLabel = activityLabel;
         componentName = new ComponentName(activityInfo.packageName, activityInfo.name);
+        launchIntent = null; //create one "on demand"
     }
 
+    public LaunchableActivity(final ComponentName componentName, final String label,
+                              final Drawable activityIcon, final Intent launchIntent){
+        this.componentName=componentName;
+        this.activityLabel=label;
+        this.launchIntent=launchIntent;
+        this.activityIcon=activityIcon;
+        this.activityInfo=null;
+    }
+        
     public void incrementLaunches() {
         if (numberOfLaunches < MAX_LAUNCHES)
             numberOfLaunches++;
@@ -121,6 +142,6 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     }
 
     public String getClassName() {
-        return activityInfo.name;
+        return componentName.getClassName();
     }
 }

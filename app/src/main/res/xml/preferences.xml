@@ -4,5 +4,12 @@
         android:defaultValue="false"/>
     <CheckBoxPreference android:title="@string/settings_enable_icons_title" android:key="pref_show_icon"
         android:defaultValue="true"/>
+    <ListPreference
+        android:key="pref_base_theme"
+        android:title="@string/pref_basetheme"
+        android:dialogTitle="@string/pref_basetheme"
+        android:entries="@array/pref_basetheme_entries"
+        android:entryValues="@array/pref_basetheme_values"
+        android:defaultValue="light" />
 
 </PreferenceScreen>

@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -18,6 +19,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -55,16 +57,19 @@ import com.seizonsenryaku.hayailauncher.SimpleTaskConsumerManager;
 import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
 import com.seizonsenryaku.hayailauncher.Trie;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
+
 
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
-
+    private final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
@@ -80,17 +85,24 @@ public class SearchActivity extends Activity
     private AdapterView appListView;
     private PackageManager pm;
     private View overflowButtonTopleft;
+    private int column_count;
+    private int everythingOnTopHeight;
 
     //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
 
-    int column_count;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
+        final View everything_on_top=findViewById(R.id.everything_on_top);
+        final ViewGroup.MarginLayoutParams paramsEverythingOnTop =
+                (ViewGroup.MarginLayoutParams) everything_on_top.getLayoutParams();
+        everythingOnTopHeight = paramsEverythingOnTop.height;
 
         pm = getPackageManager();
         final Resources resources = getResources();
@@ -114,7 +126,8 @@ public class SearchActivity extends Activity
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
-        float itemWidth = 72;
+        float itemWidth = 72;//TODO remove magic number
+
         column_count =  Math.round(dpWidth/itemWidth) - 1;
 
         sharedPreferences = PreferenceManager
@@ -125,11 +138,13 @@ public class SearchActivity extends Activity
         //noinspection deprecation
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
         iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
-                * resources.getDisplayMetrics().density + 0.5f);
+                * displayMetrics.density + 0.5f);
 
         setupPreferences();
 
         loadLaunchableApps();
+
+
         setupImageLoadingThreads(resources);
 
         setupViews();
@@ -156,7 +171,6 @@ public class SearchActivity extends Activity
 
     @Override
         protected void onResume() {
-
         searchEditText.clearFocus();
         searchEditText.requestFocus();
         super.onResume();
@@ -221,9 +235,7 @@ public class SearchActivity extends Activity
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position < column_count){
-
-                } else {
+                if (position >= column_count) {
                     launchActivity(activityInfos.get(position - column_count));
                 }
             }
@@ -248,45 +260,39 @@ public class SearchActivity extends Activity
         imageTasksSharedData = new ImageLoadingTask.SharedData(this, pm, context, iconSizePixels);
     }
 
-    private void updateApps(final List<ResolveInfo> infoList) {
-        final ArrayList<LaunchableActivity> updatedActivityInfos = new ArrayList<>();
-        for (ResolveInfo info : infoList) {
-            final String className = info.activityInfo.name;
+    private void updateApps(final List<LaunchableActivity> updatedActivityInfos) {
+
+        for (LaunchableActivity launchableActivity : updatedActivityInfos) {
+            final String packageName = launchableActivity.getComponent().getPackageName();
+            launchableActivityPackageNameHashMap.remove(packageName);
+        }
+
+        for (LaunchableActivity launchableActivity : updatedActivityInfos) {
+            final String className = launchableActivity.getComponent().getClassName();
             //don't show this activity in the launcher
             if (className.equals(this.getClass().getCanonicalName())) {
                 continue;
             }
 
-            final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, info.activityInfo.loadLabel(pm).toString());
 
             final String activityLabel = launchableActivity.getActivityLabel().toString();
-            updatedActivityInfos.add(launchableActivity);
-
-            final List<String> subwords = getAllSubwords(activityLabel);
+            final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
             for (String subword : subwords) {
                 trie.put(subword, launchableActivity);
             }
-        }
-        for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
-            final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
-            launchableActivityPackageNameHashMap.remove(packageName);
-        }
-        for (LaunchableActivity updatedLaunchableActivity : updatedActivityInfos) {
-            final String packageName = updatedLaunchableActivity.getComponent().getPackageName();
+            final String packageName = launchableActivity.getComponent().getPackageName();
 
             List<LaunchableActivity> launchableActivitiesToUpdate =
                     launchableActivityPackageNameHashMap.remove(packageName);
             if (launchableActivitiesToUpdate == null) {
                 launchableActivitiesToUpdate = new LinkedList<>();
             }
-            launchableActivitiesToUpdate.add(updatedLaunchableActivity);
+            launchableActivitiesToUpdate.add(launchableActivity);
             launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
         }
         Log.d("SearchActivity", "updated activities: " + updatedActivityInfos.size());
         launchableActivityPrefs.setAllPreferences(updatedActivityInfos);
         updateVisibleApps();
-
     }
 
 
@@ -329,8 +335,9 @@ public class SearchActivity extends Activity
     }
 
     private void updateVisibleApps() {
-        final HashSet<LaunchableActivity> infoList = trie.getAllStartingWith(searchEditText.getText()
-                .toString().toLowerCase().trim());
+        final HashSet<LaunchableActivity> infoList =
+                trie.getAllStartingWith(stripAccents(searchEditText.getText()
+                        .toString().toLowerCase().trim()));
         activityInfos.clear();
         activityInfos.addAll(infoList);
         Collections.sort(activityInfos);
@@ -349,9 +356,9 @@ public class SearchActivity extends Activity
             final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
             String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
-            final List<String> subwords = getAllSubwords(activityLabel);
+            final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
             for (String subword : subwords) {
-                trie.remove(subword, launchableActivityToRemove);
+                trie.remove(subword,launchableActivityToRemove);
             }
             if (activityInfos.remove(launchableActivityToRemove))
                 activityListChanged = true;
@@ -373,6 +380,10 @@ public class SearchActivity extends Activity
 
     }
 
+    private String stripAccents(final String s) {
+        return pattern.matcher(Normalizer.normalize(s, Normalizer.Form.NFKD)).replaceAll("");
+    }
+
     private void loadLaunchableApps() {
         final Intent intent = new Intent();
         intent.setAction(Intent.ACTION_MAIN);
@@ -381,7 +392,13 @@ public class SearchActivity extends Activity
         activityInfos = new ArrayList<>(infoList.size());
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
-        updateApps(infoList);
+        ArrayList<LaunchableActivity> launchablesFromResolve=new ArrayList<>(infoList.size());
+        for(ResolveInfo info:infoList){
+            final LaunchableActivity launchableActivity = new LaunchableActivity(
+                    info.activityInfo, info.activityInfo.loadLabel(pm).toString());
+            launchablesFromResolve.add(launchableActivity);
+        }
+        
     }
 
     private void showKeyboard() {
@@ -421,7 +438,10 @@ public class SearchActivity extends Activity
                 Log.d("SearchActivity", "No activities in list. Uninstall detected!");
             } else {
                 Log.d("SearchActivity", "Activities in list. Install/update detected!");
-                updateApps(infoList);
+                ArrayList<ActivityInfo> activityInfoFromResolve=new ArrayList<>(infoList.size());
+                for(ResolveInfo info:infoList){
+                    activityInfoFromResolve.add(info.activityInfo);
+                }
             }
 
         }
@@ -596,15 +616,11 @@ public class SearchActivity extends Activity
     public void launchActivity(final LaunchableActivity launchableActivity) {
 
         final ComponentName componentName = launchableActivity.getComponent();
-        final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
-        launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        launchIntent.setComponent(componentName);
 
         hideKeyboard();
 
         try {
-            startActivity(launchIntent);
+            startActivity(launchableActivity.getLaunchIntent());
             final int prevIndex = Collections.binarySearch(activityInfos,
                     launchableActivity);
             activityInfos.remove(prevIndex);
@@ -644,24 +660,15 @@ public class SearchActivity extends Activity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-/*
-            final View view =
-                    convertView != null ?
-                            convertView : inflater.inflate(R.layout.app_grid_item, parent, false); */
+            final View view =  convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false) ;
 
-            if ((position) < column_count) {
-                View v =  inflater.inflate(R.layout.app_grid_item, parent, false);
-
-                AbsListView.LayoutParams params = (AbsListView.LayoutParams) v.getLayoutParams();
-                params.height = 240;
-                v.setLayoutParams(params);
-
-                v.setVisibility(View.INVISIBLE);
-                return v;
+            if (position < column_count) {
+                final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
+                params.height = everythingOnTopHeight;
+                view.setLayoutParams(params);
+                view.setVisibility(View.INVISIBLE);
             } else {
-                final View view =  convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false) ;
-
-                AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
+                final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 view.setLayoutParams(params);
 
@@ -694,8 +701,8 @@ public class SearchActivity extends Activity
                 }
                 appFavoriteView.setVisibility(
                         launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
-                return view;
             }
+            return view;
         }
 
     }
