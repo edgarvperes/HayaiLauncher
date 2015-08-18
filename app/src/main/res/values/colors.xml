@@ -20,5 +20,8 @@
     <color name="dark">#455A64</color>
     <color name="background">#CFD8DC</color>
 
+    <color name="accent_red">#D32F2F</color>
+
+
     <color name="white">#FFFFFF</color>
 </resources>

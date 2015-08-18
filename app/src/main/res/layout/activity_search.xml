@@ -14,10 +14,11 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+
         >
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:id="@+id/appsContainer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -31,6 +32,7 @@
         android:choiceMode="singleChoice"
         android:numColumns="auto_fit"
         android:scrollbars="none"
+        android:layout_marginBottom="32dp"
         />
     </LinearLayout>
 
@@ -95,8 +97,8 @@
         >
     <ImageButton
         android:id="@+id/action_about"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
         android:src="@drawable/ic_search_black_36dp"
         android:tint="#FFFFFF"
         android:background="@drawable/action_button_bg"
