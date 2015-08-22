@@ -433,6 +433,7 @@ public class SearchActivity extends Activity
 
             if (infoList.isEmpty()) {
                 Log.d("SearchActivity", "No activities in list. Uninstall detected!");
+                updateVisibleApps();
             } else {
                 Log.d("SearchActivity", "Activities in list. Install/update detected!");
                 updateApps(infoList);
