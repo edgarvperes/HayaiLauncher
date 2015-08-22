@@ -439,10 +439,13 @@ public class SearchActivity extends Activity
                 updateVisibleApps();
             } else {
                 Log.d("SearchActivity", "Activities in list. Install/update detected!");
-                ArrayList<ActivityInfo> activityInfoFromResolve=new ArrayList<>(infoList.size());
+                ArrayList<LaunchableActivity> launchablesFromResolve=new ArrayList<>(infoList.size());
                 for(ResolveInfo info:infoList){
-                    activityInfoFromResolve.add(info.activityInfo);
+                    final LaunchableActivity launchableActivity = new LaunchableActivity(
+                            info.activityInfo, info.activityInfo.loadLabel(pm).toString());
+                    launchablesFromResolve.add(launchableActivity);
                 }
+                updateApps(launchablesFromResolve);
             }
 
         }
