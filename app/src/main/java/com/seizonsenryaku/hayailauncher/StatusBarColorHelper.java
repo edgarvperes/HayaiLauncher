@@ -11,31 +11,25 @@ import android.view.WindowManager;
 
 
 public class StatusBarColorHelper {
-    public static void setStatusBarColor(Resources resources, Activity activity) {
+
+    public static void setStatusBarColor(Resources resources, Activity activity, int color) {
         //There's no support for colored status bar in versions below KITKAT
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
 
-            final Window window = activity.getWindow();
-
-
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            window.getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
+        final Window window = activity.getWindow();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            //LOLLIPOP+ path
+            window.setStatusBarColor(color);
+        } else {
+            //KITKAT path
+            window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                    WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
             int statusBarHeight = getStatusBarHeight(resources);
-
             View statusBarDummy = activity.findViewById(R.id.statusBarDummyView);
-            statusBarDummy.getLayoutParams().height = statusBarHeight;
-
-            View topFillerView = activity.findViewById(R.id.topFillerView);
-            topFillerView.getLayoutParams().height = statusBarHeight;
-
-            View bottomFillerView = activity.findViewById(R.id.bottomFillerView);
-            bottomFillerView.getLayoutParams().height = statusBarHeight;
+            statusBarDummy.getLayoutParams().height=statusBarHeight;
+            statusBarDummy.setBackgroundColor(color);
         }
-
     }
 
     public static int getStatusBarHeight(Resources resources) {
@@ -47,5 +41,6 @@ public class StatusBarColorHelper {
         }
         return result;
     }
+
 
 }

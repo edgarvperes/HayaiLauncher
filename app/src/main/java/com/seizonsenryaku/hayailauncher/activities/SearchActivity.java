@@ -32,6 +32,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -154,9 +155,7 @@ public class SearchActivity extends Activity
 
         setupViews();
 
-        //change status bar color. only needed on kitkat atm.
-        StatusBarColorHelper.setStatusBarColor(resources,
-                this, resources.getColor(R.color.indigo_700));
+
 
 
     }
@@ -178,6 +177,34 @@ public class SearchActivity extends Activity
         searchEditText.clearFocus();
         searchEditText.requestFocus();
         super.onResume();
+    }
+
+    public void setPaddingHeights() {
+        //There's no support for colored status bar in versions below KITKAT
+        //TODO fix < KITKAT support
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+
+            final Window window = getWindow();
+
+
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            window.getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+
+            int statusBarHeight = StatusBarColorHelper.getStatusBarHeight(getResources());
+
+            View statusBarDummy = findViewById(R.id.statusBarDummyView);
+            statusBarDummy.getLayoutParams().height = statusBarHeight;
+
+            View topFillerView = findViewById(R.id.topFillerView);
+            topFillerView.getLayoutParams().height = statusBarHeight;
+
+            View bottomFillerView = findViewById(R.id.bottomFillerView);
+            bottomFillerView.getLayoutParams().height = statusBarHeight;
+        }
+
     }
 
     @Override
@@ -254,6 +281,8 @@ public class SearchActivity extends Activity
                 ContentShare.shareText(SearchActivity.this,searchEditText.getText().toString());
             }
         });
+
+        setPaddingHeights();
     }
 
 
