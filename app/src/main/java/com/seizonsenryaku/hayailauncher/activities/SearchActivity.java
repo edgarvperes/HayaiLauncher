@@ -136,7 +136,7 @@ public class SearchActivity extends Activity
 
         overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
 
-        shareButton = (ImageButton) findViewById(R.id.share_button);
+
 
 
         context = getApplicationContext();
@@ -297,11 +297,6 @@ public class SearchActivity extends Activity
 
         });
 
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                ContentShare.shareText(SearchActivity.this,searchEditText.getText().toString());
-            }
-        });
 
         setPaddingHeights();
     }

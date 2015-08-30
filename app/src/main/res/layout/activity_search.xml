@@ -103,7 +103,7 @@
                 android:src="@drawable/ic_clear_black_18dp"
                 android:tint="#9E9E9E" />
 
-            <ImageButton
+            ImageButton
                 android:id="@+id/share_button"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
