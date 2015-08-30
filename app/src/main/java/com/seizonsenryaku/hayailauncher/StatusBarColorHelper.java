@@ -53,13 +53,22 @@ public class StatusBarColorHelper {
     }
 
     public static int getStatusBarHeight(Resources resources) {
-        int result = 0;
+
         int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId);
+            return resources.getDimensionPixelSize(resourceId);
 
         }
-        return result;
+        return 0;
+    }
+
+    public static int getNavigationBarHeight (Resources resources){
+
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return resources.getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 
 }

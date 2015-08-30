@@ -19,7 +19,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -39,14 +38,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,6 +88,21 @@ public class SearchActivity extends Activity
     private int column_count;
     private int everythingOnTopHeight;
 
+    private static float displayDensity;
+
+    private static final int statusBarHeightMultiplier = 3;
+    private static final int navigationBarHeightMultiplier = 1;
+
+    private static final int gridViewTopRowExtraPaddingInDP = 56;
+    private static int  gridViewTopRowExtraPaddingInPixels;
+
+    private static final int marginFromNavigationBarInDp = 16;
+    private static int marginFromNavigationBarInPixels;
+
+    private static final int gridItemHeightInDp = 96;
+    private static int gridItemHeightInPixels;
+
+
     //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
@@ -127,9 +138,15 @@ public class SearchActivity extends Activity
 
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        displayDensity = displayMetrics.density;
+        gridViewTopRowExtraPaddingInPixels = Math.round(displayDensity*gridViewTopRowExtraPaddingInDP);
+        marginFromNavigationBarInPixels = Math.round(displayDensity*marginFromNavigationBarInDp);
+        gridItemHeightInPixels = Math.round(displayDensity*gridItemHeightInDp);
 
-        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        float dpHeight = displayMetrics.heightPixels / displayDensity;
+        float dpWidth = displayMetrics.widthPixels / displayDensity;
+
+
 
         float itemWidth = 72;//TODO remove magic number
 
@@ -143,7 +160,7 @@ public class SearchActivity extends Activity
         //noinspection deprecation
         defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
         iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
-                * displayMetrics.density + 0.5f);
+                * displayDensity + 0.5f);
 
         setupPreferences();
 
@@ -683,9 +700,14 @@ public class SearchActivity extends Activity
 
             if (position < column_count) {
                 final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                params.height = 3*StatusBarColorHelper.getStatusBarHeight(getResources()) + 2*56;
+                params.height = statusBarHeightMultiplier *StatusBarColorHelper.getStatusBarHeight(getResources()) + gridViewTopRowExtraPaddingInPixels;
                 view.setLayoutParams(params);
-                view.setVisibility(View.INVISIBLE);
+                view.setVisibility(View.INVISIBLE);}
+             else if (position == (getCount()-1) ) {
+                    final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
+                    params.height = gridItemHeightInPixels + navigationBarHeightMultiplier*StatusBarColorHelper.getNavigationBarHeight(getResources()) + marginFromNavigationBarInPixels;
+                    view.setLayoutParams(params);
+                    view.setVisibility(View.INVISIBLE);
             } else {
                 final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
