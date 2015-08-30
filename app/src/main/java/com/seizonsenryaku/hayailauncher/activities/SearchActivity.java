@@ -163,7 +163,7 @@ public class SearchActivity extends Activity
         launchableActivityPrefs = new LaunchableActivityPrefs(this);
 
         //noinspection deprecation
-        defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
+        defaultAppIcon = resources.getDrawable(R.drawable.ic_blur_on_black_48dp);
         iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
                 * displayDensity + 0.5f);
 
