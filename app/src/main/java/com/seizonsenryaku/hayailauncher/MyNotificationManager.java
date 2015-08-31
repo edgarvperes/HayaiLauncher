@@ -13,24 +13,26 @@ public class MyNotificationManager {
 	private static final int NOTIFICATION_ID = 0;
 
     public static int getPriorityFromString(String priority) {
-        int i_priority = 0;
+        final int i_priority;
         if (priority.toLowerCase().equals("max")) {
             i_priority = NotificationCompat.PRIORITY_MAX;
         } else if (priority.toLowerCase().equals("min")) {
             i_priority = NotificationCompat.PRIORITY_MIN;
+        } else {
+            i_priority = 0;
         }
         return i_priority;
     }
 
     public void showNotification(Context context, int priority) {
-        Intent resultIntent = new Intent(context, SearchActivity.class);
+        final Intent resultIntent = new Intent(context, SearchActivity.class);
         resultIntent.setAction(Intent.ACTION_MAIN);
         resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
+        final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-		Notification notification = new NotificationCompat.Builder(
-				context)
+        final Notification notification = new NotificationCompat.Builder(
+                context)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(context.getString(R.string.title_activity_search))
                 .setPriority(priority)
@@ -38,7 +40,7 @@ public class MyNotificationManager {
                 .setContentIntent(pendingIntent)
                 .build();
 
-        NotificationManager mNotificationManager = (NotificationManager) context
+        final NotificationManager mNotificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
 		mNotificationManager.notify(NOTIFICATION_ID, notification);
