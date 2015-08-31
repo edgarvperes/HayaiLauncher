@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 
 import com.seizonsenryaku.hayailauncher.activities.SearchActivity;
 
@@ -25,11 +24,10 @@ public class MyNotificationManager {
 
     public void showNotification(Context context, int priority) {
         Intent resultIntent = new Intent(context, SearchActivity.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-		stackBuilder.addParentStack(SearchActivity.class);
-		stackBuilder.addNextIntent(resultIntent);
-		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+        resultIntent.setAction(Intent.ACTION_MAIN);
+        resultIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
 		Notification notification = new NotificationCompat.Builder(
 				context)
@@ -37,8 +35,8 @@ public class MyNotificationManager {
 				.setContentTitle(context.getString(R.string.title_activity_search))
                 .setPriority(priority)
                 .setOngoing(true)
-                .setContentIntent(resultPendingIntent)
-				.build();
+                .setContentIntent(pendingIntent)
+                .build();
 
         NotificationManager mNotificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
@@ -51,7 +49,6 @@ public class MyNotificationManager {
         final NotificationManager mNotificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
-		// mId allows you to update the notification later on.
 		mNotificationManager.cancel(NOTIFICATION_ID);
 	}
 }
