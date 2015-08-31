@@ -2,6 +2,7 @@ package com.seizonsenryaku.hayailauncher.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
@@ -257,8 +258,9 @@ public class SearchActivity extends Activity
     }
 
     private void setupViews() {
-
-
+        //noinspection deprecation
+        findViewById(R.id.masterLayout).setBackgroundDrawable(
+                WallpaperManager.getInstance(this).getFastDrawable());
 
         searchEditText.addTextChangedListener(textWatcher);
         searchEditText.setImeActionLabel(getString(R.string.launch),EditorInfo.IME_ACTION_GO);

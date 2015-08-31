@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/masterLayout"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
