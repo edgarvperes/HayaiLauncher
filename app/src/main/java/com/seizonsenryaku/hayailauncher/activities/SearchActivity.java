@@ -72,11 +72,10 @@ public class SearchActivity extends Activity
     private static final int gridViewTopRowExtraPaddingInDP = 56;
     private static final int marginFromNavigationBarInDp = 16;
     private static final int gridItemHeightInDp = 96;
-    private static float displayDensity;
-    private static int gridViewTopRowExtraPaddingInPixels;
-    private static int marginFromNavigationBarInPixels;
-    private static int gridItemHeightInPixels;
     private final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+    private int gridViewTopRowExtraPaddingInPixels;
+    private int marginFromNavigationBarInPixels;
+    private int gridItemHeightInPixels;
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
@@ -151,10 +150,10 @@ public class SearchActivity extends Activity
 
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        displayDensity = displayMetrics.density;
-        gridViewTopRowExtraPaddingInPixels = Math.round(displayDensity*gridViewTopRowExtraPaddingInDP);
-        marginFromNavigationBarInPixels = Math.round(displayDensity*marginFromNavigationBarInDp);
-        gridItemHeightInPixels = Math.round(displayDensity*gridItemHeightInDp);
+        float displayDensity = displayMetrics.density;
+        gridViewTopRowExtraPaddingInPixels = Math.round(displayDensity * gridViewTopRowExtraPaddingInDP);
+        marginFromNavigationBarInPixels = Math.round(displayDensity * marginFromNavigationBarInDp);
+        gridItemHeightInPixels = Math.round(displayDensity * gridItemHeightInDp);
 
         float dpHeight = displayMetrics.heightPixels / displayDensity;
         float dpWidth = displayMetrics.widthPixels / displayDensity;
