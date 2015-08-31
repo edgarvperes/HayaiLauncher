@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#F5F5F5"
+    android:orientation="vertical"
      >
 
 
@@ -14,18 +14,18 @@
 
         >
     <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:id="@+id/appsContainer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:choiceMode="singleChoice"
         android:clipToPadding="false"
-        android:fadingEdge="none"
         android:columnWidth="64dp"
+        android:fadingEdge="none"
         android:gravity="center"
         android:horizontalSpacing="16dp"
         android:numColumns="auto_fit"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
         android:verticalSpacing="16dp" />
@@ -35,9 +35,9 @@
         android:id="@+id/everything_on_top"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:layout_margin="0dp">
+        android:layout_margin="0dp"
+        android:orientation="vertical">
 
         <View
             android:id="@+id/statusBarDummyView"
@@ -93,11 +93,11 @@
                 android:id="@+id/clear_button"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:layout_marginTop="19dp"
                 android:layout_marginBottom="19dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginTop="19dp"
                 android:background="@null"
-
+                android:onClick="onClickClearButton"
                 android:src="@drawable/ic_cancel_black_18dp"
                 android:tint="@color/hint_grey" />
 
