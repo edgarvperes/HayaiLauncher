@@ -16,6 +16,8 @@
     <color name="indigo_A700">#304ffe</color>
     <color name="transparent">#7FC0C0C0</color>
 
+    <color name="gray_500">#9e9e9e</color>
+    <color name="gray_700">#616161</color>
     <color name="primary">#607D8B</color>
     <color name="dark">#455A64</color>
     <color name="background">#CFD8DC</color>
@@ -23,8 +25,8 @@
     <color name="accent_red">#D32F2F</color>
 
     <color name="hint_grey">#757575</color>
-    <color name="text_hint_grey">#9E9E9E
-    </color>
+    <color name="text_hint_grey">#9E9E9E</color>
+
 
     <color name="white">#FFFFFF</color>
 </resources>
