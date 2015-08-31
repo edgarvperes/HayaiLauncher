@@ -741,21 +741,15 @@ public class SearchActivity extends Activity
 
                 appLabelView.setText(label);
 
-
-                if (sharedPreferences.getBoolean("pref_show_icon", true)) {
-
-                    appIconView.setTag(launchableActivity);
-                    if (!launchableActivity.isIconLoaded()) {
-                        appIconView.setImageDrawable(defaultAppIcon);
-                        imageLoadingConsumersManager.addTask(
-                                new ImageLoadingTask(appIconView, launchableActivity,
-                                        imageTasksSharedData));
-                    } else {
-                        appIconView.setImageDrawable(
-                                launchableActivity.getActivityIcon(pm, context, iconSizePixels));
-                    }
-                } else {
+                appIconView.setTag(launchableActivity);
+                if (!launchableActivity.isIconLoaded()) {
                     appIconView.setImageDrawable(defaultAppIcon);
+                    imageLoadingConsumersManager.addTask(
+                            new ImageLoadingTask(appIconView, launchableActivity,
+                                    imageTasksSharedData));
+                } else {
+                    appIconView.setImageDrawable(
+                            launchableActivity.getActivityIcon(pm, context, iconSizePixels));
                 }
                 appFavoriteView.setVisibility(
                         launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);

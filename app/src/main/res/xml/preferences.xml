@@ -14,11 +14,6 @@
         android:key="pref_notification_priority"
         android:title="@string/pref_notification_priority" />
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="pref_show_icon"
-        android:title="@string/settings_enable_icons_title" />
-
     <ListPreference
         android:defaultValue="light"
         android:dialogTitle="@string/pref_basetheme"
