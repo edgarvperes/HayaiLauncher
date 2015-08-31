@@ -120,6 +120,8 @@ public class SearchActivity extends Activity
     // object re-allocation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
+
+
     private int gridViewTopRowHeight;
     private int gridViewBottomRowHeight;
 
@@ -185,8 +187,6 @@ public class SearchActivity extends Activity
     }
 
     public void setPaddingHeights() {
-        //There's no support for colored status bar in versions below KITKAT
-        //TODO fix < KITKAT support
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
             final Window window = getWindow();
