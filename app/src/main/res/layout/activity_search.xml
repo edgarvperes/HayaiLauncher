@@ -93,11 +93,9 @@
 
             <ImageButton
                 android:id="@+id/clear_button"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_marginBottom="19dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="19dp"
+                android:layout_width="32dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
                 android:background="@null"
                 android:onClick="onClickClearButton"
                 android:src="@drawable/ic_cancel_black_18dp"
@@ -107,9 +105,9 @@
 
             <ImageButton
                 android:id="@+id/overflow_button"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="16dp"
+                android:layout_width="32dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_vertical"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/application_icon_content_description"
                 android:onClick="onClickSettingsButton"
