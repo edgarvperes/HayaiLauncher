@@ -13,6 +13,8 @@ public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
 
 	public static final String KEY_PREF_NOTIFICATION = "pref_notification";
+    public static final String KEY_PREF_NOTIFICATION_PRIORITY = "pref_notification_priority";
+
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +31,13 @@ public class SettingsActivity extends PreferenceActivity implements
 			boolean notificationEnabled = sharedPreferences.getBoolean(key, false);
 			MyNotificationManager myNotificationManager = new MyNotificationManager();
 			if (notificationEnabled) {
-				myNotificationManager.showNotification(this);
-			} else {
-				myNotificationManager.cancelNotification(this);
+                final String strPriority =
+                        sharedPreferences.getString(SettingsActivity.KEY_PREF_NOTIFICATION_PRIORITY,
+                                "low");
+                final int priority = MyNotificationManager.getPriorityFromString(strPriority);
+                myNotificationManager.showNotification(this, priority);
+            } else {
+                myNotificationManager.cancelNotification(this);
 			}
 		}
 

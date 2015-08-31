@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -19,7 +18,6 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,14 +38,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +54,6 @@ import com.seizonsenryaku.hayailauncher.R;
 import com.seizonsenryaku.hayailauncher.SimpleTaskConsumerManager;
 import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
 import com.seizonsenryaku.hayailauncher.Trie;
-import com.seizonsenryaku.hayailauncher.util.ContentShare;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -73,6 +67,15 @@ import java.util.regex.Pattern;
 
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private static final int statusBarHeightMultiplier = 3;
+    private static final int navigationBarHeightMultiplier = 1;
+    private static final int gridViewTopRowExtraPaddingInDP = 56;
+    private static final int marginFromNavigationBarInDp = 16;
+    private static final int gridItemHeightInDp = 96;
+    private static float displayDensity;
+    private static int gridViewTopRowExtraPaddingInPixels;
+    private static int marginFromNavigationBarInPixels;
+    private static int gridItemHeightInPixels;
     private final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
@@ -86,32 +89,37 @@ public class SearchActivity extends Activity
     private ImageLoadingTask.SharedData imageTasksSharedData;
     private int iconSizePixels;
     private EditText searchEditText;
+    final TextWatcher textWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+            updateVisibleApps();
+        }
+
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            //do nothing
+        }
+
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            //do nothing
+        }
+
+
+    };
     private AdapterView appListView;
     private PackageManager pm;
     private View overflowButtonTopleft;
     private ImageButton shareButton;
     private int column_count;
     private int everythingOnTopHeight;
-
-    private static float displayDensity;
-
-    private static final int statusBarHeightMultiplier = 3;
-    private static final int navigationBarHeightMultiplier = 1;
-
-    private static final int gridViewTopRowExtraPaddingInDP = 56;
-    private static int  gridViewTopRowExtraPaddingInPixels;
-
-    private static final int marginFromNavigationBarInDp = 16;
-    private static int marginFromNavigationBarInPixels;
-
-    private static final int gridItemHeightInDp = 96;
-    private static int gridItemHeightInPixels;
-
-
     //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -301,16 +309,15 @@ public class SearchActivity extends Activity
         setPaddingHeights();
     }
 
-
-
-
-
-
     private void setupPreferences() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         if (sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
             final MyNotificationManager myNotificationManager = new MyNotificationManager();
-            myNotificationManager.showNotification(this);
+            final String strPriority =
+                    sharedPreferences.getString(SettingsActivity.KEY_PREF_NOTIFICATION_PRIORITY,
+                            "low");
+            final int priority = MyNotificationManager.getPriorityFromString(strPriority);
+            myNotificationManager.showNotification(this, priority);
         }
     }
 
@@ -357,7 +364,6 @@ public class SearchActivity extends Activity
         launchableActivityPrefs.setAllPreferences(updatedActivityInfos);
         updateVisibleApps();
     }
-
 
     private List<String> getAllSubwords(String line) {
         final ArrayList<String> subwords = new ArrayList<>();
@@ -548,14 +554,6 @@ public class SearchActivity extends Activity
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    class PopupEventListener implements PopupMenu.OnMenuItemClickListener {
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            return onOptionsItemSelected(item);
-        }
-    }
-
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             if (!showPopup(overflowButtonTopleft)) {
@@ -708,6 +706,14 @@ public class SearchActivity extends Activity
 
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    class PopupEventListener implements PopupMenu.OnMenuItemClickListener {
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            return onOptionsItemSelected(item);
+        }
+    }
+
     class ActivityInfoArrayAdapter extends ArrayAdapter<LaunchableActivity> {
         final LayoutInflater inflater;
 
@@ -777,28 +783,5 @@ public class SearchActivity extends Activity
         }
 
     }
-
-    final TextWatcher textWatcher = new TextWatcher() {
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before,
-                                  int count) {
-            updateVisibleApps();
-        }
-
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            //do nothing
-        }
-
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            //do nothing
-        }
-
-
-    };
 
 }

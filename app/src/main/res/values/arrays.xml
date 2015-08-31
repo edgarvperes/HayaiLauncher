@@ -5,8 +5,17 @@
         <item>Light</item>
     </string-array>
     <string-array name="pref_basetheme_values" >
-        <item>dark</item>
-        <item>light</item>
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
+
+    <string-array name="pref_notification_priority_entries">
+        <item>High</item>
+        <item>Low</item>
+    </string-array>
+    <string-array name="pref_notification_priority_values">
+        <item>High</item>
+        <item>Low</item>
     </string-array>
 
 </resources>

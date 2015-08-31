@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <CheckBoxPreference android:title="@string/settings_enable_notification_title" android:key="pref_notification"
-        android:defaultValue="false"/>
-    <CheckBoxPreference android:title="@string/settings_enable_icons_title" android:key="pref_show_icon"
-        android:defaultValue="true"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="pref_notification"
+        android:title="@string/settings_enable_notification_title" />
     <ListPreference
-        android:key="pref_base_theme"
-        android:title="@string/pref_basetheme"
+        android:defaultValue="low"
+        android:dialogTitle="@string/pref_notification_priority"
+        android:entries="@array/pref_notification_priority_entries"
+        android:entryValues="@array/pref_notification_priority_values"
+        android:key="pref_notification_priority"
+        android:title="@string/pref_notification_priority" />
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="pref_show_icon"
+        android:title="@string/settings_enable_icons_title" />
+    <ListPreference
+        android:defaultValue="light"
         android:dialogTitle="@string/pref_basetheme"
         android:entries="@array/pref_basetheme_entries"
         android:entryValues="@array/pref_basetheme_values"
-        android:defaultValue="light" />
+        android:key="pref_base_theme"
+        android:title="@string/pref_basetheme" />
+
 
 </PreferenceScreen>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <string name="app_name" translatable="false">Hayai Launcher</string>
     <string name="title_activity_search" translatable="false">Hayai Launcher</string>
@@ -33,5 +33,6 @@
     <string name="action_manage_apps">Manage apps</string>
     <string name="appmenu_onplaystore">See on Google Play Store</string>
     <string name="pref_basetheme" >Base Theme</string>
+    <string name="pref_notification_priority">Notification Priority</string>
 
 </resources>
