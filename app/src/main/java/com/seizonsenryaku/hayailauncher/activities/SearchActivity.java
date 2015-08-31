@@ -233,11 +233,7 @@ public class SearchActivity extends Activity
             View bottomFillerView = findViewById(R.id.bottomFillerView);
             bottomFillerView.getLayoutParams().height = statusBarHeight;
 
-        } else {
-
-
-
-        }
+        } 
 
 
     }
@@ -416,6 +412,7 @@ public class SearchActivity extends Activity
         activityInfos.clear();
         activityInfos.addAll(infoList);
         Collections.sort(activityInfos);
+        Log.d("DEBUG_SEARCH", activityInfos.size() + "");
         arrayAdapter.notifyDataSetChanged();
     }
 
@@ -738,23 +735,27 @@ public class SearchActivity extends Activity
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            final View view =  convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false) ;
+            final View view =
+                    convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false);
+            final AbsListView.LayoutParams params =
+                    (AbsListView.LayoutParams) view.getLayoutParams();
 
             if (position < column_count) {
-                final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                params.height = statusBarHeightMultiplier *StatusBarColorHelper.getStatusBarHeight(getResources()) + gridViewTopRowExtraPaddingInPixels;
+                params.height = statusBarHeightMultiplier *
+                        StatusBarColorHelper.getStatusBarHeight(getResources()) +
+                        gridViewTopRowExtraPaddingInPixels;
                 view.setLayoutParams(params);
-                view.setVisibility(View.INVISIBLE);}
-             else if (position == (getCount()-1) ) {
-                    final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                    params.height = gridItemHeightInPixels + navigationBarHeightMultiplier*StatusBarColorHelper.getNavigationBarHeight(getResources()) + marginFromNavigationBarInPixels;
-                    view.setLayoutParams(params);
-                    view.setVisibility(View.INVISIBLE);
+                view.setVisibility(View.INVISIBLE);
             } else {
-                final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                view.setLayoutParams(params);
+                if (position == (getCount() - 1)) {
+                    params.height = gridItemHeightInPixels + navigationBarHeightMultiplier *
+                            StatusBarColorHelper.getNavigationBarHeight(getResources()) +
+                            marginFromNavigationBarInPixels;
+                } else {
+                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                }
 
+                view.setLayoutParams(params);
                 view.setVisibility(View.VISIBLE);
                 final LaunchableActivity launchableActivity = getItem(position - column_count);
                 final CharSequence label = launchableActivity.getActivityLabel();
