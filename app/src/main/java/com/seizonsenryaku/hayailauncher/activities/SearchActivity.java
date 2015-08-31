@@ -89,7 +89,7 @@ public class SearchActivity extends Activity
     private ImageLoadingTask.SharedData imageTasksSharedData;
     private int iconSizePixels;
     private EditText searchEditText;
-    final TextWatcher textWatcher = new TextWatcher() {
+    private final TextWatcher textWatcher = new TextWatcher() {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
@@ -116,7 +116,8 @@ public class SearchActivity extends Activity
     private View overflowButtonTopleft;
     private int column_count;
 
-    //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
+    //used only in function getAllSubwords. they are here as class fields to avoid
+    // object re-allocation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
     private int gridViewTopRowHeight;
@@ -144,7 +145,7 @@ public class SearchActivity extends Activity
         context = getApplicationContext();
 
         statusBarHeight = StatusBarColorHelper.getStatusBarHeight(resources);
-        final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         final float displayDensity = displayMetrics.density;
         gridViewTopRowExtraPaddingInPixels = Math.round(displayDensity * gridViewTopRowExtraPaddingInDP);
         marginFromNavigationBarInPixels = Math.round(displayDensity * marginFromNavigationBarInDp);
