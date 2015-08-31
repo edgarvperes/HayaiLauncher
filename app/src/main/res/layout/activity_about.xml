@@ -13,33 +13,33 @@
         android:id="@+id/customActionBar"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:background="@color/indigo_500"
         android:orientation="horizontal"
+        android:paddingLeft="16dp"
 
-        android:background="@color/indigo_500">
+        android:paddingRight="16dp">
         <TextView
-            android:layout_height="fill_parent"
             android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_vertical|right"
-            android:textSize="18sp"
             android:text="@string/title_activity_about"
             android:textColor="#FFFFFF"
+            android:textSize="18sp"
 
             />
 
     </LinearLayout>
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent" android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:orientation="vertical"
         tools:context="com.seizonsenryaku.hayailauncher.com.seizonsenryaku.hayailauncher.activities.AboutActivity">
 
-        <TextView android:text="@string/about_content" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:text="@string/about_content" />
 
     </LinearLayout>
 
