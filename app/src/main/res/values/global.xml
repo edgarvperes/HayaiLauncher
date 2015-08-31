@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="max_imageloading_threads">7</integer>
-    <integer name="icon_size">48</integer>
 </resources>

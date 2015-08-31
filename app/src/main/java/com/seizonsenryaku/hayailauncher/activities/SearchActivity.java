@@ -119,17 +119,16 @@ public class SearchActivity extends Activity
     //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
+    private int gridViewTopRowHeight;
+    private int gridViewBottomRowHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-
-
-
-
         pm = getPackageManager();
+
         final Resources resources = getResources();
 
         //fields:
@@ -142,26 +141,23 @@ public class SearchActivity extends Activity
         appListView = (GridView) findViewById(R.id.appsContainer);
 
         overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
-
-
-
-
         context = getApplicationContext();
 
-
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float displayDensity = displayMetrics.density;
+        statusBarHeight = StatusBarColorHelper.getStatusBarHeight(resources);
+        final DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        final float displayDensity = displayMetrics.density;
         gridViewTopRowExtraPaddingInPixels = Math.round(displayDensity * gridViewTopRowExtraPaddingInDP);
         marginFromNavigationBarInPixels = Math.round(displayDensity * marginFromNavigationBarInDp);
         gridItemHeightInPixels = Math.round(displayDensity * gridItemHeightInDp);
 
-        float dpHeight = displayMetrics.heightPixels / displayDensity;
+        gridViewTopRowHeight = statusBarHeightMultiplier * statusBarHeight +
+                gridViewTopRowExtraPaddingInPixels;
+        gridViewBottomRowHeight = gridItemHeightInPixels + navigationBarHeightMultiplier *
+                StatusBarColorHelper.getNavigationBarHeight(getResources()) +
+                marginFromNavigationBarInPixels;
+
         float dpWidth = displayMetrics.widthPixels / displayDensity;
-
-
-
-        float itemWidth = 72;//TODO remove magic number
-
+        final float itemWidth = 72;//TODO remove magic number
         column_count =  Math.round(dpWidth/itemWidth) - 1;
 
         sharedPreferences = PreferenceManager
@@ -171,40 +167,20 @@ public class SearchActivity extends Activity
 
         //noinspection deprecation
         defaultAppIcon = resources.getDrawable(R.drawable.ic_blur_on_black_48dp);
-        iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
-                * displayDensity + 0.5f);
-        statusBarHeight = StatusBarColorHelper.getStatusBarHeight(getResources());
+        iconSizePixels = resources.getDimensionPixelSize(R.dimen.app_icon_size);
+
+
         setupPreferences();
-
         loadLaunchableApps();
-
-
         setupImageLoadingThreads(resources);
-
         setupViews();
-
-
-
-
-    }
-
-    @Override
-    protected void onStart() {
-
-
-        //searchEditText.clearFocus();
-        //searchEditText.requestFocus();
-
-        super.onStart();
-
-
     }
 
     @Override
         protected void onResume() {
+        super.onResume();
         searchEditText.clearFocus();
         searchEditText.requestFocus();
-        super.onResume();
     }
 
     public void setPaddingHeights() {
@@ -323,6 +299,7 @@ public class SearchActivity extends Activity
     private void setupImageLoadingThreads(final Resources resources) {
         final int maxThreads = resources.getInteger(R.integer.max_imageloading_threads);
         int numThreads = Runtime.getRuntime().availableProcessors() - 1;
+        //clamp numThreads
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > maxThreads) numThreads = maxThreads;
         imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
@@ -744,20 +721,15 @@ public class SearchActivity extends Activity
                     (AbsListView.LayoutParams) view.getLayoutParams();
 
             if (position < column_count) {
-                params.height = statusBarHeightMultiplier * statusBarHeight +
-                        gridViewTopRowExtraPaddingInPixels;
+                params.height = gridViewTopRowHeight;
                 view.setLayoutParams(params);
                 view.setVisibility(View.INVISIBLE);
             } else {
                 if (position == (getCount() - 1)) {
-                    //TODO cache navigationBarHeight
-                    params.height = gridItemHeightInPixels + navigationBarHeightMultiplier *
-                            StatusBarColorHelper.getNavigationBarHeight(getResources()) +
-                            marginFromNavigationBarInPixels;
+                    params.height = gridViewBottomRowHeight;
                 } else {
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 }
-
                 view.setLayoutParams(params);
                 view.setVisibility(View.VISIBLE);
                 final LaunchableActivity launchableActivity = getItem(position - column_count);
@@ -772,13 +744,11 @@ public class SearchActivity extends Activity
                 if (sharedPreferences.getBoolean("pref_show_icon", true)) {
 
                     appIconView.setTag(launchableActivity);
-
                     if (!launchableActivity.isIconLoaded()) {
                         appIconView.setImageDrawable(defaultAppIcon);
                         imageLoadingConsumersManager.addTask(
                                 new ImageLoadingTask(appIconView, launchableActivity,
                                         imageTasksSharedData));
-
                     } else {
                         appIconView.setImageDrawable(
                                 launchableActivity.getActivityIcon(pm, context, iconSizePixels));
