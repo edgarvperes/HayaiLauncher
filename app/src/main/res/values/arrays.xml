@@ -4,16 +4,19 @@
         <item>Dark</item>
         <item>Light</item>
     </string-array>
-    <string-array name="pref_basetheme_values" >
-        <item>Dark</item>
-        <item>Light</item>
-    </string-array>
 
     <string-array name="pref_notification_priority_entries">
         <item>High</item>
         <item>Low (no icon)</item>
     </string-array>
-    <string-array name="pref_notification_priority_values">
+
+
+    <string-array name="pref_basetheme_values" translatable="false">
+        <item>dark</item>
+        <item>light</item>
+    </string-array>
+
+    <string-array name="pref_notification_priority_values" translatable="false">
         <item>max</item>
         <item>min</item>
     </string-array>

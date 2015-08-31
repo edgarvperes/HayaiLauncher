@@ -27,4 +27,7 @@
     <string name="action_manage_apps">Gerenciar apps</string>
     <string name="appmenu_onplaystore">Abrir no Google Play Store</string>
     <string name="launch">Abrir</string>
+    <string name="pref_basetheme">Tema Base</string>
+    <string name="pref_notification_priority">Prioridade da notificação</string>
+    <string name="settings_category_notification_category">Notificações</string>
 </resources>
