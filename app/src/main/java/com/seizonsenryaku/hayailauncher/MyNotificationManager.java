@@ -15,10 +15,10 @@ public class MyNotificationManager {
 
     public static int getPriorityFromString(String priority) {
         int i_priority = 0;
-        if (priority.toLowerCase().equals("high")) {
-            i_priority = NotificationCompat.PRIORITY_HIGH;
-        } else if (priority.toLowerCase().equals("high")) {
-            i_priority = NotificationCompat.PRIORITY_LOW;
+        if (priority.toLowerCase().equals("max")) {
+            i_priority = NotificationCompat.PRIORITY_MAX;
+        } else if (priority.toLowerCase().equals("min")) {
+            i_priority = NotificationCompat.PRIORITY_MIN;
         }
         return i_priority;
     }

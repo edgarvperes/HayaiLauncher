@@ -11,11 +11,11 @@
 
     <string-array name="pref_notification_priority_entries">
         <item>High</item>
-        <item>Low</item>
+        <item>Low (no icon)</item>
     </string-array>
     <string-array name="pref_notification_priority_values">
-        <item>High</item>
-        <item>Low</item>
+        <item>max</item>
+        <item>min</item>
     </string-array>
 
 </resources>

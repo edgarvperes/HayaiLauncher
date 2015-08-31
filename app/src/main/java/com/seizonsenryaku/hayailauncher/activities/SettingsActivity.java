@@ -27,9 +27,10 @@ public class SettingsActivity extends PreferenceActivity implements
 	@Override
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (key.equals(KEY_PREF_NOTIFICATION)) {
-			boolean notificationEnabled = sharedPreferences.getBoolean(key, false);
-			MyNotificationManager myNotificationManager = new MyNotificationManager();
+        if (key.equals(KEY_PREF_NOTIFICATION) || key.equals(KEY_PREF_NOTIFICATION_PRIORITY)) {
+            boolean notificationEnabled =
+                    sharedPreferences.getBoolean(KEY_PREF_NOTIFICATION, false);
+            MyNotificationManager myNotificationManager = new MyNotificationManager();
 			if (notificationEnabled) {
                 final String strPriority =
                         sharedPreferences.getString(SettingsActivity.KEY_PREF_NOTIFICATION_PRIORITY,
