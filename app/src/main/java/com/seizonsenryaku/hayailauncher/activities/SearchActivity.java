@@ -232,7 +232,13 @@ public class SearchActivity extends Activity
 
             View bottomFillerView = findViewById(R.id.bottomFillerView);
             bottomFillerView.getLayoutParams().height = statusBarHeight;
+
+        } else {
+
+
+
         }
+
 
     }
 
