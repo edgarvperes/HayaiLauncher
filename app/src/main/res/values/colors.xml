@@ -22,6 +22,9 @@
 
     <color name="accent_red">#D32F2F</color>
 
+    <color name="hint_grey">#757575</color>
+    <color name="text_hint_grey">#9E9E9E
+    </color>
 
     <color name="white">#FFFFFF</color>
 </resources>

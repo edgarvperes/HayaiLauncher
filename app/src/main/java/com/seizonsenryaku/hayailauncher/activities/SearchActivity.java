@@ -93,6 +93,21 @@ public class SearchActivity extends Activity
     private int column_count;
     private int everythingOnTopHeight;
 
+    private static float displayDensity;
+
+    private static final int statusBarHeightMultiplier = 3;
+    private static final int navigationBarHeightMultiplier = 1;
+
+    private static final int gridViewTopRowExtraPaddingInDP = 56;
+    private static int  gridViewTopRowExtraPaddingInPixels;
+
+    private static final int marginFromNavigationBarInDp = 16;
+    private static int marginFromNavigationBarInPixels;
+
+    private static final int gridItemHeightInDp = 96;
+    private static int gridItemHeightInPixels;
+
+
     //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
@@ -121,16 +136,22 @@ public class SearchActivity extends Activity
 
         overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
 
-        shareButton = (ImageButton) findViewById(R.id.share_button);
+
 
 
         context = getApplicationContext();
 
 
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        displayDensity = displayMetrics.density;
+        gridViewTopRowExtraPaddingInPixels = Math.round(displayDensity*gridViewTopRowExtraPaddingInDP);
+        marginFromNavigationBarInPixels = Math.round(displayDensity*marginFromNavigationBarInDp);
+        gridItemHeightInPixels = Math.round(displayDensity*gridItemHeightInDp);
 
-        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        float dpHeight = displayMetrics.heightPixels / displayDensity;
+        float dpWidth = displayMetrics.widthPixels / displayDensity;
+
+
 
         float itemWidth = 72;//TODO remove magic number
 
@@ -142,9 +163,9 @@ public class SearchActivity extends Activity
         launchableActivityPrefs = new LaunchableActivityPrefs(this);
 
         //noinspection deprecation
-        defaultAppIcon = resources.getDrawable(R.drawable.ic_launcher);
+        defaultAppIcon = resources.getDrawable(R.drawable.ic_blur_on_black_48dp);
         iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
-                * displayMetrics.density + 0.5f);
+                * displayDensity + 0.5f);
 
         setupPreferences();
 
@@ -276,11 +297,6 @@ public class SearchActivity extends Activity
 
         });
 
-        shareButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                ContentShare.shareText(SearchActivity.this,searchEditText.getText().toString());
-            }
-        });
 
         setPaddingHeights();
     }
@@ -714,10 +730,14 @@ public class SearchActivity extends Activity
 
             if (position < column_count) {
                 final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
-                //TODO get proper density values and cache getStatusBarHeight result
-                params.height = 3*StatusBarColorHelper.getStatusBarHeight(getResources()) + 2*56;
+                params.height = statusBarHeightMultiplier *StatusBarColorHelper.getStatusBarHeight(getResources()) + gridViewTopRowExtraPaddingInPixels;
                 view.setLayoutParams(params);
-                view.setVisibility(View.INVISIBLE);
+                view.setVisibility(View.INVISIBLE);}
+             else if (position == (getCount()-1) ) {
+                    final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
+                    params.height = gridItemHeightInPixels + navigationBarHeightMultiplier*StatusBarColorHelper.getNavigationBarHeight(getResources()) + marginFromNavigationBarInPixels;
+                    view.setLayoutParams(params);
+                    view.setVisibility(View.INVISIBLE);
             } else {
                 final AbsListView.LayoutParams params = (AbsListView.LayoutParams) view.getLayoutParams();
                 params.height = ViewGroup.LayoutParams.WRAP_CONTENT;

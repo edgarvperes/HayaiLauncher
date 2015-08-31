@@ -1,10 +1,10 @@
 <resources>
 
     <string name="action_settings">Configurações</string>
-    <string name="application_icon_desc">Icone do Aplicativo</string>
-    <string name="search_view_hint">Procurar um aplicativo…</string>
+    <string name="application_icon_desc">Ícone do Aplicativo</string>
+    <string name="search_view_hint">Digite algo...</string>
 	<string name="title_activity_settings">Configurações</string>
-    <string name="settings_enable_notification_title">Exibir notificação</string>
+    <string name="settings_enable_notification_title">Exibir atalho no painel de notificações</string>
     <string name="application_icon_content_description">Ícone do aplicativo</string>
     <string name="appmenu_launch">Executar</string>
     <string name="appmenu_favorite">Favorito</string>
@@ -15,7 +15,7 @@
     <string name="settings_enable_icons_title">Mostrar icones</string>
     <string name="action_refresh_app_list">Atualizar lista de apps</string>
     <string name="action_about">Sobre</string>
-    <string name="action_system_settings">System Settings</string>
+    <string name="action_system_settings">Ajustes do dispositivo</string>
     <string name="activity_not_found">Atividade não encontrada.</string>
     <string name="title_activity_about">Sobre</string><string name="about_content">Hayai Launcher Versão 20150803_r3
 \n
@@ -25,6 +25,6 @@
 \nAutores:
 \n\tEdgar Villani Peres (seizonsenryaku)</string>
     <string name="action_manage_apps">Gerenciar apps</string>
-    <string name="appmenu_onplaystore">Abrir na Play Store</string>
+    <string name="appmenu_onplaystore">Abrir no Google Play Store</string>
     <string name="launch">Abrir</string>
 </resources>
