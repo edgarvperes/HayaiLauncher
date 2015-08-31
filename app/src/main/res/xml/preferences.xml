@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="pref_notification"
-        android:title="@string/settings_enable_notification_title" />
+    <PreferenceCategory
+        android:key="pref_category_notification_category"
+        android:title="@string/settings_category_notification_category">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_notification"
+            android:title="@string/settings_enable_notification_title" />
 
-    <ListPreference
-        android:defaultValue="min"
-        android:dependency="pref_notification"
-        android:dialogTitle="@string/pref_notification_priority"
-        android:entries="@array/pref_notification_priority_entries"
-        android:entryValues="@array/pref_notification_priority_values"
-        android:key="pref_notification_priority"
-        android:title="@string/pref_notification_priority" />
-
-    <ListPreference
-        android:defaultValue="light"
-        android:dialogTitle="@string/pref_basetheme"
-        android:entries="@array/pref_basetheme_entries"
-        android:entryValues="@array/pref_basetheme_values"
-        android:key="pref_base_theme"
-        android:title="@string/pref_basetheme" />
-
-
+        <ListPreference
+            android:defaultValue="min"
+            android:dependency="pref_notification"
+            android:dialogTitle="@string/pref_notification_priority"
+            android:entries="@array/pref_notification_priority_entries"
+            android:entryValues="@array/pref_notification_priority_values"
+            android:key="pref_notification_priority"
+            android:title="@string/pref_notification_priority" />
+    </PreferenceCategory>
 </PreferenceScreen>
