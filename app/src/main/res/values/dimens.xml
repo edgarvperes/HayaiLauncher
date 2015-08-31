@@ -7,4 +7,6 @@
     <dimen name="app_row_horizontal_margin">8dp</dimen>
     <dimen name="app_row_vertical_margin">4dp</dimen>
 
+    <dimen name="app_icon_size">48dp</dimen>
+
 </resources>
