@@ -2,7 +2,7 @@
 
     <string name="action_settings">Configurações</string>
     <string name="application_icon_desc">Ícone do Aplicativo</string>
-    <string name="search_view_hint">Digite algo...</string>
+    <string name="search_view_hint">Digite algo…</string>
 	<string name="title_activity_settings">Configurações</string>
     <string name="settings_enable_notification_title">Exibir atalho no painel de notificações</string>
     <string name="application_icon_content_description">Ícone do aplicativo</string>

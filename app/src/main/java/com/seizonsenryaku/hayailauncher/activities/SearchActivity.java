@@ -213,24 +213,20 @@ public class SearchActivity extends Activity
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
             final Window window = getWindow();
-
-
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             window.getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
-            View statusBarDummy = findViewById(R.id.statusBarDummyView);
+            final View statusBarDummy = findViewById(R.id.statusBarDummyView);
             statusBarDummy.getLayoutParams().height = statusBarHeight;
-
-            View topFillerView = findViewById(R.id.topFillerView);
-            topFillerView.getLayoutParams().height = statusBarHeight;
-
-            View bottomFillerView = findViewById(R.id.bottomFillerView);
-            bottomFillerView.getLayoutParams().height = statusBarHeight;
-
         }
 
+
+        final View topFillerView = findViewById(R.id.topFillerView);
+        topFillerView.getLayoutParams().height = statusBarHeight;
+
+        final View bottomFillerView = findViewById(R.id.bottomFillerView);
+        bottomFillerView.getLayoutParams().height = statusBarHeight;
 
     }
 
