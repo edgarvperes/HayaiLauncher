@@ -40,7 +40,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -76,6 +75,7 @@ public class SearchActivity extends Activity
     private int gridViewTopRowExtraPaddingInPixels;
     private int marginFromNavigationBarInPixels;
     private int gridItemHeightInPixels;
+    private int statusBarHeight;
     private ArrayList<LaunchableActivity> activityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
@@ -113,9 +113,8 @@ public class SearchActivity extends Activity
     private AdapterView appListView;
     private PackageManager pm;
     private View overflowButtonTopleft;
-    private ImageButton shareButton;
     private int column_count;
-    private int everythingOnTopHeight;
+
     //used only in function getAllSubwords. they are here as class fields to avoid object recreation.
     private StringBuilder wordSinceLastSpaceBuilder;
     private StringBuilder wordSinceLastCapitalBuilder;
@@ -173,7 +172,7 @@ public class SearchActivity extends Activity
         defaultAppIcon = resources.getDrawable(R.drawable.ic_blur_on_black_48dp);
         iconSizePixels = (int) (resources.getInteger(R.integer.icon_size)
                 * displayDensity + 0.5f);
-
+        statusBarHeight = StatusBarColorHelper.getStatusBarHeight(getResources());
         setupPreferences();
 
         loadLaunchableApps();
@@ -219,9 +218,6 @@ public class SearchActivity extends Activity
             window.getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-
-            int statusBarHeight = StatusBarColorHelper.getStatusBarHeight(getResources());
 
             View statusBarDummy = findViewById(R.id.statusBarDummyView);
             statusBarDummy.getLayoutParams().height = statusBarHeight;
@@ -469,7 +465,8 @@ public class SearchActivity extends Activity
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString());
             launchablesFromResolve.add(launchableActivity);
         }
-        updateApps(launchablesFromResolve);            }
+        updateApps(launchablesFromResolve);
+    }
 
     private void showKeyboard() {
         ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
@@ -739,18 +736,19 @@ public class SearchActivity extends Activity
         public View getView(int position, View convertView, ViewGroup parent) {
 
             final View view =
-                    convertView != null ? convertView : inflater.inflate(R.layout.app_grid_item, parent, false);
+                    convertView != null ?
+                            convertView : inflater.inflate(R.layout.app_grid_item, parent, false);
             final AbsListView.LayoutParams params =
                     (AbsListView.LayoutParams) view.getLayoutParams();
 
             if (position < column_count) {
-                params.height = statusBarHeightMultiplier *
-                        StatusBarColorHelper.getStatusBarHeight(getResources()) +
+                params.height = statusBarHeightMultiplier * statusBarHeight +
                         gridViewTopRowExtraPaddingInPixels;
                 view.setLayoutParams(params);
                 view.setVisibility(View.INVISIBLE);
             } else {
                 if (position == (getCount() - 1)) {
+                    //TODO cache navigationBarHeight
                     params.height = gridItemHeightInPixels + navigationBarHeightMultiplier *
                             StatusBarColorHelper.getNavigationBarHeight(getResources()) +
                             marginFromNavigationBarInPixels;
