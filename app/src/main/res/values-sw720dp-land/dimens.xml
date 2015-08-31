@@ -6,4 +6,6 @@
     -->
     <dimen name="activity_horizontal_margin">128dp</dimen>
 
+    <dimen name="app_icon_size">56dp</dimen>
+
 </resources>

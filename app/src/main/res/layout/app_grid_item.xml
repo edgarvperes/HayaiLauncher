@@ -9,7 +9,7 @@
         android:layout_gravity="center">
 
         <ImageView
-            android:layout_width="48dp"
+            android:layout_width="@dimen/app_icon_size"
             android:layout_height="48dp"
             android:id="@+id/appIcon"
             />
