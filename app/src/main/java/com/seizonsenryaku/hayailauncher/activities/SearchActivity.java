@@ -236,7 +236,11 @@ public class SearchActivity extends Activity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        Thread keyboardEventPosterThread = new Thread(new Runnable() {
+        showKeyboard();
+
+        //HACK putting showKeyboard event to the end of the Ui Thread running queue
+        // to make sure the keyboard opens.
+        final Thread keyboardEventPosterThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {
