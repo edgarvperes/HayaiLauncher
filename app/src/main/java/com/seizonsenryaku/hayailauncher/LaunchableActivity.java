@@ -132,16 +132,16 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     @Override
     public int compareTo(@NonNull final LaunchableActivity another) {
 
-        //Criteria 1 (Bit 1) indicates whether the activity is flagged as favorite or not.
+        //Criteria 1 (Bit 1) indicates whether the activity is flagged as shareable or not.
         //Criteria 2 (Bits 2 to 16) indicates the number of launches
         //Criteria 3 (Bits 17 to 31) indicates string difference (can be at most Character.MAX_VALUE)
 
         //
-        final int thisN = (this.favorite ? 0x40000000
-                : 0) + (this.numberOfLaunches << 16);
+        final int thisN = (this.isShareable ? 0
+                : 0x40000000) + (this.numberOfLaunches << 16);
 
-        final int anotherN = (another.favorite ? 0x40000000
-                : 0) + (another.numberOfLaunches << 16) +
+        final int anotherN = (this.isShareable ? 0
+                : 0x40000000) + (another.numberOfLaunches << 16) +
                 activityLabel.compareTo(another.activityLabel);
 
         return anotherN - thisN;

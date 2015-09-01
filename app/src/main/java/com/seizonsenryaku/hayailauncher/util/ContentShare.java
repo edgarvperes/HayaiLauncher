@@ -3,7 +3,6 @@ package com.seizonsenryaku.hayailauncher.util;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.util.Log;
 
 import java.util.List;
 
@@ -32,11 +31,6 @@ public class ContentShare {
         intent.setType("text/plain");
         final List<ResolveInfo> resolveInfos =
                 pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
-
-        for (ResolveInfo resolveInfo : resolveInfos) {
-
-            Log.d("text_receivers", resolveInfo.activityInfo.name + " " + resolveInfo.loadLabel(pm));
-        }
         return resolveInfos;
     }
 
