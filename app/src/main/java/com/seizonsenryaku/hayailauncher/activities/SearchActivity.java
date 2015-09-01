@@ -86,11 +86,13 @@ public class SearchActivity extends Activity
     private ImageLoadingTask.SharedData imageTasksSharedData;
     private int iconSizePixels;
     private EditText searchEditText;
+    private View clearButton;
     private final TextWatcher textWatcher = new TextWatcher() {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                                   int count) {
+            clearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             updateVisibleApps();
         }
 
@@ -139,7 +141,7 @@ public class SearchActivity extends Activity
 
         searchEditText = (EditText) findViewById(R.id.editText1);
         appListView = (GridView) findViewById(R.id.appsContainer);
-
+        clearButton = findViewById(R.id.clear_button);
         overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
         context = getApplicationContext();
 
