@@ -140,7 +140,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         final int thisN = (this.isShareable ? 0
                 : 0x40000000) + (this.numberOfLaunches << 16);
 
-        final int anotherN = (this.isShareable ? 0
+        final int anotherN = (another.isShareable ? 0
                 : 0x40000000) + (another.numberOfLaunches << 16) +
                 activityLabel.compareTo(another.activityLabel);
 
