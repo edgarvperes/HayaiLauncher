@@ -67,7 +67,6 @@ import java.util.regex.Pattern;
 
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final int statusBarHeightMultiplier = 3;
     private static final int navigationBarHeightMultiplier = 1;
     private static final int gridViewTopRowExtraPaddingInDP = 56;
     private static final int marginFromNavigationBarInDp = 16;
@@ -154,8 +153,8 @@ public class SearchActivity extends Activity
                 Math.round(displayDensity * marginFromNavigationBarInDp);
         final int gridItemHeightInPixels =
                 Math.round(displayDensity * gridItemHeightInDp);
-
-        gridViewTopRowHeight = statusBarHeightMultiplier * statusBarHeight +
+        int statusBarMultiplierPaddings = setPaddingHeights();
+        gridViewTopRowHeight = statusBarMultiplierPaddings * statusBarHeight +
                 gridViewTopRowExtraPaddingInPixels;
         gridViewBottomRowHeight = gridItemHeightInPixels + navigationBarHeightMultiplier *
                 StatusBarColorHelper.getNavigationBarHeight(getResources()) +
@@ -188,7 +187,8 @@ public class SearchActivity extends Activity
         searchEditText.requestFocus();
     }
 
-    public void setPaddingHeights() {
+    public int setPaddingHeights() {
+        int statusBarPaddings = 0;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
             final Window window = getWindow();
@@ -198,8 +198,9 @@ public class SearchActivity extends Activity
 
             final View statusBarDummy = findViewById(R.id.statusBarDummyView);
             statusBarDummy.getLayoutParams().height = statusBarHeight;
+            statusBarPaddings++;
         }
-
+        statusBarPaddings += 2;
 
         final View topFillerView = findViewById(R.id.topFillerView);
         topFillerView.getLayoutParams().height = statusBarHeight;
@@ -207,6 +208,7 @@ public class SearchActivity extends Activity
         final View bottomFillerView = findViewById(R.id.bottomFillerView);
         bottomFillerView.getLayoutParams().height = statusBarHeight;
 
+        return statusBarPaddings;
     }
 
     @Override
@@ -238,13 +240,13 @@ public class SearchActivity extends Activity
                 WallpaperManager.getInstance(this).getFastDrawable());
 
         searchEditText.addTextChangedListener(textWatcher);
-        searchEditText.setImeActionLabel(getString(R.string.launch),EditorInfo.IME_ACTION_GO);
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener(){
+        searchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_GO){
-                    if(!activityInfos.isEmpty()) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    if (!activityInfos.isEmpty()) {
                         launchActivity(activityInfos.get(0));
                         return true;
                     }
@@ -284,7 +286,6 @@ public class SearchActivity extends Activity
         });
 
 
-        setPaddingHeights();
     }
 
     private void setupPreferences() {
