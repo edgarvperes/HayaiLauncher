@@ -1,7 +1,11 @@
 package com.seizonsenryaku.hayailauncher.util;
 
-import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.util.Log;
+
+import java.util.List;
 
 /**
  * Created by Administrador on 18/08/2015.
@@ -9,12 +13,37 @@ import android.content.Intent;
 public class ContentShare {
 
 
-    public static void shareText(Context context, String text){
+    public static Intent shareTextIntent(String text) {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         sendIntent.putExtra(Intent.EXTRA_TEXT, text);
         sendIntent.setType("text/plain");
-        context.startActivity(sendIntent);
+        return sendIntent;
+
+    }
+
+
+    public static List<ResolveInfo> getTextReceivers(PackageManager pm) {
+
+        final Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        final List<ResolveInfo> resolveInfos =
+                pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
+        for (ResolveInfo resolveInfo : resolveInfos) {
+
+            Log.d("text_receivers", resolveInfo.activityInfo.name + " " + resolveInfo.loadLabel(pm));
+        }
+        return resolveInfos;
+    }
+
+    public static List<ResolveInfo> getLaunchableResolveInfos(PackageManager pm) {
+        final Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_LAUNCHER);
+        return pm.queryIntentActivities(intent, 0);
     }
 }

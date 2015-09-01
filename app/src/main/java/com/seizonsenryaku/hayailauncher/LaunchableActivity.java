@@ -13,6 +13,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
+import com.seizonsenryaku.hayailauncher.util.ContentShare;
+
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
     //This limitation is needed to speedup the compareTo function.
     private static final int MAX_LAUNCHES = 16383;
@@ -21,14 +23,17 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     private final ComponentName componentName;
     private final Intent launchIntent;
     private int numberOfLaunches;
+    private boolean isShareable;
     private Drawable activityIcon;
     private boolean favorite;
 
-    public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel) {
+    public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel,
+                              boolean isShareable) {
         this.activityInfo = activityInfo;
         this.activityLabel = activityLabel;
         componentName = new ComponentName(activityInfo.packageName, activityInfo.name);
         launchIntent = null; //create one "on demand"
+        this.isShareable = isShareable;
     }
     public LaunchableActivity(final ComponentName componentName, final String label,
                               final Drawable activityIcon, final Intent launchIntent){
@@ -39,10 +44,14 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         this.activityInfo=null;
     }
 
-    public Intent getLaunchIntent() {
+    public Intent getLaunchIntent(String searchString) {
         if (launchIntent != null)
             return launchIntent;
-
+        if (isShareable()) {
+            final Intent launchIntent = ContentShare.shareTextIntent(searchString);
+            launchIntent.setComponent(getComponent());
+            return launchIntent;
+        }
         final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
         launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -144,5 +153,9 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
 
     public String getClassName() {
         return componentName.getClassName();
+    }
+
+    public boolean isShareable() {
+        return isShareable;
     }
 }

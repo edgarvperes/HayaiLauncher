@@ -51,9 +51,10 @@ import com.seizonsenryaku.hayailauncher.LaunchableActivity;
 import com.seizonsenryaku.hayailauncher.LaunchableActivityPrefs;
 import com.seizonsenryaku.hayailauncher.MyNotificationManager;
 import com.seizonsenryaku.hayailauncher.R;
-import com.seizonsenryaku.hayailauncher.SimpleTaskConsumerManager;
 import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
 import com.seizonsenryaku.hayailauncher.Trie;
+import com.seizonsenryaku.hayailauncher.threading.SimpleTaskConsumerManager;
+import com.seizonsenryaku.hayailauncher.util.ContentShare;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -177,8 +178,23 @@ public class SearchActivity extends Activity
 
         setupPreferences();
         loadLaunchableApps();
+        loadShareableApps();
         setupImageLoadingThreads(resources);
         setupViews();
+    }
+
+    private void loadShareableApps() {
+        List<ResolveInfo> infoList = ContentShare.getTextReceivers(pm);
+        activityInfos = new ArrayList<>(infoList.size());
+        arrayAdapter = new ActivityInfoArrayAdapter(this,
+                R.layout.app_grid_item, activityInfos);
+        ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
+        for (ResolveInfo info : infoList) {
+            final LaunchableActivity launchableActivity = new LaunchableActivity(
+                    info.activityInfo, info.activityInfo.loadLabel(pm).toString(), true);
+            launchablesFromResolve.add(launchableActivity);
+        }
+        updateApps(launchablesFromResolve);
     }
 
     @Override
@@ -435,17 +451,15 @@ public class SearchActivity extends Activity
     }
 
     private void loadLaunchableApps() {
-        final Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
+
+        List<ResolveInfo> infoList = ContentShare.getLaunchableResolveInfos(pm);
         activityInfos = new ArrayList<>(infoList.size());
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
         ArrayList<LaunchableActivity> launchablesFromResolve=new ArrayList<>(infoList.size());
         for(ResolveInfo info:infoList){
             final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, info.activityInfo.loadLabel(pm).toString());
+                    info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
             launchablesFromResolve.add(launchableActivity);
         }
         updateApps(launchablesFromResolve);
@@ -490,7 +504,7 @@ public class SearchActivity extends Activity
                 ArrayList<LaunchableActivity> launchablesFromResolve=new ArrayList<>(infoList.size());
                 for(ResolveInfo info:infoList){
                     final LaunchableActivity launchableActivity = new LaunchableActivity(
-                            info.activityInfo, info.activityInfo.loadLabel(pm).toString());
+                            info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
                     launchablesFromResolve.add(launchableActivity);
                 }
                 updateApps(launchablesFromResolve);
@@ -653,17 +667,11 @@ public class SearchActivity extends Activity
         hideKeyboard();
 
         try {
-            startActivity(launchableActivity.getLaunchIntent());
+            startActivity(launchableActivity.getLaunchIntent(searchEditText.getText().toString()));
             final int prevIndex = Collections.binarySearch(activityInfos,
                     launchableActivity);
-            activityInfos.remove(prevIndex);
             launchableActivity.incrementLaunches();
-            final int newIndex = -(Collections.binarySearch(activityInfos,
-                    launchableActivity) + 1);
-            activityInfos.add(newIndex, launchableActivity);
-            launchableActivityPrefs.writePreference(componentName.getClassName(),
-                    launchableActivity.getNumberOfLaunches(),
-                    launchableActivity.isFavorite());
+            Collections.sort(activityInfos);
             arrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {
             //this should only happen when the launcher still hasn't updated the file list after
@@ -727,6 +735,7 @@ public class SearchActivity extends Activity
                 final CharSequence label = launchableActivity.getActivityLabel();
                 final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
                 final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
+                final View appShareIndicator = view.findViewById(R.id.appShareIndicator);
 
                 appLabelView.setText(label);
 
@@ -740,6 +749,8 @@ public class SearchActivity extends Activity
                     appIconView.setImageDrawable(
                             launchableActivity.getActivityIcon(pm, context, iconSizePixels));
                 }
+                appShareIndicator.setVisibility(
+                        launchableActivity.isShareable() ? View.VISIBLE : View.GONE);
             }
             return view;
         }
