@@ -14,6 +14,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
+    //This limitation is needed to speedup the compareTo function.
+    private static final int MAX_LAUNCHES = 16383;
     private final ActivityInfo activityInfo;
     private final String activityLabel;
     private final ComponentName componentName;
@@ -22,26 +24,12 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     private Drawable activityIcon;
     private boolean favorite;
 
-    //This limitation is needed to speedup the compareTo function.
-    private static final int MAX_LAUNCHES = 16383;
-
-    public Intent getLaunchIntent(){
-        if(launchIntent!=null)
-            return launchIntent;
-
-        final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
-        launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        launchIntent.setComponent(componentName);
-        return launchIntent;
-    }
     public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel) {
         this.activityInfo = activityInfo;
         this.activityLabel = activityLabel;
         componentName = new ComponentName(activityInfo.packageName, activityInfo.name);
         launchIntent = null; //create one "on demand"
     }
-
     public LaunchableActivity(final ComponentName componentName, final String label,
                               final Drawable activityIcon, final Intent launchIntent){
         this.componentName=componentName;
@@ -50,26 +38,37 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         this.activityIcon=activityIcon;
         this.activityInfo=null;
     }
+
+    public Intent getLaunchIntent() {
+        if (launchIntent != null)
+            return launchIntent;
+
+        final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
+        launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+        launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        launchIntent.setComponent(componentName);
+        return launchIntent;
+    }
         
     public void incrementLaunches() {
         if (numberOfLaunches < MAX_LAUNCHES)
             numberOfLaunches++;
     }
 
-    public void setNumberOfLaunches(final int numberOfLaunches) {
-        this.numberOfLaunches = numberOfLaunches;
+    public boolean isFavorite() {
+        return favorite;
     }
 
     public void setFavorite(boolean favorite) {
         this.favorite = favorite;
     }
 
-    public boolean isFavorite() {
-        return favorite;
-    }
-
     public int getNumberOfLaunches() {
         return numberOfLaunches;
+    }
+
+    public void setNumberOfLaunches(final int numberOfLaunches) {
+        this.numberOfLaunches = numberOfLaunches;
     }
 
     public CharSequence getActivityLabel() {
@@ -89,9 +88,11 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                         (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                 final int iconDpi = activityManager.getLauncherLargeIconDensity();
                 try {
+
                     _activityIcon = pm.getResourcesForActivity(componentName).getDrawableForDensity(
                             activityInfo.getIconResource(), iconDpi);
-                } catch (PackageManager.NameNotFoundException e) {
+
+                } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
                     e.printStackTrace();
                 }
 
