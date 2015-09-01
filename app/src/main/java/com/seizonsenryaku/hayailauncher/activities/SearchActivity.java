@@ -109,6 +109,7 @@ public class SearchActivity extends Activity
 
 
     };
+    private InputMethodManager inputMethodManager;
     private AdapterView appListView;
     private PackageManager pm;
     private View overflowButtonTopleft;
@@ -143,7 +144,7 @@ public class SearchActivity extends Activity
         clearButton = findViewById(R.id.clear_button);
         overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
         context = getApplicationContext();
-
+        inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         statusBarHeight = StatusBarColorHelper.getStatusBarHeight(resources);
         final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         final float displayDensity = displayMetrics.density;
@@ -451,13 +452,11 @@ public class SearchActivity extends Activity
     }
 
     private void showKeyboard() {
-        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
-                .showSoftInput(searchEditText, 0);
+        inputMethodManager.showSoftInput(searchEditText, 0);
     }
 
     private void hideKeyboard() {
-        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE)).
-                hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+        inputMethodManager.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
     }
 
     private void handlePackageChanged() {
@@ -609,20 +608,6 @@ public class SearchActivity extends Activity
             case R.id.appmenu_launch:
                 launchActivity(launchableActivity);
                 return true;
-            case R.id.appmenu_favorite:
-                final int prevIndex = Collections.binarySearch(activityInfos,
-                        launchableActivity);
-                activityInfos.remove(prevIndex);
-                launchableActivity.setFavorite(!launchableActivity.isFavorite());
-                final int newIndex = -(Collections.binarySearch(activityInfos,
-                        launchableActivity) + 1);
-                activityInfos.add(newIndex, launchableActivity);
-                launchableActivityPrefs.writePreference(launchableActivity.getClassName(),
-                        launchableActivity.getNumberOfLaunches(),
-                        launchableActivity.isFavorite());
-                arrayAdapter.notifyDataSetChanged();
-                break;
-
             case R.id.appmenu_info:
                 final Intent intent = new Intent(
                         android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
@@ -641,7 +626,6 @@ public class SearchActivity extends Activity
                 return false;
         }
 
-        return false;
     }
 
     @Override
@@ -743,7 +727,6 @@ public class SearchActivity extends Activity
                 final CharSequence label = launchableActivity.getActivityLabel();
                 final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
                 final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
-                final View appFavoriteView = view.findViewById(R.id.appFavorite);
 
                 appLabelView.setText(label);
 
@@ -757,8 +740,6 @@ public class SearchActivity extends Activity
                     appIconView.setImageDrawable(
                             launchableActivity.getActivityIcon(pm, context, iconSizePixels));
                 }
-                appFavoriteView.setVisibility(
-                        launchableActivity.isFavorite() ? View.VISIBLE : View.INVISIBLE);
             }
             return view;
         }
