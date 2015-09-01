@@ -31,6 +31,7 @@ public class ContentShare {
         intent.setType("text/plain");
         final List<ResolveInfo> resolveInfos =
                 pm.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+
         return resolveInfos;
     }
 

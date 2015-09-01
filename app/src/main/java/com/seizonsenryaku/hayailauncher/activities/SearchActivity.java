@@ -194,7 +194,7 @@ public class SearchActivity extends Activity
                 R.layout.app_grid_item, activityInfos);
         for (ResolveInfo info : infoList) {
             final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, info.activityInfo.loadLabel(pm).toString(), true);
+                    info.activityInfo, info.loadLabel(pm).toString(), true);
             shareableActivityInfos.add(launchableActivity);
         }
         updateApps(shareableActivityInfos, false);
