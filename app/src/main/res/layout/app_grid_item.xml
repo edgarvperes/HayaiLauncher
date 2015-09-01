@@ -4,32 +4,24 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/app_icon_size"
+        android:layout_height="@dimen/app_icon_size"
         android:layout_gravity="center">
 
         <ImageView
             android:id="@+id/appIcon"
-            android:layout_width="@dimen/app_icon_size"
-            android:layout_height="@dimen/app_icon_size"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_launcher"
             />
 
-        <TextView
-
-            android:id="@+id/appFavorite"
+        <ImageView
+            android:id="@+id/appShareIndicator"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/appIcon"
-            android:layout_alignLeft="@+id/appIcon"
-            android:layout_alignRight="@+id/appIcon"
-            android:layout_alignTop="@+id/appIcon"
-            android:layout_gravity="center"
-            android:gravity="right"
-            android:shadowColor="#333300"
-            android:shadowRadius="2.0"
-            android:text="@string/app_item_favorite_symbol"
-            android:textColor="#FFEF00"
-            android:textSize="16sp" />
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_send_white_18dp"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <TextView
