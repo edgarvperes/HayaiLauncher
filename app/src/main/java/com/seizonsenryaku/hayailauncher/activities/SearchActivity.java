@@ -188,7 +188,7 @@ public class SearchActivity extends Activity
     }
 
     public int setPaddingHeights() {
-        int statusBarPaddings = 0;
+        int statusBarPaddings = 2;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
             final Window window = getWindow();
@@ -200,7 +200,6 @@ public class SearchActivity extends Activity
             statusBarDummy.getLayoutParams().height = statusBarHeight;
             statusBarPaddings++;
         }
-        statusBarPaddings += 2;
 
         final View topFillerView = findViewById(R.id.topFillerView);
         topFillerView.getLayoutParams().height = statusBarHeight;
