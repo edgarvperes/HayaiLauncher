@@ -1,7 +1,7 @@
 # HayaiLauncher
 A fast, lightweight Android Launcher.
 
-Currently the app requires no permissions and the APK's size is lower than 150KB.
+Currently the app requires no permissions and the APK's size is lower than 200KB.
 
 Screenshots:
 
