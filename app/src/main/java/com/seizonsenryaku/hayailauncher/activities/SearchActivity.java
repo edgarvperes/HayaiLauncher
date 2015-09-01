@@ -570,21 +570,25 @@ public class SearchActivity extends Activity
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_settings:
-                final Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
+                final Intent intentSettings = new Intent(this, SettingsActivity.class);
+                startActivity(intentSettings);
                 return true;
             case R.id.action_refresh_app_list:
                 recreate();
                 return true;
             case R.id.action_system_settings:
-                startActivity(new Intent(Settings.ACTION_SETTINGS));
+                final Intent intentSystemSettings = new Intent(Settings.ACTION_SETTINGS);
+                intentSystemSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intentSystemSettings);
                 return true;
             case R.id.action_manage_apps:
-                startActivity(new Intent(Settings.ACTION_APPLICATION_SETTINGS));
+                final Intent intentManageApps = new Intent(Settings.ACTION_APPLICATION_SETTINGS);
+                intentManageApps.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intentManageApps);
                 return true;
             case R.id.action_about:
-                final Intent intent_about = new Intent(this, AboutActivity.class);
-                startActivity(intent_about);
+                final Intent intentAbout = new Intent(this, AboutActivity.class);
+                startActivity(intentAbout);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

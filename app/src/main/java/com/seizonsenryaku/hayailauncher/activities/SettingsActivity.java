@@ -62,9 +62,10 @@ public class SettingsActivity extends PreferenceActivity implements
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPause() {
-		super.onPause();
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
+		super.onPause();
+		finish();
 	}
 
 }

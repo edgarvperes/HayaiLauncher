@@ -30,4 +30,10 @@ public class AboutActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
 }
