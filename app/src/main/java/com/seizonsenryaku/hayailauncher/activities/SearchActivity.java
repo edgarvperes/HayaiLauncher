@@ -668,8 +668,6 @@ public class SearchActivity extends Activity
 
         try {
             startActivity(launchableActivity.getLaunchIntent(searchEditText.getText().toString()));
-            final int prevIndex = Collections.binarySearch(activityInfos,
-                    launchableActivity);
             launchableActivity.incrementLaunches();
             Collections.sort(activityInfos);
             arrayAdapter.notifyDataSetChanged();
