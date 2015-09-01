@@ -75,6 +75,7 @@ public class SearchActivity extends Activity
     private final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     private int statusBarHeight;
     private ArrayList<LaunchableActivity> activityInfos;
+    private ArrayList<LaunchableActivity> shareableActivityInfos;
     private Trie<LaunchableActivity> trie;
     private ArrayAdapter<LaunchableActivity> arrayAdapter;
     private HashMap<String, List<LaunchableActivity>> launchableActivityPackageNameHashMap;
@@ -87,6 +88,8 @@ public class SearchActivity extends Activity
     private int iconSizePixels;
     private EditText searchEditText;
     private View clearButton;
+
+
     private final TextWatcher textWatcher = new TextWatcher() {
 
         @Override
@@ -136,6 +139,7 @@ public class SearchActivity extends Activity
 
         //fields:
         launchableActivityPackageNameHashMap = new HashMap<>();
+        shareableActivityInfos = new ArrayList<>();
         trie = new Trie<>();
         wordSinceLastSpaceBuilder = new StringBuilder(64);
         wordSinceLastCapitalBuilder = new StringBuilder(64);
@@ -177,8 +181,8 @@ public class SearchActivity extends Activity
 
 
         setupPreferences();
-        loadLaunchableApps();
         loadShareableApps();
+        loadLaunchableApps();
         setupImageLoadingThreads(resources);
         setupViews();
     }
@@ -188,13 +192,12 @@ public class SearchActivity extends Activity
         activityInfos = new ArrayList<>(infoList.size());
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
-        ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
         for (ResolveInfo info : infoList) {
             final LaunchableActivity launchableActivity = new LaunchableActivity(
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString(), true);
-            launchablesFromResolve.add(launchableActivity);
+            shareableActivityInfos.add(launchableActivity);
         }
-        updateApps(launchablesFromResolve);
+        updateApps(shareableActivityInfos, false);
     }
 
     @Override
@@ -326,7 +329,7 @@ public class SearchActivity extends Activity
         imageTasksSharedData = new ImageLoadingTask.SharedData(this, pm, context, iconSizePixels);
     }
 
-    private void updateApps(final List<LaunchableActivity> updatedActivityInfos) {
+    private void updateApps(final List<LaunchableActivity> updatedActivityInfos, boolean addToTrie) {
 
         for (LaunchableActivity launchableActivity : updatedActivityInfos) {
             final String packageName = launchableActivity.getComponent().getPackageName();
@@ -340,11 +343,12 @@ public class SearchActivity extends Activity
                 continue;
             }
 
-
-            final String activityLabel = launchableActivity.getActivityLabel().toString();
-            final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
-            for (String subword : subwords) {
-                trie.put(subword, launchableActivity);
+            if (addToTrie) {
+                final String activityLabel = launchableActivity.getActivityLabel().toString();
+                final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
+                for (String subword : subwords) {
+                    trie.put(subword, launchableActivity);
+                }
             }
             final String packageName = launchableActivity.getComponent().getPackageName();
 
@@ -405,8 +409,10 @@ public class SearchActivity extends Activity
                         .toString().toLowerCase().trim()));
         activityInfos.clear();
         activityInfos.addAll(infoList);
+        activityInfos.addAll(shareableActivityInfos);
         Collections.sort(activityInfos);
         Log.d("DEBUG_SEARCH", activityInfos.size() + "");
+
         arrayAdapter.notifyDataSetChanged();
     }
 
@@ -462,7 +468,7 @@ public class SearchActivity extends Activity
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
             launchablesFromResolve.add(launchableActivity);
         }
-        updateApps(launchablesFromResolve);
+        updateApps(launchablesFromResolve, true);
     }
 
     private void showKeyboard() {
@@ -507,7 +513,7 @@ public class SearchActivity extends Activity
                             info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
                     launchablesFromResolve.add(launchableActivity);
                 }
-                updateApps(launchablesFromResolve);
+                updateApps(launchablesFromResolve, true);
             }
 
         }
