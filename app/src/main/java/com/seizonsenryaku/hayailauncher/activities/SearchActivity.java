@@ -201,7 +201,7 @@ public class SearchActivity extends Activity
     }
 
     @Override
-        protected void onResume() {
+    protected void onResume() {
         super.onResume();
         searchEditText.clearFocus();
         searchEditText.requestFocus();
@@ -209,7 +209,7 @@ public class SearchActivity extends Activity
 
     public int setPaddingHeights() {
         int statusBarPaddings = 2;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
             final Window window = getWindow();
             window.getDecorView().setSystemUiVisibility(
@@ -261,14 +261,22 @@ public class SearchActivity extends Activity
         searchEditText.addTextChangedListener(textWatcher);
         searchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+
                 if (actionId == EditorInfo.IME_ACTION_GO) {
-                    if (!activityInfos.isEmpty()) {
-                        launchActivity(activityInfos.get(0));
-                        return true;
-                    }
+                    Log.d("KEYBOARD", "ACTION_GO");
+                    return openFirstActivity();
+                }
+                return false;
+            }
+        });
+        searchEditText.setOnKeyListener(new View.OnKeyListener() {
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    Log.d("KEYBOARD", "ENTER_KEY");
+                    return openFirstActivity();
                 }
                 return false;
             }
@@ -305,6 +313,14 @@ public class SearchActivity extends Activity
         });
 
 
+    }
+
+    private boolean openFirstActivity() {
+        if (!activityInfos.isEmpty()) {
+            launchActivity(activityInfos.get(0));
+            return true;
+        }
+        return false;
     }
 
     private void setupPreferences() {
@@ -430,7 +446,7 @@ public class SearchActivity extends Activity
             String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
             final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
             for (String subword : subwords) {
-                trie.remove(subword,launchableActivityToRemove);
+                trie.remove(subword, launchableActivityToRemove);
             }
             if (activityInfos.remove(launchableActivityToRemove))
                 activityListChanged = true;
@@ -461,8 +477,8 @@ public class SearchActivity extends Activity
         List<ResolveInfo> infoList = ContentShare.getLaunchableResolveInfos(pm);
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
-        ArrayList<LaunchableActivity> launchablesFromResolve=new ArrayList<>(infoList.size());
-        for(ResolveInfo info:infoList){
+        ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
+        for (ResolveInfo info : infoList) {
             final LaunchableActivity launchableActivity = new LaunchableActivity(
                     info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
             launchablesFromResolve.add(launchableActivity);
@@ -506,8 +522,8 @@ public class SearchActivity extends Activity
                 updateVisibleApps();
             } else {
                 Log.d("SearchActivity", "Activities in list. Install/update detected!");
-                ArrayList<LaunchableActivity> launchablesFromResolve=new ArrayList<>(infoList.size());
-                for(ResolveInfo info:infoList){
+                ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
+                for (ResolveInfo info : infoList) {
                     final LaunchableActivity launchableActivity = new LaunchableActivity(
                             info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
                     launchablesFromResolve.add(launchableActivity);
