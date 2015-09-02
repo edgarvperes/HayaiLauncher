@@ -139,7 +139,8 @@ public class SearchActivity extends Activity
 
         //fields:
         launchableActivityPackageNameHashMap = new HashMap<>();
-        shareableActivityInfos = new ArrayList<>();
+        shareableActivityInfos = new ArrayList<>(200);
+        activityInfos = new ArrayList<>(200);
         trie = new Trie<>();
         wordSinceLastSpaceBuilder = new StringBuilder(64);
         wordSinceLastCapitalBuilder = new StringBuilder(64);
@@ -181,17 +182,15 @@ public class SearchActivity extends Activity
 
 
         setupPreferences();
-        loadShareableApps();
         loadLaunchableApps();
+        loadShareableApps();
         setupImageLoadingThreads(resources);
         setupViews();
     }
 
     private void loadShareableApps() {
         List<ResolveInfo> infoList = ContentShare.getTextReceivers(pm);
-        activityInfos = new ArrayList<>(infoList.size());
-        arrayAdapter = new ActivityInfoArrayAdapter(this,
-                R.layout.app_grid_item, activityInfos);
+
         for (ResolveInfo info : infoList) {
             final LaunchableActivity launchableActivity = new LaunchableActivity(
                     info.activityInfo, info.loadLabel(pm).toString(), true);
@@ -459,7 +458,6 @@ public class SearchActivity extends Activity
     private void loadLaunchableApps() {
 
         List<ResolveInfo> infoList = ContentShare.getLaunchableResolveInfos(pm);
-        activityInfos = new ArrayList<>(infoList.size());
         arrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, activityInfos);
         ArrayList<LaunchableActivity> launchablesFromResolve=new ArrayList<>(infoList.size());
