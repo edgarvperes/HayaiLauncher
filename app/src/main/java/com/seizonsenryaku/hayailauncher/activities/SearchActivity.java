@@ -254,7 +254,7 @@ public class SearchActivity extends Activity
 
     private void setupViews() {
         //noinspection deprecation
-        findViewById(R.id.masterLayout).setBackgroundDrawable(
+        ((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
                 WallpaperManager.getInstance(this).getFastDrawable());
 
         searchEditText.addTextChangedListener(textWatcher);
