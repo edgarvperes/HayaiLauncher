@@ -72,6 +72,7 @@ public class SearchActivity extends Activity
     private static final int gridViewTopRowExtraPaddingInDP = 56;
     private static final int marginFromNavigationBarInDp = 16;
     private static final int gridItemHeightInDp = 96;
+    private static final int initialArrayListSize = 300;
     private final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     private int statusBarHeight;
     private ArrayList<LaunchableActivity> activityInfos;
@@ -139,8 +140,8 @@ public class SearchActivity extends Activity
 
         //fields:
         launchableActivityPackageNameHashMap = new HashMap<>();
-        shareableActivityInfos = new ArrayList<>(200);
-        activityInfos = new ArrayList<>(200);
+        shareableActivityInfos = new ArrayList<>(initialArrayListSize);
+        activityInfos = new ArrayList<>(initialArrayListSize);
         trie = new Trie<>();
         wordSinceLastSpaceBuilder = new StringBuilder(64);
         wordSinceLastCapitalBuilder = new StringBuilder(64);
