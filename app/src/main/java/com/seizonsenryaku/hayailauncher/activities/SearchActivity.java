@@ -169,7 +169,7 @@ public class SearchActivity extends Activity
 
         float dpWidth = displayMetrics.widthPixels / displayDensity;
         final float itemWidth = 72;//TODO remove magic number
-        column_count =  Math.round(dpWidth/itemWidth) - 1;
+        column_count = (int) (dpWidth / itemWidth) - 1;
 
         sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
