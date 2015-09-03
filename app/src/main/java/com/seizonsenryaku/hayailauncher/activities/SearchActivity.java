@@ -68,35 +68,34 @@ import java.util.regex.Pattern;
 
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
-    private static final int navigationBarHeightMultiplier = 1;
-    private static final int gridViewTopRowExtraPaddingInDP = 56;
-    private static final int marginFromNavigationBarInDp = 16;
-    private static final int gridItemHeightInDp = 96;
-    private static final int initialArrayListSize = 300;
-    private final Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-    private int statusBarHeight;
-    private ArrayList<LaunchableActivity> activityInfos;
-    private ArrayList<LaunchableActivity> shareableActivityInfos;
-    private Trie<LaunchableActivity> trie;
-    private ArrayAdapter<LaunchableActivity> arrayAdapter;
-    private HashMap<String, List<LaunchableActivity>> launchableActivityPackageNameHashMap;
-    private LaunchableActivityPrefs launchableActivityPrefs;
-    private SharedPreferences sharedPreferences;
-    private Context context;
-    private Drawable defaultAppIcon;
-    private SimpleTaskConsumerManager imageLoadingConsumersManager;
-    private ImageLoadingTask.SharedData imageTasksSharedData;
-    private int iconSizePixels;
-    private EditText searchEditText;
-    private View clearButton;
+    private static final int sNavigationBarHeightMultiplier = 1;
+    private static final int sGridViewTopRowExtraPaddingInDP = 56;
+    private static final int sMarginFromNavigationBarInDp = 16;
+    private static final int sGridItemHeightInDp = 96;
+    private static final int sInitialArrayListSize = 300;
+    private final Pattern mPattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+    private int mStatusBarHeight;
+    private ArrayList<LaunchableActivity> mActivityInfos;
+    private ArrayList<LaunchableActivity> mShareableActivityInfos;
+    private Trie<LaunchableActivity> mTrie;
+    private ArrayAdapter<LaunchableActivity> mArrayAdapter;
+    private HashMap<String, List<LaunchableActivity>> mLaunchableActivityPackageNameHashMap;
+    private LaunchableActivityPrefs mLaunchableActivityPrefs;
+    private SharedPreferences mSharedPreferences;
+    private Context mContext;
+    private Drawable mDefaultAppIcon;
+    private SimpleTaskConsumerManager mImageLoadingConsumersManager;
+    private ImageLoadingTask.SharedData mImageTasksSharedData;
+    private int mIconSizePixels;
+    private EditText mSearchEditText;
+    private View mClearButton;
 
-
-    private final TextWatcher textWatcher = new TextWatcher() {
+    private final TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                                   int count) {
-            clearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+            mClearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             updateVisibleApps();
         }
 
@@ -114,72 +113,72 @@ public class SearchActivity extends Activity
 
 
     };
-    private InputMethodManager inputMethodManager;
-    private AdapterView appListView;
-    private PackageManager pm;
-    private View overflowButtonTopleft;
-    private int column_count;
+    private InputMethodManager mInputMethodManager;
+    private AdapterView mAppListView;
+    private PackageManager mPm;
+    private View mOverflowButtonTopleft;
+    private int mColumnCount;
 
     //used only in function getAllSubwords. they are here as class fields to avoid
     // object re-allocation.
-    private StringBuilder wordSinceLastSpaceBuilder;
-    private StringBuilder wordSinceLastCapitalBuilder;
+    private StringBuilder mWordSinceLastSpaceBuilder;
+    private StringBuilder mWordSinceLastCapitalBuilder;
 
 
-    private int gridViewTopRowHeight;
-    private int gridViewBottomRowHeight;
+    private int mGridViewTopRowHeight;
+    private int mGridViewBottomRowHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        pm = getPackageManager();
+        mPm = getPackageManager();
 
         final Resources resources = getResources();
 
         //fields:
-        launchableActivityPackageNameHashMap = new HashMap<>();
-        shareableActivityInfos = new ArrayList<>(initialArrayListSize);
-        activityInfos = new ArrayList<>(initialArrayListSize);
-        trie = new Trie<>();
-        wordSinceLastSpaceBuilder = new StringBuilder(64);
-        wordSinceLastCapitalBuilder = new StringBuilder(64);
+        mLaunchableActivityPackageNameHashMap = new HashMap<>();
+        mShareableActivityInfos = new ArrayList<>(sInitialArrayListSize);
+        mActivityInfos = new ArrayList<>(sInitialArrayListSize);
+        mTrie = new Trie<>();
+        mWordSinceLastSpaceBuilder = new StringBuilder(64);
+        mWordSinceLastCapitalBuilder = new StringBuilder(64);
 
-        searchEditText = (EditText) findViewById(R.id.editText1);
-        appListView = (GridView) findViewById(R.id.appsContainer);
-        clearButton = findViewById(R.id.clear_button);
-        overflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
-        context = getApplicationContext();
-        inputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        statusBarHeight = StatusBarColorHelper.getStatusBarHeight(resources);
+        mSearchEditText = (EditText) findViewById(R.id.editText1);
+        mAppListView = (GridView) findViewById(R.id.appsContainer);
+        mClearButton = findViewById(R.id.clear_button);
+        mOverflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
+        mContext = getApplicationContext();
+        mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        mStatusBarHeight = StatusBarColorHelper.getStatusBarHeight(resources);
         final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
         final float displayDensity = displayMetrics.density;
         final int gridViewTopRowExtraPaddingInPixels =
-                Math.round(displayDensity * gridViewTopRowExtraPaddingInDP);
+                Math.round(displayDensity * sGridViewTopRowExtraPaddingInDP);
         final int marginFromNavigationBarInPixels =
-                Math.round(displayDensity * marginFromNavigationBarInDp);
+                Math.round(displayDensity * sMarginFromNavigationBarInDp);
         final int gridItemHeightInPixels =
-                Math.round(displayDensity * gridItemHeightInDp);
+                Math.round(displayDensity * sGridItemHeightInDp);
         int statusBarMultiplierPaddings = setPaddingHeights();
-        gridViewTopRowHeight = statusBarMultiplierPaddings * statusBarHeight +
+        mGridViewTopRowHeight = statusBarMultiplierPaddings * mStatusBarHeight +
                 gridViewTopRowExtraPaddingInPixels;
-        gridViewBottomRowHeight = gridItemHeightInPixels + navigationBarHeightMultiplier *
+        mGridViewBottomRowHeight = gridItemHeightInPixels + sNavigationBarHeightMultiplier *
                 StatusBarColorHelper.getNavigationBarHeight(getResources()) +
                 marginFromNavigationBarInPixels;
 
         float dpWidth = displayMetrics.widthPixels / displayDensity;
         final float itemWidth = 72;//TODO remove magic number
-        column_count = (int) (dpWidth / itemWidth) - 1;
+        mColumnCount = (int) (dpWidth / itemWidth) - 1;
 
-        sharedPreferences = PreferenceManager
+        mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-        launchableActivityPrefs = new LaunchableActivityPrefs(this);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        mLaunchableActivityPrefs = new LaunchableActivityPrefs(this);
 
         //noinspection deprecation
-        defaultAppIcon = resources.getDrawable(R.drawable.ic_blur_on_black_48dp);
-        iconSizePixels = resources.getDimensionPixelSize(R.dimen.app_icon_size);
+        mDefaultAppIcon = resources.getDrawable(R.drawable.ic_blur_on_black_48dp);
+        mIconSizePixels = resources.getDimensionPixelSize(R.dimen.app_icon_size);
 
 
         setupPreferences();
@@ -190,21 +189,21 @@ public class SearchActivity extends Activity
     }
 
     private void loadShareableApps() {
-        List<ResolveInfo> infoList = ContentShare.getTextReceivers(pm);
+        List<ResolveInfo> infoList = ContentShare.getTextReceivers(mPm);
 
         for (ResolveInfo info : infoList) {
             final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, info.loadLabel(pm).toString(), true);
-            shareableActivityInfos.add(launchableActivity);
+                    info.activityInfo, info.loadLabel(mPm).toString(), true);
+            mShareableActivityInfos.add(launchableActivity);
         }
-        updateApps(shareableActivityInfos, false);
+        updateApps(mShareableActivityInfos, false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        searchEditText.clearFocus();
-        searchEditText.requestFocus();
+        mSearchEditText.clearFocus();
+        mSearchEditText.requestFocus();
     }
 
     public int setPaddingHeights() {
@@ -217,15 +216,15 @@ public class SearchActivity extends Activity
                             | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
 
             final View statusBarDummy = findViewById(R.id.statusBarDummyView);
-            statusBarDummy.getLayoutParams().height = statusBarHeight;
+            statusBarDummy.getLayoutParams().height = mStatusBarHeight;
             statusBarPaddings++;
         }
 
         final View topFillerView = findViewById(R.id.topFillerView);
-        topFillerView.getLayoutParams().height = statusBarHeight;
+        topFillerView.getLayoutParams().height = mStatusBarHeight;
 
         final View bottomFillerView = findViewById(R.id.bottomFillerView);
-        bottomFillerView.getLayoutParams().height = statusBarHeight;
+        bottomFillerView.getLayoutParams().height = mStatusBarHeight;
 
         return statusBarPaddings;
     }
@@ -258,9 +257,9 @@ public class SearchActivity extends Activity
         ((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
                 WallpaperManager.getInstance(this).getFastDrawable());
 
-        searchEditText.addTextChangedListener(textWatcher);
-        searchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        mSearchEditText.addTextChangedListener(mTextWatcher);
+        mSearchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
+        mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
@@ -271,7 +270,7 @@ public class SearchActivity extends Activity
                 return false;
             }
         });
-        searchEditText.setOnKeyListener(new View.OnKeyListener() {
+        mSearchEditText.setOnKeyListener(new View.OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
                         (keyCode == KeyEvent.KEYCODE_ENTER)) {
@@ -281,9 +280,9 @@ public class SearchActivity extends Activity
                 return false;
             }
         });
-        registerForContextMenu(appListView);
+        registerForContextMenu(mAppListView);
 
-        ((GridView) appListView).setOnScrollListener(new AbsListView.OnScrollListener() {
+        ((GridView) mAppListView).setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState != SCROLL_STATE_IDLE) {
@@ -298,15 +297,15 @@ public class SearchActivity extends Activity
             }
         });
         //noinspection unchecked
-        appListView.setAdapter(arrayAdapter);
+        mAppListView.setAdapter(mArrayAdapter);
 
 
-        appListView.setOnItemClickListener(new OnItemClickListener() {
+        mAppListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= column_count) {
-                    launchActivity(activityInfos.get(position - column_count));
+                if (position >= mColumnCount) {
+                    launchActivity(mActivityInfos.get(position - mColumnCount));
                 }
             }
 
@@ -316,8 +315,8 @@ public class SearchActivity extends Activity
     }
 
     private boolean openFirstActivity() {
-        if (!activityInfos.isEmpty()) {
-            launchActivity(activityInfos.get(0));
+        if (!mActivityInfos.isEmpty()) {
+            launchActivity(mActivityInfos.get(0));
             return true;
         }
         return false;
@@ -325,10 +324,10 @@ public class SearchActivity extends Activity
 
     private void setupPreferences() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-        if (sharedPreferences.getBoolean(SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
+        if (mSharedPreferences.getBoolean(SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
             final MyNotificationManager myNotificationManager = new MyNotificationManager();
             final String strPriority =
-                    sharedPreferences.getString(SettingsActivity.KEY_PREF_NOTIFICATION_PRIORITY,
+                    mSharedPreferences.getString(SettingsActivity.KEY_PREF_NOTIFICATION_PRIORITY,
                             "low");
             final int priority = MyNotificationManager.getPriorityFromString(strPriority);
             myNotificationManager.showNotification(this, priority);
@@ -341,15 +340,15 @@ public class SearchActivity extends Activity
         //clamp numThreads
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > maxThreads) numThreads = maxThreads;
-        imageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
-        imageTasksSharedData = new ImageLoadingTask.SharedData(this, pm, context, iconSizePixels);
+        mImageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
+        mImageTasksSharedData = new ImageLoadingTask.SharedData(this, mPm, mContext, mIconSizePixels);
     }
 
     private void updateApps(final List<LaunchableActivity> updatedActivityInfos, boolean addToTrie) {
 
         for (LaunchableActivity launchableActivity : updatedActivityInfos) {
             final String packageName = launchableActivity.getComponent().getPackageName();
-            launchableActivityPackageNameHashMap.remove(packageName);
+            mLaunchableActivityPackageNameHashMap.remove(packageName);
         }
 
         for (LaunchableActivity launchableActivity : updatedActivityInfos) {
@@ -363,21 +362,21 @@ public class SearchActivity extends Activity
                 final String activityLabel = launchableActivity.getActivityLabel().toString();
                 final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
                 for (String subword : subwords) {
-                    trie.put(subword, launchableActivity);
+                    mTrie.put(subword, launchableActivity);
                 }
             }
             final String packageName = launchableActivity.getComponent().getPackageName();
 
             List<LaunchableActivity> launchableActivitiesToUpdate =
-                    launchableActivityPackageNameHashMap.remove(packageName);
+                    mLaunchableActivityPackageNameHashMap.remove(packageName);
             if (launchableActivitiesToUpdate == null) {
                 launchableActivitiesToUpdate = new LinkedList<>();
             }
             launchableActivitiesToUpdate.add(launchableActivity);
-            launchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
+            mLaunchableActivityPackageNameHashMap.put(packageName, launchableActivitiesToUpdate);
         }
         Log.d("SearchActivity", "updated activities: " + updatedActivityInfos.size());
-        launchableActivityPrefs.setAllPreferences(updatedActivityInfos);
+        mLaunchableActivityPrefs.setAllPreferences(updatedActivityInfos);
         updateVisibleApps();
     }
 
@@ -387,54 +386,54 @@ public class SearchActivity extends Activity
             final char character = line.charAt(i);
 
             if (Character.isUpperCase(character) || Character.isDigit(character)) {
-                if (wordSinceLastCapitalBuilder.length() > 1) {
-                    subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
+                if (mWordSinceLastCapitalBuilder.length() > 1) {
+                    subwords.add(mWordSinceLastCapitalBuilder.toString().toLowerCase());
                 }
-                wordSinceLastCapitalBuilder.setLength(0);
+                mWordSinceLastCapitalBuilder.setLength(0);
 
             }
             if (Character.isSpaceChar(character)) {
-                subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
-                if (wordSinceLastCapitalBuilder.length() > 1 &&
-                        wordSinceLastCapitalBuilder.length() !=
-                                wordSinceLastSpaceBuilder.length()) {
-                    subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
+                subwords.add(mWordSinceLastSpaceBuilder.toString().toLowerCase());
+                if (mWordSinceLastCapitalBuilder.length() > 1 &&
+                        mWordSinceLastCapitalBuilder.length() !=
+                                mWordSinceLastSpaceBuilder.length()) {
+                    subwords.add(mWordSinceLastCapitalBuilder.toString().toLowerCase());
                 }
-                wordSinceLastCapitalBuilder.setLength(0);
-                wordSinceLastSpaceBuilder.setLength(0);
+                mWordSinceLastCapitalBuilder.setLength(0);
+                mWordSinceLastSpaceBuilder.setLength(0);
             } else {
-                wordSinceLastCapitalBuilder.append(character);
-                wordSinceLastSpaceBuilder.append(character);
+                mWordSinceLastCapitalBuilder.append(character);
+                mWordSinceLastSpaceBuilder.append(character);
             }
         }
-        if (wordSinceLastSpaceBuilder.length() > 0) {
-            subwords.add(wordSinceLastSpaceBuilder.toString().toLowerCase());
+        if (mWordSinceLastSpaceBuilder.length() > 0) {
+            subwords.add(mWordSinceLastSpaceBuilder.toString().toLowerCase());
         }
-        if (wordSinceLastCapitalBuilder.length() > 1
-                && wordSinceLastCapitalBuilder.length() != wordSinceLastSpaceBuilder.length()) {
-            subwords.add(wordSinceLastCapitalBuilder.toString().toLowerCase());
+        if (mWordSinceLastCapitalBuilder.length() > 1
+                && mWordSinceLastCapitalBuilder.length() != mWordSinceLastSpaceBuilder.length()) {
+            subwords.add(mWordSinceLastCapitalBuilder.toString().toLowerCase());
         }
-        wordSinceLastSpaceBuilder.setLength(0);
-        wordSinceLastCapitalBuilder.setLength(0);
+        mWordSinceLastSpaceBuilder.setLength(0);
+        mWordSinceLastCapitalBuilder.setLength(0);
         return subwords;
     }
 
     private void updateVisibleApps() {
         final HashSet<LaunchableActivity> infoList =
-                trie.getAllStartingWith(stripAccents(searchEditText.getText()
+                mTrie.getAllStartingWith(stripAccents(mSearchEditText.getText()
                         .toString().toLowerCase().trim()));
-        activityInfos.clear();
-        activityInfos.addAll(infoList);
-        activityInfos.addAll(shareableActivityInfos);
-        Collections.sort(activityInfos);
-        Log.d("DEBUG_SEARCH", activityInfos.size() + "");
+        mActivityInfos.clear();
+        mActivityInfos.addAll(infoList);
+        mActivityInfos.addAll(mShareableActivityInfos);
+        Collections.sort(mActivityInfos);
+        Log.d("DEBUG_SEARCH", mActivityInfos.size() + "");
 
-        arrayAdapter.notifyDataSetChanged();
+        mArrayAdapter.notifyDataSetChanged();
     }
 
     private void removeActivitiesFromPackage(String packageName) {
         final List<LaunchableActivity> launchableActivitiesToRemove =
-                launchableActivityPackageNameHashMap.remove(packageName);
+                mLaunchableActivityPackageNameHashMap.remove(packageName);
         if (launchableActivitiesToRemove == null) {
             return;
         }
@@ -446,57 +445,57 @@ public class SearchActivity extends Activity
             String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
             final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
             for (String subword : subwords) {
-                trie.remove(subword, launchableActivityToRemove);
+                mTrie.remove(subword, launchableActivityToRemove);
             }
-            if (activityInfos.remove(launchableActivityToRemove))
+            if (mActivityInfos.remove(launchableActivityToRemove))
                 activityListChanged = true;
             //TODO DEBUGME if uncommented the next line causes a crash.
-            //launchableActivityPrefs.deletePreference(className);
+            //mLaunchableActivityPrefs.deletePreference(className);
         }
 
         if (activityListChanged)
-            arrayAdapter.notifyDataSetChanged();
+            mArrayAdapter.notifyDataSetChanged();
     }
 
     private boolean isCurrentLauncher() {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
         final ResolveInfo resolveInfo =
-                pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+                mPm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
         return resolveInfo != null &&
-                context.getPackageName().equals(resolveInfo.activityInfo.packageName);
+                mContext.getPackageName().equals(resolveInfo.activityInfo.packageName);
 
     }
 
     private String stripAccents(final String s) {
-        return pattern.matcher(Normalizer.normalize(s, Normalizer.Form.NFKD)).replaceAll("");
+        return mPattern.matcher(Normalizer.normalize(s, Normalizer.Form.NFKD)).replaceAll("");
     }
 
     private void loadLaunchableApps() {
 
-        List<ResolveInfo> infoList = ContentShare.getLaunchableResolveInfos(pm);
-        arrayAdapter = new ActivityInfoArrayAdapter(this,
-                R.layout.app_grid_item, activityInfos);
+        List<ResolveInfo> infoList = ContentShare.getLaunchableResolveInfos(mPm);
+        mArrayAdapter = new ActivityInfoArrayAdapter(this,
+                R.layout.app_grid_item, mActivityInfos);
         ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
         for (ResolveInfo info : infoList) {
             final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
+                    info.activityInfo, info.activityInfo.loadLabel(mPm).toString(), false);
             launchablesFromResolve.add(launchableActivity);
         }
         updateApps(launchablesFromResolve, true);
     }
 
     private void showKeyboard() {
-        inputMethodManager.showSoftInput(searchEditText, 0);
+        mInputMethodManager.showSoftInput(mSearchEditText, 0);
     }
 
     private void hideKeyboard() {
-        inputMethodManager.hideSoftInputFromWindow(searchEditText.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
     }
 
     private void handlePackageChanged() {
-        final SharedPreferences.Editor editor = sharedPreferences.edit();
-        final String[] packageChangedNames = sharedPreferences.getString("package_changed_name", "")
+        final SharedPreferences.Editor editor = mSharedPreferences.edit();
+        final String[] packageChangedNames = mSharedPreferences.getString("package_changed_name", "")
                 .split(" ");
         editor.putString("package_changed_name", "");
         editor.apply();
@@ -510,7 +509,7 @@ public class SearchActivity extends Activity
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
             intent.setPackage(packageName);
             Log.d("SearchActivity", "changed: " + packageName);
-            final List<ResolveInfo> infoList = pm.queryIntentActivities(intent, 0);
+            final List<ResolveInfo> infoList = mPm.queryIntentActivities(intent, 0);
 
             //we don't actually need to run removeActivitiesFromPackage if the package
             // is being installed
@@ -525,7 +524,7 @@ public class SearchActivity extends Activity
                 ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
                 for (ResolveInfo info : infoList) {
                     final LaunchableActivity launchableActivity = new LaunchableActivity(
-                            info.activityInfo, info.activityInfo.loadLabel(pm).toString(), false);
+                            info.activityInfo, info.activityInfo.loadLabel(mPm).toString(), false);
                     launchablesFromResolve.add(launchableActivity);
                 }
                 updateApps(launchablesFromResolve, true);
@@ -544,8 +543,8 @@ public class SearchActivity extends Activity
 
     @Override
     protected void onDestroy() {
-        if (imageLoadingConsumersManager != null)
-            imageLoadingConsumersManager.destroyAllConsumers(false);
+        if (mImageLoadingConsumersManager != null)
+            mImageLoadingConsumersManager.destroyAllConsumers(false);
         super.onDestroy();
     }
 
@@ -571,7 +570,7 @@ public class SearchActivity extends Activity
 
     public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if (!showPopup(overflowButtonTopleft)) {
+            if (!showPopup(mOverflowButtonTopleft)) {
                 openOptionsMenu();
             }
             return true;
@@ -675,7 +674,7 @@ public class SearchActivity extends Activity
     }
 
     public void onClickSettingsButton(View view) {
-        if (!showPopup(overflowButtonTopleft)) {
+        if (!showPopup(mOverflowButtonTopleft)) {
             openOptionsMenu();
         }
 
@@ -688,14 +687,14 @@ public class SearchActivity extends Activity
         hideKeyboard();
 
         try {
-            startActivity(launchableActivity.getLaunchIntent(searchEditText.getText().toString()));
+            startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
             launchableActivity.incrementLaunches();
-            Collections.sort(activityInfos);
-            arrayAdapter.notifyDataSetChanged();
+            Collections.sort(mActivityInfos);
+            mArrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {
             //this should only happen when the launcher still hasn't updated the file list after
             //an activity removal.
-            Toast.makeText(context, getString(R.string.activity_not_found),
+            Toast.makeText(mContext, getString(R.string.activity_not_found),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -703,7 +702,7 @@ public class SearchActivity extends Activity
     }
 
     public void onClickClearButton(View view) {
-        searchEditText.setText("");
+        mSearchEditText.setText("");
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -726,7 +725,7 @@ public class SearchActivity extends Activity
 
         @Override
         public int getCount() {
-            return super.getCount() + column_count;
+            return super.getCount() + mColumnCount;
         }
 
         @Override
@@ -738,19 +737,19 @@ public class SearchActivity extends Activity
             final AbsListView.LayoutParams params =
                     (AbsListView.LayoutParams) view.getLayoutParams();
 
-            if (position < column_count) {
-                params.height = gridViewTopRowHeight;
+            if (position < mColumnCount) {
+                params.height = mGridViewTopRowHeight;
                 view.setLayoutParams(params);
                 view.setVisibility(View.INVISIBLE);
             } else {
                 if (position == (getCount() - 1)) {
-                    params.height = gridViewBottomRowHeight;
+                    params.height = mGridViewBottomRowHeight;
                 } else {
                     params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                 }
                 view.setLayoutParams(params);
                 view.setVisibility(View.VISIBLE);
-                final LaunchableActivity launchableActivity = getItem(position - column_count);
+                final LaunchableActivity launchableActivity = getItem(position - mColumnCount);
                 final CharSequence label = launchableActivity.getActivityLabel();
                 final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
                 final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
@@ -760,13 +759,13 @@ public class SearchActivity extends Activity
 
                 appIconView.setTag(launchableActivity);
                 if (!launchableActivity.isIconLoaded()) {
-                    appIconView.setImageDrawable(defaultAppIcon);
-                    imageLoadingConsumersManager.addTask(
+                    appIconView.setImageDrawable(mDefaultAppIcon);
+                    mImageLoadingConsumersManager.addTask(
                             new ImageLoadingTask(appIconView, launchableActivity,
-                                    imageTasksSharedData));
+                                    mImageTasksSharedData));
                 } else {
                     appIconView.setImageDrawable(
-                            launchableActivity.getActivityIcon(pm, context, iconSizePixels));
+                            launchableActivity.getActivityIcon(mPm, mContext, mIconSizePixels));
                 }
                 appShareIndicator.setVisibility(
                         launchableActivity.isShareable() ? View.VISIBLE : View.GONE);

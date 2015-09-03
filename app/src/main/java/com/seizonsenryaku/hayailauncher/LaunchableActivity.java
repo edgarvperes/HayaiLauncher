@@ -18,35 +18,35 @@ import com.seizonsenryaku.hayailauncher.util.ContentShare;
 public class LaunchableActivity implements Comparable<LaunchableActivity> {
     //This limitation is needed to speedup the compareTo function.
     private static final int MAX_LAUNCHES = 16383;
-    private final ActivityInfo activityInfo;
-    private final String activityLabel;
-    private final ComponentName componentName;
-    private final Intent launchIntent;
-    private int numberOfLaunches;
-    private boolean isShareable;
-    private Drawable activityIcon;
-    private boolean favorite;
+    private final ActivityInfo mActivityInfo;
+    private final String mActivityLabel;
+    private final ComponentName mComponentName;
+    private final Intent mLaunchIntent;
+    private int mNumberOfLaunches;
+    private boolean mShareable;
+    private Drawable mActivityIcon;
+    private boolean mFavorite;
 
     public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel,
                               boolean isShareable) {
-        this.activityInfo = activityInfo;
-        this.activityLabel = activityLabel;
-        componentName = new ComponentName(activityInfo.packageName, activityInfo.name);
-        launchIntent = null; //create one "on demand"
-        this.isShareable = isShareable;
+        this.mActivityInfo = activityInfo;
+        this.mActivityLabel = activityLabel;
+        mComponentName = new ComponentName(activityInfo.packageName, activityInfo.name);
+        mLaunchIntent = null; //create one "on demand"
+        this.mShareable = isShareable;
     }
     public LaunchableActivity(final ComponentName componentName, final String label,
                               final Drawable activityIcon, final Intent launchIntent){
-        this.componentName=componentName;
-        this.activityLabel=label;
-        this.launchIntent=launchIntent;
-        this.activityIcon=activityIcon;
-        this.activityInfo=null;
+        this.mComponentName = componentName;
+        this.mActivityLabel = label;
+        this.mLaunchIntent = launchIntent;
+        this.mActivityIcon = activityIcon;
+        this.mActivityInfo = null;
     }
 
     public Intent getLaunchIntent(String searchString) {
-        if (launchIntent != null)
-            return launchIntent;
+        if (mLaunchIntent != null)
+            return mLaunchIntent;
         if (isShareable()) {
             final Intent launchIntent = ContentShare.shareTextIntent(searchString);
             launchIntent.setComponent(getComponent());
@@ -55,37 +55,37 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         final Intent launchIntent = new Intent(Intent.ACTION_MAIN);
         launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
         launchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        launchIntent.setComponent(componentName);
+        launchIntent.setComponent(mComponentName);
         return launchIntent;
     }
         
     public void incrementLaunches() {
-        if (numberOfLaunches < MAX_LAUNCHES)
-            numberOfLaunches++;
+        if (mNumberOfLaunches < MAX_LAUNCHES)
+            mNumberOfLaunches++;
     }
 
     public boolean isFavorite() {
-        return favorite;
+        return mFavorite;
     }
 
     public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
+        this.mFavorite = favorite;
     }
 
     public int getNumberOfLaunches() {
-        return numberOfLaunches;
+        return mNumberOfLaunches;
     }
 
     public void setNumberOfLaunches(final int numberOfLaunches) {
-        this.numberOfLaunches = numberOfLaunches;
+        this.mNumberOfLaunches = numberOfLaunches;
     }
 
     public CharSequence getActivityLabel() {
-        return activityLabel;
+        return mActivityLabel;
     }
 
     public boolean isIconLoaded() {
-        return activityIcon != null;
+        return mActivityIcon != null;
     }
 
     public synchronized Drawable getActivityIcon(final PackageManager pm, final Context context,
@@ -97,21 +97,23 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                         (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                 final int iconDpi = activityManager.getLauncherLargeIconDensity();
                 try {
-
-                    _activityIcon = pm.getResourcesForActivity(componentName).getDrawableForDensity(
-                            activityInfo.getIconResource(), iconDpi);
+                    //noinspection deprecation
+                    _activityIcon =
+                            pm.getResourcesForActivity(mComponentName).getDrawableForDensity(
+                                    mActivityInfo.getIconResource(), iconDpi);
 
                 } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
                     e.printStackTrace();
                 }
 
                 if (_activityIcon == null) {
+                    //noinspection deprecation
                     _activityIcon = Resources.getSystem().getDrawable(
                             android.R.mipmap.sym_def_app_icon);
                 }
 
             } else {
-                _activityIcon = activityInfo.loadIcon(pm);
+                _activityIcon = mActivityInfo.loadIcon(pm);
             }
 
             //rescaling the icon if it is bigger than the target size
@@ -119,14 +121,15 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
             if (_activityIcon instanceof BitmapDrawable) {
                 if (_activityIcon.getIntrinsicHeight() > iconSizePixels &&
                         _activityIcon.getIntrinsicWidth() > iconSizePixels) {
+                    //noinspection deprecation
                     _activityIcon = new BitmapDrawable(
                             Bitmap.createScaledBitmap(((BitmapDrawable) _activityIcon).getBitmap()
                                     , iconSizePixels, iconSizePixels, false));
                 }
             }
-            activityIcon = _activityIcon;
+            mActivityIcon = _activityIcon;
         }
-        return activityIcon;
+        return mActivityIcon;
     }
 
     @Override
@@ -137,25 +140,25 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         //Criteria 3 (Bits 17 to 31) indicates string difference (can be at most Character.MAX_VALUE)
 
         //
-        final int thisN = (this.isShareable ? 0
-                : 0x40000000) + (this.numberOfLaunches << 16);
+        final int thisN = (this.mShareable ? 0
+                : 0x40000000) + (this.mNumberOfLaunches << 16);
 
-        final int anotherN = (another.isShareable ? 0
-                : 0x40000000) + (another.numberOfLaunches << 16) +
-                activityLabel.compareTo(another.activityLabel);
+        final int anotherN = (another.mShareable ? 0
+                : 0x40000000) + (another.mNumberOfLaunches << 16) +
+                mActivityLabel.compareTo(another.mActivityLabel);
 
         return anotherN - thisN;
     }
 
     public ComponentName getComponent() {
-        return componentName;
+        return mComponentName;
     }
 
     public String getClassName() {
-        return componentName.getClassName();
+        return mComponentName.getClassName();
     }
 
     public boolean isShareable() {
-        return isShareable;
+        return mShareable;
     }
 }

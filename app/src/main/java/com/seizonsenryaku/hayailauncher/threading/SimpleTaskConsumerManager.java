@@ -7,48 +7,49 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class SimpleTaskConsumerManager {
 
-    private final LinkedBlockingQueue<Task> tasks;
-    private volatile int numThreadsAlive;
-    private boolean consumersShouldDie;
-    private SimpleTaskConsumer[] simpleTaskConsumers;
-    public SimpleTaskConsumerManager(int numConsumers) {
-        tasks = new LinkedBlockingQueue<>();
+    private final LinkedBlockingQueue<Task> mTasks;
+    private volatile int mNumThreadsAlive;
+    private boolean mConsumersShouldDie;
+    private SimpleTaskConsumer[] mSimpleTaskConsumers;
+
+    public SimpleTaskConsumerManager(final int numConsumers) {
+        mTasks = new LinkedBlockingQueue<>();
         startConsumers(numConsumers);
 
     }
 
-    private void startConsumers(int numConsumers) {
-        simpleTaskConsumers = new SimpleTaskConsumer[numConsumers];
+    private void startConsumers(final int numConsumers) {
+        mSimpleTaskConsumers = new SimpleTaskConsumer[numConsumers];
         for (int i = 0; i < numConsumers; i++) {
-            simpleTaskConsumers[i] = new SimpleTaskConsumer();
-            Thread thread = new Thread(simpleTaskConsumers[i]);
+            mSimpleTaskConsumers[i] = new SimpleTaskConsumer();
+            Thread thread = new Thread(mSimpleTaskConsumers[i]);
             thread.start();
         }
     }
 
     public void addTask(final Task task) {
-        if (consumersShouldDie) return; //TODO throw exception
+        if (mConsumersShouldDie) return; //TODO throw exception
 
         try {
-            tasks.put(task);
+            mTasks.put(task);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public void removeAllTasks() {
-        tasks.clear();
+        mTasks.clear();
     }
 
     public void destroyAllConsumers(boolean finishCurrentTasks) {
-        if (consumersShouldDie) return;
+        if (mConsumersShouldDie) return;
 
-        consumersShouldDie = true;
+        mConsumersShouldDie = true;
         if (!finishCurrentTasks) removeAllTasks();
-        int threadsToKill = numThreadsAlive;
+        int threadsToKill = mNumThreadsAlive;
         DieTask dieTask = new DieTask();
         for (int i = 0; i < threadsToKill; i++) {
-            tasks.add(dieTask);
+            mTasks.add(dieTask);
         }
     }
 
@@ -76,18 +77,18 @@ public class SimpleTaskConsumerManager {
 
         @Override
         public void run() {
-            threadId = numThreadsAlive++;
+            threadId = mNumThreadsAlive++;
 
             do {
                 try {
-                    final Task task = tasks.take();
+                    final Task task = mTasks.take();
                     task.doTask();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-            } while (!consumersShouldDie);
-            numThreadsAlive--;
+            } while (!mConsumersShouldDie);
+            mNumThreadsAlive--;
 
         }
     }

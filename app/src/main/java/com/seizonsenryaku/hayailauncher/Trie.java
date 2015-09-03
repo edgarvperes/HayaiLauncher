@@ -7,34 +7,24 @@ import java.util.HashSet;
 
 public class Trie<T> {
 
-	private final class Node {
-		final SparseArray<Node> children;
-		public T object;
-
-		public Node() {
-			children = new SparseArray<>();
-		}
-
-	}
-
-	private final Node root;
+	private final Node mRoot;
 
 	public Trie() {
-		root = new Node();
+		mRoot = new Node();
 	}
 
-	public void put(CharSequence charSequence, T object) {
+	public void put(final CharSequence charSequence, T object) {
 		Log.d("TRIE",charSequence.toString());
-		addRec(charSequence, root, object);
+		addRec(charSequence, mRoot, object);
 	}
 
-	public T get(CharSequence charSequence) {
-		final Node node = getNodeRec(charSequence, root);
+	public T get(final CharSequence charSequence) {
+		final Node node = getNodeRec(charSequence, mRoot);
 		return node!=null ? node.object : null;
 	}
 
-	public boolean remove(CharSequence charSequence, T object){
-		Node ancestor=root;
+	public boolean remove(CharSequence charSequence, final T object) {
+		Node ancestor = mRoot;
 		Node node;
 		do{
 			node=getNodeRec(charSequence, ancestor);
@@ -50,12 +40,12 @@ public class Trie<T> {
 		return true;
 	}
 
-	public HashSet<T> getAllStartingWith(CharSequence charSequence) {
-        return getAllStartingWithRec(charSequence, root, new HashSet<T>());
+	public HashSet<T> getAllStartingWith(final CharSequence charSequence) {
+		return getAllStartingWithRec(charSequence, mRoot, new HashSet<T>());
 	}
 
-	private HashSet<T> getAllStartingWithRec(CharSequence charSequence,
-			Node ancestor, HashSet<T> list) {
+	private HashSet<T> getAllStartingWithRec(final CharSequence charSequence,
+											 Node ancestor, HashSet<T> list) {
 		final int length = charSequence.length();
 		if (length > 0) {
 			final char currentLetter = charSequence.charAt(0);
@@ -67,7 +57,7 @@ public class Trie<T> {
 					child, list);
 		} else {
 			if (ancestor.object != null) {
-				    list.add(ancestor.object);
+				list.add(ancestor.object);
 			}
 			final int numOfChildren = ancestor.children.size();
 
@@ -79,7 +69,7 @@ public class Trie<T> {
 		}
 	}
 
-	private Node getNodeRec(CharSequence charSequence, Node ancestor) {
+	private Node getNodeRec(final CharSequence charSequence, final Node ancestor) {
 		final int length = charSequence.length();
 		if (length > 0) {
 			final char currentLetter = charSequence.charAt(0);
@@ -94,7 +84,7 @@ public class Trie<T> {
 
 	}
 
-	private void addRec(CharSequence charSequence, Node node, T object) {
+	private void addRec(final CharSequence charSequence, final Node node, final T object) {
 		final int length = charSequence.length();
 		if (length > 0) {
 			final char currentLetter = charSequence.charAt(0);
@@ -110,6 +100,16 @@ public class Trie<T> {
 			} else if(node.object != object){
 				addRec(charSequence + " ", node, object);
 			}
+		}
+
+	}
+
+	private final class Node {
+		final SparseArray<Node> children;
+		public T object;
+
+		public Node() {
+			children = new SparseArray<>();
 		}
 
 	}
