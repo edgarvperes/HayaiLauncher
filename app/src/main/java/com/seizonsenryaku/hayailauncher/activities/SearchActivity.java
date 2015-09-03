@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -682,10 +681,7 @@ public class SearchActivity extends Activity
 
     public void launchActivity(final LaunchableActivity launchableActivity) {
 
-        final ComponentName componentName = launchableActivity.getComponent();
-
         hideKeyboard();
-
         try {
             startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
             launchableActivity.incrementLaunches();

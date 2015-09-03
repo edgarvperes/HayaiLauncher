@@ -68,17 +68,14 @@ public class SimpleTaskConsumerManager {
     //Dummy task, does nothing. Used to properly wake the threads to kill them.
     public static class DieTask extends Task {
         public void doTask() {
-
+            //nothing here.
         }
     }
 
     private class SimpleTaskConsumer implements Runnable {
-        private int threadId;
 
         @Override
         public void run() {
-            threadId = mNumThreadsAlive++;
-
             do {
                 try {
                     final Task task = mTasks.take();

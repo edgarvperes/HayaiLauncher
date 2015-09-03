@@ -103,7 +103,8 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                                     mActivityInfo.getIconResource(), iconDpi);
 
                 } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
-                    e.printStackTrace();
+                    //if we get here, there's no icon to load.
+                    //there's nothing to do, as the android default icon will be loaded
                 }
 
                 if (_activityIcon == null) {
