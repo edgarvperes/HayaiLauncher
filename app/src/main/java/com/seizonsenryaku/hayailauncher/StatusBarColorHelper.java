@@ -2,9 +2,7 @@ package com.seizonsenryaku.hayailauncher;
 
 import android.app.Activity;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Build;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -12,7 +10,8 @@ import android.view.WindowManager;
 
 public class StatusBarColorHelper {
 
-    public static void setStatusBarColor(Resources resources, Activity activity, int color) {
+    public static void setStatusBarColor(final Resources resources, final Activity activity,
+                                         final int color) {
         //There's no support for colored status bar in versions below KITKAT
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
 
@@ -25,30 +24,23 @@ public class StatusBarColorHelper {
             window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
                     WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-            int statusBarHeight = getStatusBarHeight(resources);
-            View statusBarDummy = activity.findViewById(R.id.statusBarDummyView);
+            final int statusBarHeight = getStatusBarHeight(resources);
+            final View statusBarDummy = activity.findViewById(R.id.statusBarDummyView);
             statusBarDummy.getLayoutParams().height=statusBarHeight;
             statusBarDummy.setBackgroundColor(color);
         }
     }
 
-    public static int getStatusBarHeight(Resources resources) {
+    public static int getStatusBarHeight(final Resources resources) {
 
-        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            return resources.getDimensionPixelSize(resourceId);
-
-        }
-        return 0;
+        final int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        return resourceId > 0 ? resources.getDimensionPixelSize(resourceId) : 0;
     }
 
-    public static int getNavigationBarHeight (Resources resources){
+    public static int getNavigationBarHeight(final Resources resources) {
 
-        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            return resources.getDimensionPixelSize(resourceId);
-        }
-        return 0;
+        final int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        return resourceId > 0 ? resources.getDimensionPixelSize(resourceId) : 0;
     }
 
 

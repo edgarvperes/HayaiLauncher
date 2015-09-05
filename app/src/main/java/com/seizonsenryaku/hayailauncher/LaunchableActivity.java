@@ -28,7 +28,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     private boolean mFavorite;
 
     public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel,
-                              boolean isShareable) {
+                              final boolean isShareable) {
         this.mActivityInfo = activityInfo;
         this.mActivityLabel = activityLabel;
         mComponentName = new ComponentName(activityInfo.packageName, activityInfo.name);
@@ -44,7 +44,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         this.mActivityInfo = null;
     }
 
-    public Intent getLaunchIntent(String searchString) {
+    public Intent getLaunchIntent(final String searchString) {
         if (mLaunchIntent != null)
             return mLaunchIntent;
         if (isShareable()) {
@@ -68,7 +68,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         return mFavorite;
     }
 
-    public void setFavorite(boolean favorite) {
+    public void setFavorite(final boolean favorite) {
         this.mFavorite = favorite;
     }
 
