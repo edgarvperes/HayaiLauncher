@@ -79,7 +79,7 @@
                 android:ems="10"
                 android:hint="@string/search_view_hint"
                 android:imeOptions="actionGo"
-                android:inputType="textVisiblePassword"
+                android:inputType="text"
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:textColor="@android:color/black"
