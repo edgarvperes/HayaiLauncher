@@ -10,19 +10,15 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.NonNull;
 
 import com.seizonsenryaku.hayailauncher.util.ContentShare;
 
-public class LaunchableActivity implements Comparable<LaunchableActivity> {
-    //This limitation is needed to speedup the compareTo function.
-    private static final int MAX_LAUNCHES = 16383;
+public class LaunchableActivity {
     private final ActivityInfo mActivityInfo;
     private final String mActivityLabel;
     private final ComponentName mComponentName;
     private final Intent mLaunchIntent;
-    private int mNumberOfLaunches;
+    private long lastLaunchTime;
     private boolean mShareable;
     private Drawable mActivityIcon;
     private boolean mFavorite;
@@ -58,10 +54,9 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         launchIntent.setComponent(mComponentName);
         return launchIntent;
     }
-        
-    public void incrementLaunches() {
-        if (mNumberOfLaunches < MAX_LAUNCHES)
-            mNumberOfLaunches++;
+
+    public void setLaunchTime() {
+        lastLaunchTime = System.currentTimeMillis() / 1000;
     }
 
     public boolean isFavorite() {
@@ -72,13 +67,10 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         this.mFavorite = favorite;
     }
 
-    public int getNumberOfLaunches() {
-        return mNumberOfLaunches;
+    public long getLaunchTime() {
+        return lastLaunchTime;
     }
 
-    public void setNumberOfLaunches(final int numberOfLaunches) {
-        this.mNumberOfLaunches = numberOfLaunches;
-    }
 
     public CharSequence getActivityLabel() {
         return mActivityLabel;
@@ -92,7 +84,6 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                                                  final int iconSizePixels) {
         if (!isIconLoaded()) {
             Drawable _activityIcon = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
                 final ActivityManager activityManager =
                         (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                 final int iconDpi = activityManager.getLauncherLargeIconDensity();
@@ -113,9 +104,6 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
                             android.R.mipmap.sym_def_app_icon);
                 }
 
-            } else {
-                _activityIcon = mActivityInfo.loadIcon(pm);
-            }
 
             //rescaling the icon if it is bigger than the target size
             //TODO do this when it is not a bitmap drawable?
@@ -131,24 +119,6 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
             mActivityIcon = _activityIcon;
         }
         return mActivityIcon;
-    }
-
-    @Override
-    public int compareTo(@NonNull final LaunchableActivity another) {
-
-        //Criteria 1 (Bit 1) indicates whether the activity is flagged as shareable or not.
-        //Criteria 2 (Bits 2 to 16) indicates the number of launches
-        //Criteria 3 (Bits 17 to 31) indicates string difference (can be at most Character.MAX_VALUE)
-
-        //
-        final int thisN = (this.mShareable ? 0
-                : 0x40000000) + (this.mNumberOfLaunches << 16);
-
-        final int anotherN = (another.mShareable ? 0
-                : 0x40000000) + (another.mNumberOfLaunches << 16) +
-                mActivityLabel.compareTo(another.mActivityLabel);
-
-        return anotherN - thisN;
     }
 
     public ComponentName getComponent() {

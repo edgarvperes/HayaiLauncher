@@ -5,7 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
+import android.os.Build;
 
 import com.seizonsenryaku.hayailauncher.activities.SearchActivity;
 
@@ -13,13 +13,13 @@ public class MyNotificationManager {
 	private static final int NOTIFICATION_ID = 0;
 
     public static int getPriorityFromString(String priority) {
-        final int i_priority;
-        if (priority.toLowerCase().equals("max")) {
-            i_priority = NotificationCompat.PRIORITY_MAX;
-        } else if (priority.toLowerCase().equals("min")) {
-            i_priority = NotificationCompat.PRIORITY_MIN;
-        } else {
-            i_priority = 0;
+        int i_priority = 0;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (priority.toLowerCase().equals("max")) {
+                i_priority = Notification.PRIORITY_MAX;
+            } else if (priority.toLowerCase().equals("min")) {
+                i_priority = Notification.PRIORITY_MIN;
+            }
         }
         return i_priority;
     }
@@ -31,14 +31,16 @@ public class MyNotificationManager {
         final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final Notification notification = new NotificationCompat.Builder(
+        final Notification notification = new Notification.Builder(
                 context)
 				.setSmallIcon(R.drawable.ic_launcher)
 				.setContentTitle(context.getString(R.string.title_activity_search))
-                .setPriority(priority)
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)
-                .build();
+                .getNotification();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            notification.priority = priority;
+        }
 
         final NotificationManager mNotificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);

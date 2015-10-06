@@ -1,6 +1,5 @@
 package com.seizonsenryaku.hayailauncher.activities;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
@@ -16,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -25,7 +23,6 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,7 +60,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
-
 
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -547,16 +543,12 @@ public class SearchActivity extends Activity
         super.onDestroy();
     }
 
-    public boolean showPopup(View v) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final PopupMenu popup = new PopupMenu(this, v);
-            popup.setOnMenuItemClickListener(new PopupEventListener());
-            final MenuInflater inflater = popup.getMenuInflater();
-            inflater.inflate(R.menu.search_activity_menu, popup.getMenu());
-            popup.show();
-            return true;
-        }
-        return false;
+    public void showPopup(View v) {
+        final PopupMenu popup = new PopupMenu(this, v);
+        popup.setOnMenuItemClickListener(new PopupEventListener());
+        final MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.search_activity_menu, popup.getMenu());
+        popup.show();
     }
 
     @Override
@@ -567,23 +559,14 @@ public class SearchActivity extends Activity
         }
     }
 
-    public boolean onKeyUp(int keyCode, @NonNull KeyEvent event) {
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if (!showPopup(mOverflowButtonTopleft)) {
-                openOptionsMenu();
-            }
+            showPopup(mOverflowButtonTopleft);
             return true;
         }
         return super.onKeyUp(keyCode, event);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        final MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_activity_menu, menu);
-        return true;
-
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
@@ -661,21 +644,9 @@ public class SearchActivity extends Activity
 
     }
 
-    @Override
-    public void recreate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            super.recreate();
-        } else {
-            final Intent intentRefresh = new Intent(this, SearchActivity.class);
-            finish();
-            startActivity(intentRefresh);
-        }
-    }
-
     public void onClickSettingsButton(View view) {
-        if (!showPopup(mOverflowButtonTopleft)) {
-            openOptionsMenu();
-        }
+        showPopup(mOverflowButtonTopleft);
+
 
     }
 
@@ -684,7 +655,7 @@ public class SearchActivity extends Activity
         hideKeyboard();
         try {
             startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
-            launchableActivity.incrementLaunches();
+            launchableActivity.setLaunchTime();
             Collections.sort(mActivityInfos);
             mArrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {
@@ -701,7 +672,6 @@ public class SearchActivity extends Activity
         mSearchEditText.setText("");
     }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     class PopupEventListener implements PopupMenu.OnMenuItemClickListener {
         @Override
         public boolean onMenuItemClick(MenuItem item) {
