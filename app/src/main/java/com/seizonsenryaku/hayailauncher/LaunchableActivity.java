@@ -13,11 +13,13 @@ import android.graphics.drawable.Drawable;
 
 import com.seizonsenryaku.hayailauncher.util.ContentShare;
 
-public class LaunchableActivity {
+
+public class LaunchableActivity implements Comparable<LaunchableActivity> {
+
     private final ActivityInfo mActivityInfo;
     private final String mActivityLabel;
     private final ComponentName mComponentName;
-    private final Intent mLaunchIntent;
+    private Intent mLaunchIntent;
     private long lastLaunchTime;
     private boolean mShareable;
     private Drawable mActivityIcon;
@@ -28,7 +30,6 @@ public class LaunchableActivity {
         this.mActivityInfo = activityInfo;
         this.mActivityLabel = activityLabel;
         mComponentName = new ComponentName(activityInfo.packageName, activityInfo.name);
-        mLaunchIntent = null; //create one "on demand"
         this.mShareable = isShareable;
     }
     public LaunchableActivity(final ComponentName componentName, final String label,
@@ -71,6 +72,9 @@ public class LaunchableActivity {
         return lastLaunchTime;
     }
 
+    public void setLaunchTime(long timestamp) {
+        lastLaunchTime = timestamp;
+    }
 
     public CharSequence getActivityLabel() {
         return mActivityLabel;
@@ -131,5 +135,18 @@ public class LaunchableActivity {
 
     public boolean isShareable() {
         return mShareable;
+    }
+
+    @Override
+    public int compareTo(LaunchableActivity another) {
+        if (this.mShareable && !another.mShareable)
+            return 1;
+        if (!this.mShareable && another.mShareable)
+            return -1;
+        if (this.lastLaunchTime > another.lastLaunchTime)
+            return -1;
+        if (this.lastLaunchTime < another.lastLaunchTime)
+            return 1;
+        return this.mActivityLabel.compareTo(another.mActivityLabel);
     }
 }

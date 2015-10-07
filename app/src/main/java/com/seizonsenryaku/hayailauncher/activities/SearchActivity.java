@@ -656,6 +656,8 @@ public class SearchActivity extends Activity
         try {
             startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
             launchableActivity.setLaunchTime();
+            mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
+                    launchableActivity.getLaunchTime(), false);
             Collections.sort(mActivityInfos);
             mArrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {
