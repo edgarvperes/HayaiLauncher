@@ -193,7 +193,7 @@ public class SearchActivity extends Activity
 
         setupPreferences();
         loadLaunchableApps();
-        loadShareableApps();
+        //loadShareableApps();
         setupImageLoadingThreads(resources);
         setupViews();
     }
