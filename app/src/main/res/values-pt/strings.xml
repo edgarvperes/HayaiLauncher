@@ -17,7 +17,7 @@
     <string name="action_about">Sobre</string>
     <string name="action_system_settings">Ajustes do dispositivo</string>
     <string name="activity_not_found">Atividade não encontrada.</string>
-    <string name="title_activity_about">Sobre</string><string name="about_content">Hayai Launcher Versão 20150803_r3
+    <string name="title_activity_about">Sobre</string><string name="about_content">Hayai Launcher 1.0
 \n
 \nWebsite do projeto:
 \nhttps://github.com/seizonsenryaku/HayaiLauncher
@@ -25,6 +25,8 @@
 \nContribuidores:
 \n\tEdgar Villani Peres (seizonsenryaku)
 \n\tDalton de Oliveira Silva(daltonos)
+\n
+\n-
 \n
 \n Copyright 2015 Hayai Software
 \n
