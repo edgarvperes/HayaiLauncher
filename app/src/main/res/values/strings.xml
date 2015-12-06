@@ -31,7 +31,7 @@
 \n
 \nContributors:
 \n\tEdgar Villani Peres (seizonsenryaku)
-\n\tDalton de Oliveira Silva(daltonos)</string>
+\n\tDalton de Oliveira Silva(daltonos)
 \n
 \n Copyright 2015 Hayai Software
 \n
@@ -46,7 +46,7 @@
 \n WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 \n See the License for the specific language governing permissions and
 \n limitations under the License.
-\n
+\n</string>
     <string name="action_manage_apps">Manage apps</string>
     <string name="appmenu_onplaystore">See on Google Play Store</string>
     <string name="pref_basetheme" >Base Theme</string>
