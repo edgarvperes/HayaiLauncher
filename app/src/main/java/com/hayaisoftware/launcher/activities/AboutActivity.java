@@ -30,8 +30,7 @@ public class AboutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        Resources resources=getResources();
-        StatusBarColorHelper.setStatusBarColor(resources, this, resources.getColor(R.color.indigo_700));
+
     }
 
 

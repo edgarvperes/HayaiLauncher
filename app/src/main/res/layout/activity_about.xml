@@ -2,33 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.hayaisoftware.launcher.com.hayaisoftware.launcher.activities.AboutActivity">
-
-    <View
-        android:id="@+id/statusBarDummyView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-
-    <LinearLayout
-        android:id="@+id/customActionBar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/indigo_500"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-
-        android:paddingRight="16dp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical|right"
-            android:text="@string/title_activity_about"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-
-            />
-
-    </LinearLayout>
+    tools:context="com.hayaisoftware.launcher.activities.AboutActivity">
+    
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent" android:orientation="vertical"
@@ -36,7 +11,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context="com.hayaisoftware.launcher.com.hayaisoftware.launcher.activities.AboutActivity">
+        tools:context="com.hayaisoftware.launcher.activities.AboutActivity">
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:text="@string/about_content" />

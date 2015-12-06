@@ -44,6 +44,7 @@
         </activity>
         <activity
             android:name="com.hayaisoftware.launcher.activities.AboutActivity"
+            android:theme="@style/AppSettingsTheme"
             android:label="@string/title_activity_about" >
         </activity>
         <receiver android:name="com.hayaisoftware.launcher.PackageChangedReceiverService">
