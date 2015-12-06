@@ -48,7 +48,7 @@ public class MyNotificationManager {
 
         final Notification notification = new Notification.Builder(
                 context)
-				.setSmallIcon(R.mipmap.launcher_icon)
+				.setSmallIcon(R.drawable.ic_notification)
 				.setContentTitle(context.getString(R.string.title_activity_search))
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)
