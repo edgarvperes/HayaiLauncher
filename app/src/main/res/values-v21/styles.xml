@@ -5,7 +5,7 @@
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 14+ devices.
     -->
-    <style name="AppBaseTheme" parent="@android:style/Theme.Material.NoActionBar">
+    <style name="AppBaseTheme" parent="@android:style/Theme.Material.Light.NoActionBar">
 
         <!-- Main theme colors -->
         <!--   your app branding color for the app bar -->
@@ -20,10 +20,13 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="AppSettingsTheme" parent="@android:style/Theme.Material">
+    <style name="AppSettingsTheme" parent="@android:style/Theme.Material.Light">
         <item name="android:colorPrimary">@color/indigo_500</item>
+        <item name="android:textColorPrimary">@color/white</item>
+
         <!--   darker variant for the status bar and contextual app bars -->
         <item name="android:colorPrimaryDark">@color/indigo_700</item>
+
 
     </style>
 
