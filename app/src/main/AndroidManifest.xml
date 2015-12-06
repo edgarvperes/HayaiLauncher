@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.seizonsenryaku.hayailauncher"
+    package="com.hayaisoftware.launcher"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:versionCode="1"
     android:versionName="1.0" >
@@ -16,7 +16,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppBaseTheme" >
         <activity
-            android:name="com.seizonsenryaku.hayailauncher.activities.SearchActivity"
+            android:name="com.hayaisoftware.launcher.activities.SearchActivity"
             android:alwaysRetainTaskState="true"
             android:excludeFromRecents="true"
             android:label="@string/title_activity_search"
@@ -38,15 +38,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.seizonsenryaku.hayailauncher.activities.SettingsActivity"
+            android:name="com.hayaisoftware.launcher.activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppSettingsTheme" >
         </activity>
         <activity
-            android:name="com.seizonsenryaku.hayailauncher.activities.AboutActivity"
+            android:name="com.hayaisoftware.launcher.activities.AboutActivity"
             android:label="@string/title_activity_about" >
         </activity>
-        <receiver android:name=".PackageChangedReceiverService">
+        <receiver android:name="com.hayaisoftware.launcher.PackageChangedReceiverService">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED"/>
                 <action android:name="android.intent.action.PACKAGE_CHANGED"/>

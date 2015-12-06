@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher;
+package com.hayaisoftware.launcher;
 
 import android.app.Activity;
 import android.content.res.Resources;

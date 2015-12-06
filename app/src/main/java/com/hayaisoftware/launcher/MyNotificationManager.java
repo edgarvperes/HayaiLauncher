@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher;
+package com.hayaisoftware.launcher;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -22,7 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
-import com.seizonsenryaku.hayailauncher.activities.SearchActivity;
+import com.hayaisoftware.launcher.activities.SearchActivity;
 
 public class MyNotificationManager {
 	private static final int NOTIFICATION_ID = 0;

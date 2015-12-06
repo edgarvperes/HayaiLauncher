@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher;
+package com.hayaisoftware.launcher;
 
 import android.content.Context;
 import android.database.Cursor;

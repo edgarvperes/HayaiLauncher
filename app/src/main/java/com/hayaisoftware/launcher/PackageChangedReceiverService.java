@@ -13,20 +13,13 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher;
+package com.hayaisoftware.launcher;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-
-import com.seizonsenryaku.hayailauncher.activities.SearchActivity;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class PackageChangedReceiverService extends BroadcastReceiver {
 

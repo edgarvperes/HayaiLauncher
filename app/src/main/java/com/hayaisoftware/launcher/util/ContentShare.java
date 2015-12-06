@@ -1,4 +1,4 @@
-package com.seizonsenryaku.hayailauncher.util;
+package com.hayaisoftware.launcher.util;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;

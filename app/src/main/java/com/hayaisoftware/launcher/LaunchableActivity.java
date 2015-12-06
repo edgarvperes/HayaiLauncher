@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher;
+package com.hayaisoftware.launcher;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;
@@ -26,7 +26,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import com.seizonsenryaku.hayailauncher.util.ContentShare;
+import com.hayaisoftware.launcher.util.ContentShare;
 
 
 public class LaunchableActivity implements Comparable<LaunchableActivity> {

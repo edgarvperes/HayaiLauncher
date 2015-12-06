@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher.activities;
+package com.hayaisoftware.launcher.activities;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -21,8 +21,8 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 
-import com.seizonsenryaku.hayailauncher.MyNotificationManager;
-import com.seizonsenryaku.hayailauncher.R;
+import com.hayaisoftware.launcher.MyNotificationManager;
+import com.hayaisoftware.launcher.R;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {

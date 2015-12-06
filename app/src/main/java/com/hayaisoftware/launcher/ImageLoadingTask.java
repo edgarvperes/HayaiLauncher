@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher;
+package com.hayaisoftware.launcher;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,7 +21,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
-import com.seizonsenryaku.hayailauncher.threading.SimpleTaskConsumerManager;
+import com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager;
 
 
 public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {

@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher.activities;
+package com.hayaisoftware.launcher.activities;
 
 import android.app.Activity;
 import android.app.WallpaperManager;
@@ -57,15 +57,15 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.seizonsenryaku.hayailauncher.ImageLoadingTask;
-import com.seizonsenryaku.hayailauncher.LaunchableActivity;
-import com.seizonsenryaku.hayailauncher.LaunchableActivityPrefs;
-import com.seizonsenryaku.hayailauncher.MyNotificationManager;
-import com.seizonsenryaku.hayailauncher.R;
-import com.seizonsenryaku.hayailauncher.StatusBarColorHelper;
-import com.seizonsenryaku.hayailauncher.Trie;
-import com.seizonsenryaku.hayailauncher.threading.SimpleTaskConsumerManager;
-import com.seizonsenryaku.hayailauncher.util.ContentShare;
+import com.hayaisoftware.launcher.ImageLoadingTask;
+import com.hayaisoftware.launcher.LaunchableActivity;
+import com.hayaisoftware.launcher.LaunchableActivityPrefs;
+import com.hayaisoftware.launcher.MyNotificationManager;
+import com.hayaisoftware.launcher.R;
+import com.hayaisoftware.launcher.StatusBarColorHelper;
+import com.hayaisoftware.launcher.Trie;
+import com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager;
+import com.hayaisoftware.launcher.util.ContentShare;
 
 import java.text.Normalizer;
 import java.util.ArrayList;

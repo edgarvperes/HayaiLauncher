@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package com.seizonsenryaku.hayailauncher.threading;
+package com.hayaisoftware.launcher.threading;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
