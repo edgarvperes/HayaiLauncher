@@ -16,13 +16,14 @@
 package com.hayaisoftware.launcher.activities;
 
 import android.app.Activity;
-import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
+import com.hayaisoftware.launcher.BuildConfig;
 import com.hayaisoftware.launcher.R;
-import com.hayaisoftware.launcher.StatusBarColorHelper;
 
 public class AboutActivity extends Activity {
 
@@ -30,7 +31,9 @@ public class AboutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-
+        TextView aboutTextView=((TextView) findViewById(R.id.about_textview));
+        aboutTextView.setText(aboutTextView.getText().toString().replace("[APP_VERSION]",
+                BuildConfig.VERSION_NAME));
     }
 
 

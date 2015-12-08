@@ -24,7 +24,7 @@
     <string name="action_system_settings">Device settings</string>
     <string name="activity_not_found">Activity not found.</string>
     <string name="action_about">About</string>
-    <string name="about_content">Hayai Launcher 1.0.1
+    <string name="about_content">Hayai Launcher [APP_VERSION]
 \n
 \nProject Website:
 \nhttps://github.com/seizonsenryaku/HayaiLauncher
