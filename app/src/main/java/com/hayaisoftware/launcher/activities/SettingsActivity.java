@@ -17,8 +17,12 @@ package com.hayaisoftware.launcher.activities;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceCategory;
 import android.view.Menu;
 
 import com.hayaisoftware.launcher.ShortcutNotificationManager;
@@ -36,6 +40,15 @@ public class SettingsActivity extends PreferenceActivity implements
 		super.onCreate(savedInstanceState);
 		
 		addPreferencesFromResource(R.xml.preferences);
+		
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+			//remove priority preference (not supported)
+			PreferenceCategory notificationCategory =
+					(PreferenceCategory) findPreference("pref_category_notification");
+			ListPreference priorityPreference =
+					(ListPreference) findPreference("pref_notification_priority");
+			notificationCategory.removePreference(priorityPreference);
+		}
 	}
 
 
