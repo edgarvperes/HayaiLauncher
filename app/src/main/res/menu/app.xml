@@ -4,11 +4,6 @@
         android:id="@+id/appmenu_launch"
         android:title="@string/appmenu_launch"
         />
-
-    <item
-        android:id="@+id/appmenu_favorite"
-        android:title="@string/appmenu_favorite"
-        />
     
     <item
         android:id="@+id/appmenu_info"
