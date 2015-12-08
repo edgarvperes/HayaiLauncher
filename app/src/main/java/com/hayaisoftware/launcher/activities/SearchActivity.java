@@ -60,7 +60,7 @@ import android.widget.Toast;
 import com.hayaisoftware.launcher.ImageLoadingTask;
 import com.hayaisoftware.launcher.LaunchableActivity;
 import com.hayaisoftware.launcher.LaunchableActivityPrefs;
-import com.hayaisoftware.launcher.MyNotificationManager;
+import com.hayaisoftware.launcher.ShortcutNotificationManager;
 import com.hayaisoftware.launcher.R;
 import com.hayaisoftware.launcher.StatusBarColorHelper;
 import com.hayaisoftware.launcher.Trie;
@@ -335,12 +335,12 @@ public class SearchActivity extends Activity
     private void setupPreferences() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         if (mSharedPreferences.getBoolean(SettingsActivity.KEY_PREF_NOTIFICATION, false)) {
-            final MyNotificationManager myNotificationManager = new MyNotificationManager();
+            final ShortcutNotificationManager shortcutNotificationManager = new ShortcutNotificationManager();
             final String strPriority =
                     mSharedPreferences.getString(SettingsActivity.KEY_PREF_NOTIFICATION_PRIORITY,
                             "low");
-            final int priority = MyNotificationManager.getPriorityFromString(strPriority);
-            myNotificationManager.showNotification(this, priority);
+            final int priority = ShortcutNotificationManager.getPriorityFromString(strPriority);
+            shortcutNotificationManager.showNotification(this, priority);
         }
     }
 

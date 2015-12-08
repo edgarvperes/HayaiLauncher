@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.view.Menu;
 
-import com.hayaisoftware.launcher.MyNotificationManager;
+import com.hayaisoftware.launcher.ShortcutNotificationManager;
 import com.hayaisoftware.launcher.R;
 
 public class SettingsActivity extends PreferenceActivity implements
@@ -45,15 +45,16 @@ public class SettingsActivity extends PreferenceActivity implements
         if (key.equals(KEY_PREF_NOTIFICATION) || key.equals(KEY_PREF_NOTIFICATION_PRIORITY)) {
             boolean notificationEnabled =
                     sharedPreferences.getBoolean(KEY_PREF_NOTIFICATION, false);
-            MyNotificationManager myNotificationManager = new MyNotificationManager();
+            ShortcutNotificationManager shortcutNotificationManager = new ShortcutNotificationManager();
+			shortcutNotificationManager.cancelNotification(this);
 			if (notificationEnabled) {
                 final String strPriority =
                         sharedPreferences.getString(SettingsActivity.KEY_PREF_NOTIFICATION_PRIORITY,
                                 "low");
-                final int priority = MyNotificationManager.getPriorityFromString(strPriority);
-                myNotificationManager.showNotification(this, priority);
+                final int priority = ShortcutNotificationManager.getPriorityFromString(strPriority);
+                shortcutNotificationManager.showNotification(this, priority);
             } else {
-                myNotificationManager.cancelNotification(this);
+                shortcutNotificationManager.cancelNotification(this);
 			}
 		}
 

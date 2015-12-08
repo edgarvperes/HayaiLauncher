@@ -24,7 +24,7 @@ import android.os.Build;
 
 import com.hayaisoftware.launcher.activities.SearchActivity;
 
-public class MyNotificationManager {
+public class ShortcutNotificationManager {
 	private static final int NOTIFICATION_ID = 0;
 
     public static int getPriorityFromString(String priority) {
@@ -46,6 +46,7 @@ public class MyNotificationManager {
         final PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
+        //noinspection deprecation
         final Notification notification = new Notification.Builder(
                 context)
 				.setSmallIcon(R.drawable.ic_notification)
@@ -53,14 +54,15 @@ public class MyNotificationManager {
                 .setOngoing(true)
                 .setContentIntent(pendingIntent)
                 .getNotification();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             notification.priority = priority;
         }
 
-        final NotificationManager mNotificationManager = (NotificationManager) context
+        final NotificationManager notificationManager = (NotificationManager) context
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
-		mNotificationManager.notify(NOTIFICATION_ID, notification);
+        notificationManager.notify(NOTIFICATION_ID, notification);
 	}
 
 	public void cancelNotification(Context context) {
