@@ -65,8 +65,6 @@ public class SettingsActivity extends PreferenceActivity implements
                                 "low");
                 final int priority = ShortcutNotificationManager.getPriorityFromString(strPriority);
                 shortcutNotificationManager.showNotification(this, priority);
-            } else {
-                shortcutNotificationManager.cancelNotification(this);
 			}
 		}
 
