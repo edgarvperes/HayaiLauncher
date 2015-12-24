@@ -48,3 +48,7 @@ x64/
 build/
 [Bb]in/
 [Oo]bj/
+
+#unnecessary files
+manifest-merger-release-report.txt
+
