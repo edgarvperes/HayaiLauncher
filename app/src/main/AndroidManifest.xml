@@ -16,7 +16,6 @@
         <activity
             android:name="com.hayaisoftware.launcher.activities.SearchActivity"
             android:alwaysRetainTaskState="true"
-            android:excludeFromRecents="true"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
