@@ -73,6 +73,7 @@ public class SimpleTaskConsumerManager {
             for (int i = 0; i < threadsToKill; i++) {
                 mTasks.add(dieTask);
             }
+            mConsumersShouldDie = true;
             if (blockUntilFinished) {
                 try {
                     mWaitingUntilAllFinishedLock.wait();
@@ -100,7 +101,7 @@ public class SimpleTaskConsumerManager {
     public class DieTask extends Task {
 
         public void doTask() {
-            mConsumersShouldDie = true;
+            //does nothing
         }
     }
 
