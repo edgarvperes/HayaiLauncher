@@ -69,7 +69,7 @@ public class SimpleTaskConsumerManager {
 
         synchronized (mWaitingUntilAllFinishedLock) {
             int threadsToKill = mNumThreadsAlive;
-            mConsumersShouldDie = true;
+
             DieTask dieTask = new DieTask();
             for (int i = 0; i < threadsToKill; i++) {
                 mTasks.add(dieTask);
@@ -102,7 +102,7 @@ public class SimpleTaskConsumerManager {
     public class DieTask extends Task {
 
         public void doTask() {
-            //does nothing
+            mConsumersShouldDie = true;
         }
     }
 
