@@ -7,8 +7,8 @@ android {
         applicationId 'com.hayaisoftware.launcher'
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 8
-        versionName "1.1.2"
+        versionCode 9
+        versionName "1.1.3"
     }
     buildTypes {
         release {
