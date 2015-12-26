@@ -21,12 +21,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class SimpleTaskConsumerManager {
 
     private final LinkedBlockingQueue<Task> mTasks;
-    private volatile int mNumThreadsAlive;
+    private int mNumThreadsAlive;
     private boolean mConsumersShouldDie;
+    private final Object mWaitingUntilAllFinishedLock;
     private SimpleTaskConsumer[] mSimpleTaskConsumers;
 
     public SimpleTaskConsumerManager(final int numConsumers) {
         mTasks = new LinkedBlockingQueue<>();
+        mWaitingUntilAllFinishedLock = new Object();
         startConsumers(numConsumers);
 
     }
@@ -55,16 +57,32 @@ public class SimpleTaskConsumerManager {
     }
 
     public void destroyAllConsumers(boolean finishCurrentTasks) {
+        destroyAllConsumers(finishCurrentTasks, false);
+    }
+
+
+    public void destroyAllConsumers(boolean finishCurrentTasks, boolean blockUntilFinished) {
         if (mConsumersShouldDie) return;
 
-        mConsumersShouldDie = true;
+
         if (!finishCurrentTasks) removeAllTasks();
-        int threadsToKill = mNumThreadsAlive;
-        DieTask dieTask = new DieTask();
-        for (int i = 0; i < threadsToKill; i++) {
-            mTasks.add(dieTask);
+
+        synchronized (mWaitingUntilAllFinishedLock) {
+            int threadsToKill = mNumThreadsAlive;
+            DieTask dieTask = new DieTask();
+            for (int i = 0; i < threadsToKill; i++) {
+                mTasks.add(dieTask);
+            }
+            if (blockUntilFinished) {
+                try {
+                    mWaitingUntilAllFinishedLock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
+
 
     @Override
     protected void finalize() throws Throwable {
@@ -79,9 +97,10 @@ public class SimpleTaskConsumerManager {
     }
 
     //Dummy task, does nothing. Used to properly wake the threads to kill them.
-    public static class DieTask extends Task {
+    public class DieTask extends Task {
+
         public void doTask() {
-            //nothing here.
+            mConsumersShouldDie = true;
         }
     }
 
@@ -89,6 +108,10 @@ public class SimpleTaskConsumerManager {
 
         @Override
         public void run() {
+            synchronized (mWaitingUntilAllFinishedLock) {
+                mNumThreadsAlive++;
+            }
+
             do {
                 try {
                     final Task task = mTasks.take();
@@ -98,7 +121,14 @@ public class SimpleTaskConsumerManager {
                 }
 
             } while (!mConsumersShouldDie);
-            mNumThreadsAlive--;
+
+            synchronized (mWaitingUntilAllFinishedLock) {
+                mNumThreadsAlive--;
+                if (mNumThreadsAlive == 0)
+                    mWaitingUntilAllFinishedLock.notify();
+
+            }
+
 
         }
     }

@@ -60,6 +60,7 @@ import android.widget.Toast;
 import com.hayaisoftware.launcher.ImageLoadingTask;
 import com.hayaisoftware.launcher.LaunchableActivity;
 import com.hayaisoftware.launcher.LaunchableActivityPrefs;
+import com.hayaisoftware.launcher.LoadLaunchableActivityTask;
 import com.hayaisoftware.launcher.R;
 import com.hayaisoftware.launcher.ShortcutNotificationManager;
 import com.hayaisoftware.launcher.StatusBarColorHelper;
@@ -83,6 +84,7 @@ public class SearchActivity extends Activity
     private static final int sMarginFromNavigationBarInDp = 16;
     private static final int sGridItemHeightInDp = 96;
     private static final int sInitialArrayListSize = 300;
+
     private final Pattern mPattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     private int mStatusBarHeight;
     private ArrayList<LaunchableActivity> mActivityInfos;
@@ -99,6 +101,7 @@ public class SearchActivity extends Activity
     private int mIconSizePixels;
     private EditText mSearchEditText;
     private View mClearButton;
+    private int numOfCores;
 
     private final TextWatcher mTextWatcher = new TextWatcher() {
 
@@ -140,7 +143,6 @@ public class SearchActivity extends Activity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         mPm = getPackageManager();
@@ -192,10 +194,12 @@ public class SearchActivity extends Activity
 
 
         setupPreferences();
+        numOfCores = Runtime.getRuntime().availableProcessors() - 1;
         loadLaunchableApps();
         //loadShareableApps();
         setupImageLoadingThreads(resources);
         setupViews();
+
     }
 
     private void loadShareableApps() {
@@ -345,13 +349,20 @@ public class SearchActivity extends Activity
     }
 
     private void setupImageLoadingThreads(final Resources resources) {
+
+        mImageLoadingConsumersManager =
+                new SimpleTaskConsumerManager(getOptimalNumberOfThreads(resources));
+        mImageTasksSharedData = new ImageLoadingTask.SharedData(this, mPm, mContext, mIconSizePixels);
+    }
+
+
+    private int getOptimalNumberOfThreads(final Resources resources) {
         final int maxThreads = resources.getInteger(R.integer.max_imageloading_threads);
-        int numThreads = Runtime.getRuntime().availableProcessors() - 1;
+        int numThreads = numOfCores;
         //clamp numThreads
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > maxThreads) numThreads = maxThreads;
-        mImageLoadingConsumersManager = new SimpleTaskConsumerManager(numThreads);
-        mImageTasksSharedData = new ImageLoadingTask.SharedData(this, mPm, mContext, mIconSizePixels);
+        return numThreads;
     }
 
     private void updateApps(final List<LaunchableActivity> updatedActivityInfos, boolean addToTrie) {
@@ -487,10 +498,26 @@ public class SearchActivity extends Activity
         mArrayAdapter = new ActivityInfoArrayAdapter(this,
                 R.layout.app_grid_item, mActivityInfos);
         ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
-        for (ResolveInfo info : infoList) {
-            final LaunchableActivity launchableActivity = new LaunchableActivity(
-                    info.activityInfo, info.activityInfo.loadLabel(mPm).toString(), false);
-            launchablesFromResolve.add(launchableActivity);
+
+        if (numOfCores <= 1) {
+            for (ResolveInfo info : infoList) {
+                final LaunchableActivity launchableActivity = new LaunchableActivity(
+                        info.activityInfo, info.activityInfo.loadLabel(mPm).toString(), false);
+                launchablesFromResolve.add(launchableActivity);
+            }
+        } else {
+            SimpleTaskConsumerManager simpleTaskConsumerManager =
+                    new SimpleTaskConsumerManager(Runtime.getRuntime().availableProcessors());
+
+            LoadLaunchableActivityTask.SharedData sharedAppLoadData =
+                    new LoadLaunchableActivityTask.SharedData(mPm, launchablesFromResolve);
+            for (ResolveInfo info : infoList) {
+                LoadLaunchableActivityTask loadLaunchableActivityTask =
+                        new LoadLaunchableActivityTask(info, sharedAppLoadData);
+                simpleTaskConsumerManager.addTask(loadLaunchableActivityTask);
+            }
+
+            simpleTaskConsumerManager.destroyAllConsumers(true, true);
         }
         updateApps(launchablesFromResolve, true);
     }
