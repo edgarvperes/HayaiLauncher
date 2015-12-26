@@ -68,12 +68,13 @@ public class SimpleTaskConsumerManager {
         if (!finishCurrentTasks) removeAllTasks();
 
         synchronized (mWaitingUntilAllFinishedLock) {
+            mConsumersShouldDie = true;
             int threadsToKill = mNumThreadsAlive;
             DieTask dieTask = new DieTask();
             for (int i = 0; i < threadsToKill; i++) {
                 mTasks.add(dieTask);
             }
-            mConsumersShouldDie = true;
+
             if (blockUntilFinished) {
                 try {
                     mWaitingUntilAllFinishedLock.wait();
