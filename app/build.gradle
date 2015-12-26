@@ -7,7 +7,7 @@ android {
         applicationId 'com.hayaisoftware.launcher'
         minSdkVersion 15
         targetSdkVersion 22
-        versionCode 6
+        versionCode 7
         versionName "1.1.1 alpha"
     }
     buildTypes {
