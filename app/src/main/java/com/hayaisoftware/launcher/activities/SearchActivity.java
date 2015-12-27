@@ -351,7 +351,8 @@ public class SearchActivity extends Activity
     private void setupImageLoadingThreads(final Resources resources) {
 
         mImageLoadingConsumersManager =
-                new SimpleTaskConsumerManager(getOptimalNumberOfThreads(resources));
+                new SimpleTaskConsumerManager(getOptimalNumberOfThreads(resources),
+                        mActivityInfos.size());
         mImageTasksSharedData = new ImageLoadingTask.SharedData(this, mPm, mContext, mIconSizePixels);
     }
 
@@ -507,7 +508,7 @@ public class SearchActivity extends Activity
             }
         } else {
             SimpleTaskConsumerManager simpleTaskConsumerManager =
-                    new SimpleTaskConsumerManager(numOfCores);
+                    new SimpleTaskConsumerManager(numOfCores,infoList.size());
 
             LoadLaunchableActivityTask.SharedData sharedAppLoadData =
                     new LoadLaunchableActivityTask.SharedData(mPm, launchablesFromResolve);

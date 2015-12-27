@@ -15,16 +15,24 @@
 
 package com.hayaisoftware.launcher.threading;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class SimpleTaskConsumerManager {
 
-    private final LinkedBlockingQueue<Task> mTasks;
+    private final BlockingQueue<Task> mTasks;
     private volatile int mNumThreadsAlive;
     private boolean mConsumersShouldDie;
     private SimpleTaskConsumer[] mSimpleTaskConsumers;
     private Thread[] threads;
+
+    public SimpleTaskConsumerManager(final int numConsumers, final int queueSize) {
+        mTasks = new ArrayBlockingQueue<>(queueSize);
+        startConsumers(numConsumers);
+
+    }
 
     public SimpleTaskConsumerManager(final int numConsumers) {
         mTasks = new LinkedBlockingQueue<>();
