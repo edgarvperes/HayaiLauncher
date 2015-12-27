@@ -507,7 +507,7 @@ public class SearchActivity extends Activity
             }
         } else {
             SimpleTaskConsumerManager simpleTaskConsumerManager =
-                    new SimpleTaskConsumerManager(Runtime.getRuntime().availableProcessors());
+                    new SimpleTaskConsumerManager(numOfCores);
 
             LoadLaunchableActivityTask.SharedData sharedAppLoadData =
                     new LoadLaunchableActivityTask.SharedData(mPm, launchablesFromResolve);
