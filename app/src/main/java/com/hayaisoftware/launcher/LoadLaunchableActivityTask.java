@@ -33,12 +33,13 @@ public class LoadLaunchableActivityTask extends SimpleTaskConsumerManager.Task {
         this.mSharedData = sharedData;
     }
 
-    public void doTask() {
+    public boolean doTask() {
         final LaunchableActivity launchableActivity = new LaunchableActivity(
                 info.activityInfo, info.activityInfo.loadLabel(mSharedData.mPackageManager).toString(), false);
         synchronized (mSharedData.launchablesFromResolve) {
             mSharedData.launchablesFromResolve.add(launchableActivity);
         }
+        return true;
     }
 
     public static class SharedData {

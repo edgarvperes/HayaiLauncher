@@ -21,24 +21,24 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class SimpleTaskConsumerManager {
 
     private final LinkedBlockingQueue<Task> mTasks;
-    private int mNumThreadsAlive;
+    private volatile int mNumThreadsAlive;
     private boolean mConsumersShouldDie;
-    private final Object mWaitingUntilAllFinishedLock;
     private SimpleTaskConsumer[] mSimpleTaskConsumers;
+    private Thread[] threads;
 
     public SimpleTaskConsumerManager(final int numConsumers) {
         mTasks = new LinkedBlockingQueue<>();
-        mWaitingUntilAllFinishedLock = new Object();
         startConsumers(numConsumers);
 
     }
 
     private void startConsumers(final int numConsumers) {
         mSimpleTaskConsumers = new SimpleTaskConsumer[numConsumers];
+        threads=new Thread[numConsumers];
         for (int i = 0; i < numConsumers; i++) {
             mSimpleTaskConsumers[i] = new SimpleTaskConsumer();
-            Thread thread = new Thread(mSimpleTaskConsumers[i]);
-            thread.start();
+            threads[i] = new Thread(mSimpleTaskConsumers[i]);
+            threads[i].start();
         }
     }
 
@@ -56,34 +56,41 @@ public class SimpleTaskConsumerManager {
         mTasks.clear();
     }
 
-    public void destroyAllConsumers(boolean finishCurrentTasks) {
+    public void destroyAllConsumers(final boolean finishCurrentTasks) {
         destroyAllConsumers(finishCurrentTasks, false);
     }
 
 
-    public void destroyAllConsumers(boolean finishCurrentTasks, boolean blockUntilFinished) {
+    public void destroyAllConsumers(final boolean finishCurrentTasks,
+                                    final boolean blockUntilFinished) {
         if (mConsumersShouldDie) return;
-
+        mConsumersShouldDie = true;
 
         if (!finishCurrentTasks) removeAllTasks();
+        
 
-        synchronized (mWaitingUntilAllFinishedLock) {
-            int threadsToKill = mNumThreadsAlive;
-
-            DieTask dieTask = new DieTask();
-            for (int i = 0; i < threadsToKill; i++) {
-                mTasks.add(dieTask);
+        final DieTask dieTask = new DieTask();
+        for(final Thread thread:threads){
+            try {
+                mTasks.put(dieTask);
+                //Log.d("Multithread", "Added DieTask");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
+        //Log.d("Multithread","Added All DieTasks");
+        if (blockUntilFinished) {
 
-            if (blockUntilFinished) {
+            for(final Thread thread:threads){
                 try {
-                    mWaitingUntilAllFinishedLock.wait();
+                    thread.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+
 
 
     @Override
@@ -95,14 +102,17 @@ public class SimpleTaskConsumerManager {
     }
 
     public static abstract class Task {
-        public abstract void doTask();
+
+        //Returns true if you want the thread that run the task to continue running.
+        public abstract boolean doTask();
     }
 
     //Dummy task, does nothing. Used to properly wake the threads to kill them.
     public class DieTask extends Task {
 
-        public void doTask() {
-            mConsumersShouldDie = true;
+        public boolean doTask() {
+            //Log.d("Multithread"," Run DieTask");
+            return false;
         }
     }
 
@@ -110,26 +120,23 @@ public class SimpleTaskConsumerManager {
 
         @Override
         public void run() {
-            synchronized (mWaitingUntilAllFinishedLock) {
-                mNumThreadsAlive++;
-            }
-
+            int threadId = mNumThreadsAlive++;
+            //Log.d("Thread"+threadId, " is ready!");
             do {
                 try {
                     final Task task = mTasks.take();
-                    task.doTask();
+                    if(!task.doTask()){
+                        break;
+                    }
+
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
-            } while (!mConsumersShouldDie);
+            } while (true);
 
-            synchronized (mWaitingUntilAllFinishedLock) {
-                mNumThreadsAlive--;
-                if (mNumThreadsAlive == 0)
-                    mWaitingUntilAllFinishedLock.notify();
-
-            }
+            //Log.d("Multithread",threadId + " quit the loop!");
+            mNumThreadsAlive--;
 
 
         }

@@ -36,7 +36,7 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
         this.mSharedData = sharedData;
     }
 
-    public void doTask() {
+    public boolean doTask() {
         final Drawable activityIcon =
                 mLaunchableActivity.getActivityIcon(mSharedData.mPackageManager, mSharedData.mContext,
                         mSharedData.mIconSizePixels);
@@ -48,6 +48,7 @@ public class ImageLoadingTask extends SimpleTaskConsumerManager.Task {
                     mImageView.setImageDrawable(activityIcon);
             }
         });
+        return true;
     }
 
     public static class SharedData {

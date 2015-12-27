@@ -517,7 +517,9 @@ public class SearchActivity extends Activity
                 simpleTaskConsumerManager.addTask(loadLaunchableActivityTask);
             }
 
+            //Log.d("MultithreadStartup","waiting for completion of all tasks");
             simpleTaskConsumerManager.destroyAllConsumers(true, true);
+            //Log.d("MultithreadStartup", "all tasks ok");
         }
         updateApps(launchablesFromResolve, true);
     }
