@@ -67,7 +67,7 @@ public class SimpleTaskConsumerManager {
         mConsumersShouldDie = true;
 
         if (!finishCurrentTasks) removeAllTasks();
-        
+
 
         final DieTask dieTask = new DieTask();
         for(final Thread thread:threads){
