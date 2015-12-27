@@ -194,7 +194,7 @@ public class SearchActivity extends Activity
 
 
         setupPreferences();
-        numOfCores = Runtime.getRuntime().availableProcessors() - 1;
+        numOfCores = Runtime.getRuntime().availableProcessors();
         loadLaunchableApps();
         //loadShareableApps();
         setupImageLoadingThreads(resources);
@@ -358,7 +358,7 @@ public class SearchActivity extends Activity
 
     private int getOptimalNumberOfThreads(final Resources resources) {
         final int maxThreads = resources.getInteger(R.integer.max_imageloading_threads);
-        int numThreads = numOfCores;
+        int numThreads = numOfCores - 1;
         //clamp numThreads
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > maxThreads) numThreads = maxThreads;
