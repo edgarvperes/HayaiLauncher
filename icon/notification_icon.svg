@@ -1,48 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="24"
    height="24"
-   id="svg3561"
    version="1.1"
-   inkscape:version="0.91 r"
    viewBox="0 0 24 24"
-   inkscape:export-filename="/home/edgar/Documents/HayaiLauncher/app/src/main/res/drawable-xxxhdpi/ic_notification2.png"
-   inkscape:export-xdpi="360"
-   inkscape:export-ydpi="360"
-   sodipodi:docname="notification_icon.svg"
    style="enable-background:new">
-  <defs
-     id="defs3563" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="4.9497475"
-     inkscape:cx="21.937479"
-     inkscape:cy="13.557464"
-     inkscape:current-layer="layer1"
-     showgrid="true"
-     inkscape:grid-bbox="true"
-     inkscape:document-units="px"
-     inkscape:window-width="719"
-     inkscape:window-height="669"
-     inkscape:window-x="571"
-     inkscape:window-y="0"
-     inkscape:window-maximized="0" />
-  <metadata
-     id="metadata3566">
+  <metadata>
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -55,18 +23,12 @@
   </metadata>
   <g
      id="layer1"
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
      transform="translate(0,-24)">
     <path
-       sodipodi:nodetypes="cccssssccccccsssss"
        id="path3890"
        d="m 18.547874,40.632218 -1.045831,0 -0.370672,-0.359191 c 1.297345,-1.516344 2.078411,-3.485131 2.078411,-5.626721 C 19.209782,29.870878 15.357439,26 10.604888,26 5.8523374,26 2,29.870878 2,34.646306 c 0,4.775407 3.8523374,8.646217 8.604888,8.646217 2.131368,0 4.090634,-0.784747 5.599801,-2.088324 l 0.35743,0.372468 0,1.050802 L 20.027495,46 22,44.017936 Z m -7.942991,0.535053 c -3.5909922,0 -6.4897509,-2.912706 -6.4897509,-6.520965 0,-3.608237 2.8987587,-6.52103 6.4897509,-6.52103 3.591002,0 6.489755,2.912793 6.489755,6.52103 0,3.608259 -2.898753,6.520965 -6.489755,6.520965 z"
-       inkscape:connector-curvature="0"
        style="fill:#ffffff;stroke:none;stroke-width:2.7918613" />
     <path
-       sodipodi:nodetypes="ccccccccccccc"
-       inkscape:connector-curvature="0"
        id="path3892"
        d="m 8.413252,34.296046 -0.4830445,2.153671 -1.2820769,2.982061 2.5806211,-2.712662 2.4751883,-1.53392 1.487498,2.844546 -0.342767,-3.36147 0.44871,-1.247452 1.331928,-3.664561 -2.275747,2.91439 -2.8402296,1.909938 -0.6291018,-2.477486 z"
        style="fill:#ffffff;fill-rule:evenodd;stroke:#ffffff;stroke-width:0.02626837px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
