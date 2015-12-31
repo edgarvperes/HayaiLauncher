@@ -1,7 +1,4 @@
-
 ### Android ###
-# Windows thumbs
-Thumbs.db
 
 # Built application files
 *.apk
@@ -30,15 +27,16 @@ proguard/
 
 # Log Files
 *.log
+*.log.*
 
 ### Android Patch ###
 gen-external-apklibs
 
-#Idea
+# Idea
 *.iml
 .idea/
 
-#gradle
+# gradle
 .gradle/
 
 # Build results
@@ -49,6 +47,17 @@ build/
 [Bb]in/
 [Oo]bj/
 
-#unnecessary files
+# Unnecessary files
 manifest-merger-release-report.txt
 
+# Windows thumbs
+Thumbs.db
+
+# Temp files
+*~
+*.bak
+*.autosav
+*.autosave
+# Temp files of GNU Emacs
+*\#
+\#*
