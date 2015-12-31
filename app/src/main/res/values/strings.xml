@@ -11,7 +11,7 @@
     <string name="settings_enable_notification_title">Show shortcut in notification panel</string>
     <string name="settings_enable_icons_title">Display app icons</string>
     <string name="application_icon_content_description">Application Icon</string>
-	<string name="appmenu_launch">Launch</string>
+    <string name="appmenu_launch">Launch</string>
     <string name="appmenu_favorite">Favorite</string>
     <string name="appmenu_info">App information</string>
     <string name="app_item_bottom_several">Launched %d times</string>
@@ -41,7 +41,7 @@
 you may not use this file except in compliance with the License.
 \n You may obtain a copy of the License at
 \n
-\n http://www.apache.org/licenses/LICENSE-2.0
+\n https://www.apache.org/licenses/LICENSE-2.0
 \n
 \n Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
