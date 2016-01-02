@@ -27,8 +27,6 @@
     <string name="appmenu_launch">Lancé</string>
     <string name="appmenu_favorite">Favori</string>
     <string name="appmenu_info">Informations sur l\'app</string>
-    <string name="app_item_bottom_several">Lancé %d fois</string>
-    <string name="app_item_bottom_once">Lancé %d fois</string>
     <string name="app_item_bottom_never">Jamais lancé</string>
     <string name="title_activity_about">À propos</string>
     <string name="launch">Aller</string>

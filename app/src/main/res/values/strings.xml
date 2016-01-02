@@ -14,8 +14,6 @@
     <string name="appmenu_launch">Launch</string>
     <string name="appmenu_favorite">Favorite</string>
     <string name="appmenu_info">App information</string>
-    <string name="app_item_bottom_several">Launched %d times</string>
-    <string name="app_item_bottom_once">Launched %d time</string>
     <string name="app_item_bottom_never">Never launched</string>
     <string name="app_item_favorite_symbol" translatable="false">★</string>
     <string name="title_activity_about">About</string>

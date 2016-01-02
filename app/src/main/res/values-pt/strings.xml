@@ -9,8 +9,6 @@
     <string name="appmenu_launch">Executar</string>
     <string name="appmenu_favorite">Favorito</string>
     <string name="appmenu_info">Informações do aplicativo</string>
-    <string name="app_item_bottom_once">Executado %d vez</string>
-    <string name="app_item_bottom_several">Executado %d vezes</string>
     <string name="app_item_bottom_never">Nunca executado</string>
     <string name="settings_enable_icons_title">Mostrar icones</string>
     <string name="action_refresh_app_list">Atualizar lista de apps</string>
