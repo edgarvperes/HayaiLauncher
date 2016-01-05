@@ -217,7 +217,7 @@ public class SearchActivity extends Activity
     protected void onResume() {
         super.onResume();
         mSearchEditText.clearFocus();
-        if(mSharedPreferences.getBoolean("pref_autonotification",true)) {
+        if(mSharedPreferences.getBoolean("pref_autokeyboard",true)) {
             mSearchEditText.requestFocus();
         }
     }
@@ -249,7 +249,7 @@ public class SearchActivity extends Activity
     protected void onPostResume() {
         super.onPostResume();
 
-        if(mSharedPreferences.getBoolean("pref_autonotification",true)){
+        if(mSharedPreferences.getBoolean("pref_autokeyboard",true)){
             showKeyboard();
 
             //HACK putting showKeyboard event to the end of the Ui Thread running queue

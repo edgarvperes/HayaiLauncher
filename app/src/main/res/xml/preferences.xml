@@ -5,8 +5,8 @@
         android:title="@string/settings_category_general_category">
         <CheckBoxPreference
             android:defaultValue="true"
-            android:key="pref_autonotification"
-            android:title="@string/settings_autonotification" />
+            android:key="pref_autokeyboard"
+            android:title="@string/settings_autokeyboard" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_category_notification"
