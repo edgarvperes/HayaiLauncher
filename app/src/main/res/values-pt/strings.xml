@@ -46,4 +46,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="pref_basetheme">Tema Base</string>
     <string name="pref_notification_priority">Prioridade da notificação</string>
     <string name="settings_category_notification_category">Notificações</string>
+    <string name="settings_autonotification">Abrir teclado automaticamente</string>
+    <string name="settings_category_general_category">Geral</string>
 </resources>

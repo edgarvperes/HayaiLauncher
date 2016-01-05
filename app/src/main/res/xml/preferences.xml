@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory
+        android:key="pref_category_general"
+        android:title="@string/settings_category_general_category">
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="pref_autonotification"
+            android:title="@string/settings_autonotification" />
+    </PreferenceCategory>
+    <PreferenceCategory
         android:key="pref_category_notification"
         android:title="@string/settings_category_notification_category">
         <CheckBoxPreference

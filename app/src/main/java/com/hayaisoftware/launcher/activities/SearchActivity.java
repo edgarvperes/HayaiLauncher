@@ -217,7 +217,9 @@ public class SearchActivity extends Activity
     protected void onResume() {
         super.onResume();
         mSearchEditText.clearFocus();
-        mSearchEditText.requestFocus();
+        if(mSharedPreferences.getBoolean("pref_autonotification",true)) {
+            mSearchEditText.requestFocus();
+        }
     }
 
     public int setPaddingHeights() {
@@ -246,22 +248,25 @@ public class SearchActivity extends Activity
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        showKeyboard();
 
-        //HACK putting showKeyboard event to the end of the Ui Thread running queue
-        // to make sure the keyboard opens.
-        final Thread keyboardEventPosterThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        showKeyboard();
-                    }
-                });
-            }
-        });
-        keyboardEventPosterThread.start();
+        if(mSharedPreferences.getBoolean("pref_autonotification",true)){
+            showKeyboard();
+
+            //HACK putting showKeyboard event to the end of the Ui Thread running queue
+            // to make sure the keyboard opens.
+            final Thread keyboardEventPosterThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showKeyboard();
+                        }
+                    });
+                }
+            });
+            keyboardEventPosterThread.start();
+        }
 
 
     }
