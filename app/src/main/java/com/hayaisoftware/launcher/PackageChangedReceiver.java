@@ -21,7 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-public class PackageChangedReceiverService extends BroadcastReceiver {
+public class PackageChangedReceiver extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
             final String packageChangedName = intent.getData().getSchemeSpecificPart();

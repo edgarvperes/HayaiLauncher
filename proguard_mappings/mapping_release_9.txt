@@ -53,7 +53,7 @@ com.hayaisoftware.launcher.LoadLaunchableActivityTask$SharedData -> com.hayaisof
     android.content.pm.PackageManager mPackageManager -> a
     java.util.ArrayList launchablesFromResolve -> b
     void <init>(android.content.pm.PackageManager,java.util.ArrayList) -> <init>
-com.hayaisoftware.launcher.PackageChangedReceiverService -> com.hayaisoftware.launcher.PackageChangedReceiverService:
+com.hayaisoftware.launcher.PackageChangedReceiver -> com.hayaisoftware.launcher.PackageChangedReceiver:
     void <init>() -> <init>
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.hayaisoftware.launcher.ShortcutNotificationManager -> com.hayaisoftware.launcher.i:

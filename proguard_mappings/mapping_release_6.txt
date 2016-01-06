@@ -36,7 +36,7 @@ com.hayaisoftware.launcher.LaunchableActivityPrefs$ActivityPref -> com.hayaisoft
     long lastTimestamp -> c
     boolean wasUsed -> d
     com.hayaisoftware.launcher.LaunchableActivityPrefs this$0 -> e
-com.hayaisoftware.launcher.PackageChangedReceiverService -> com.hayaisoftware.launcher.PackageChangedReceiverService:
+com.hayaisoftware.launcher.PackageChangedReceiver -> com.hayaisoftware.launcher.PackageChangedReceiver:
     void onReceive(android.content.Context,android.content.Intent) -> onReceive
 com.hayaisoftware.launcher.ShortcutNotificationManager -> com.hayaisoftware.launcher.g:
     int getPriorityFromString(java.lang.String) -> a

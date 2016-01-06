@@ -18,8 +18,10 @@ package com.hayaisoftware.launcher.activities;
 import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -61,6 +63,7 @@ import com.hayaisoftware.launcher.ImageLoadingTask;
 import com.hayaisoftware.launcher.LaunchableActivity;
 import com.hayaisoftware.launcher.LaunchableActivityPrefs;
 import com.hayaisoftware.launcher.LoadLaunchableActivityTask;
+import com.hayaisoftware.launcher.PackageChangedReceiver;
 import com.hayaisoftware.launcher.R;
 import com.hayaisoftware.launcher.ShortcutNotificationManager;
 import com.hayaisoftware.launcher.StatusBarColorHelper;
@@ -102,7 +105,7 @@ public class SearchActivity extends Activity
     private EditText mSearchEditText;
     private View mClearButton;
     private int numOfCores;
-
+    private BroadcastReceiver packageChangedReceiver;
     private final TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
@@ -195,6 +198,14 @@ public class SearchActivity extends Activity
 
         setupPreferences();
         numOfCores = Runtime.getRuntime().availableProcessors();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.intent.action.PACKAGE_ADDED");
+        filter.addAction("android.intent.action.PACKAGE_CHANGED");
+        filter.addAction("android.intent.action.PACKAGE_REMOVED");
+        filter.addAction("android.intent.action.PACKAGE_REPLACED");
+        filter.addDataScheme("package");
+        packageChangedReceiver=new PackageChangedReceiver();
+        registerReceiver(packageChangedReceiver,filter);
         loadLaunchableApps();
         //loadShareableApps();
         setupImageLoadingThreads(resources);
@@ -590,6 +601,7 @@ public class SearchActivity extends Activity
     protected void onDestroy() {
         if (mImageLoadingConsumersManager != null)
             mImageLoadingConsumersManager.destroyAllConsumers(false);
+        unregisterReceiver(packageChangedReceiver);
         super.onDestroy();
     }
 
