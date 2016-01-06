@@ -198,13 +198,13 @@ public class SearchActivity extends Activity
 
         setupPreferences();
         numOfCores = Runtime.getRuntime().availableProcessors();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.intent.action.PACKAGE_ADDED");
-        filter.addAction("android.intent.action.PACKAGE_CHANGED");
-        filter.addAction("android.intent.action.PACKAGE_REMOVED");
-        filter.addAction("android.intent.action.PACKAGE_REPLACED");
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         filter.addDataScheme("package");
-        packageChangedReceiver=new PackageChangedReceiver();
+        packageChangedReceiver = new PackageChangedReceiver();
         registerReceiver(packageChangedReceiver,filter);
         loadLaunchableApps();
         //loadShareableApps();
@@ -389,10 +389,11 @@ public class SearchActivity extends Activity
             mLaunchableActivityPackageNameHashMap.remove(packageName);
         }
 
+        final String thisClassCanonicalName=this.getClass().getCanonicalName();
         for (LaunchableActivity launchableActivity : updatedActivityInfos) {
             final String className = launchableActivity.getComponent().getClassName();
             //don't show this activity in the launcher
-            if (className.equals(this.getClass().getCanonicalName())) {
+            if (className.equals(thisClassCanonicalName)) {
                 continue;
             }
 
