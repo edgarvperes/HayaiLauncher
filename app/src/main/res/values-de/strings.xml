@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Hayai Launcher</string>
     <string name="action_about">Über</string>
     <string name="action_manage_apps">App-Verwaltung</string>
     <string name="action_refresh_app_list">App-Liste aktualisieren</string>
@@ -23,4 +22,6 @@
     <string name="settings_enable_notification_title">Im Benachrichtigungsfeld Verknüpfung anzeigen</string>
     <string name="title_activity_about">Über diese App</string>
     <string name="title_activity_settings">Einstellungen</string>
+    <string name="settings_autokeyboard">Tastatur automatisch anzeigen</string>
+    <string name="settings_category_general_category">Allgemein</string>
 </resources>
