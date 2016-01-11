@@ -3,25 +3,25 @@
 
     <string name="app_name" translatable="false">Hayai Launcher</string>
     <string name="title_activity_search" translatable="false">Hayai Launcher</string>
-    <string name="action_settings">Settings</string>
-    <string name="application_icon_desc" >Application Icon</string>
-    <string name="search_view_hint">Type something…</string>
-    <string name="title_activity_settings">Settings</string>
-    <string name="settings_category_notification_category">Notifications</string>
-    <string name="settings_enable_notification_title">Show shortcut in notification panel</string>
-    <string name="settings_enable_icons_title">Display app icons</string>
-    <string name="application_icon_content_description">Application Icon</string>
-    <string name="appmenu_launch">Launch</string>
-    <string name="appmenu_favorite">Favorite</string>
-    <string name="appmenu_info">App information</string>
-    <string name="app_item_bottom_never">Never launched</string>
+    <string name="action_settings">Настройки</string>
+    <string name="application_icon_desc" >Иконка приложения</string>
+    <string name="search_view_hint">Введите что-нибудь…</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="settings_category_notification_category">Уведомления</string>
+    <string name="settings_enable_notification_title">Показывать иконку в панели уведомлений</string>
+    <string name="settings_enable_icons_title">Показывать иконки приложений</string>
+    <string name="application_icon_content_description">Иконка приложения</string>
+    <string name="appmenu_launch">Запуск</string>
+    <string name="appmenu_favorite">Избранное</string>
+    <string name="appmenu_info">Информация о приложении</string>
+    <string name="app_item_bottom_never">Никогда не запущен</string>
     <string name="app_item_favorite_symbol" translatable="false">★</string>
-    <string name="title_activity_about">About</string>
-    <string name="launch">Go</string>
-    <string name="action_refresh_app_list">Refresh app list</string>
-    <string name="action_system_settings">Device settings</string>
-    <string name="activity_not_found">Activity not found.</string>
-    <string name="action_about">About</string>
+    <string name="title_activity_about">О приложении</string>
+    <string name="launch">Запустить</string>
+    <string name="action_refresh_app_list">Обновить список приложений</string>
+    <string name="action_system_settings">Настройки устройства</string>
+    <string name="activity_not_found">Действие не найдено.</string>
+    <string name="action_about">О приложении</string>
     <string name="about_content">Hayai Launcher [APP_VERSION]
 \n
 \nProject Website:
@@ -47,11 +47,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 \n See the License for the specific language governing permissions and
 \n limitations under the License.
 \n</string>
-    <string name="action_manage_apps">Manage apps</string>
-    <string name="appmenu_onplaystore">See on Google Play Store</string>
-    <string name="pref_basetheme" >Base Theme</string>
-    <string name="pref_notification_priority">Notification priority</string>
-    <string name="settings_autokeyboard">Open keyboard automatically</string>
-    <string name="settings_category_general_category">General</string>
+    <string name="action_manage_apps">Управление приложениями</string>
+    <string name="appmenu_onplaystore">Посмотреть в Google Play Store</string>
+    <string name="pref_basetheme" >Стандартная тема</string>
+    <string name="pref_notification_priority">Приоритет приложений</string>
+    <string name="settings_autokeyboard">Открывать клавиатуру автоматически</string>
+    <string name="settings_category_general_category">Общее</string>
 
 </resources>
