@@ -291,6 +291,8 @@ public class SearchActivity extends Activity
                     showKeyboard();
                 }
             });
+        }else{
+            hideKeyboard();
         }
 
 
