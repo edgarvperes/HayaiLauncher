@@ -11,6 +11,11 @@
         />
 
     <item
+        android:id="@+id/appmenu_pin_to_top"
+        android:title="@string/appmenu_pin_to_top"
+        />
+
+    <item
         android:id="@+id/appmenu_onplaystore"
         android:title="@string/appmenu_onplaystore"
         />

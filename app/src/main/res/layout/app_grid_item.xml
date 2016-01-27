@@ -21,6 +21,15 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_send_white_18dp"
             android:visibility="gone" />
+        <ImageView
+            android:id="@+id/appPinToTop"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:tint="@color/pin_to_top"
+            android:src="@drawable/ic_star_white_18dp"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
     <TextView

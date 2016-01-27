@@ -68,12 +68,16 @@ import com.hayaisoftware.launcher.R;
 import com.hayaisoftware.launcher.ShortcutNotificationManager;
 import com.hayaisoftware.launcher.StatusBarColorHelper;
 import com.hayaisoftware.launcher.Trie;
+import com.hayaisoftware.launcher.comparators.AlphabeticalOrder;
+import com.hayaisoftware.launcher.comparators.PinToTop;
+import com.hayaisoftware.launcher.comparators.RecentOrder;
 import com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager;
 import com.hayaisoftware.launcher.util.ContentShare;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -104,8 +108,13 @@ public class SearchActivity extends Activity
     private int mIconSizePixels;
     private EditText mSearchEditText;
     private View mClearButton;
-    private int numOfCores;
-    private BroadcastReceiver packageChangedReceiver;
+    private int mNumOfCores;
+    private BroadcastReceiver mPackageChangedReceiver;
+
+    private Comparator<LaunchableActivity> mPinToTopComparator;
+    private Comparator<LaunchableActivity> mRecentOrderComparator;
+    private Comparator<LaunchableActivity> mAlphabeticalOrderComparator;
+
     private final TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
@@ -143,6 +152,9 @@ public class SearchActivity extends Activity
 
     private int mGridViewTopRowHeight;
     private int mGridViewBottomRowHeight;
+    private boolean shouldOrderByRecents;
+    private boolean disableIcons;
+    private boolean autoKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -188,24 +200,31 @@ public class SearchActivity extends Activity
 
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
+        setupPreferences();
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
         mLaunchableActivityPrefs = new LaunchableActivityPrefs(this);
 
         //noinspection deprecation
-        mDefaultAppIcon = resources.getDrawable(R.drawable.ic_blur_on_black_48dp);
+        mDefaultAppIcon = Resources.getSystem().getDrawable(
+                android.R.mipmap.sym_def_app_icon);
         mIconSizePixels = resources.getDimensionPixelSize(R.dimen.app_icon_size);
 
 
-        setupPreferences();
-        numOfCores = Runtime.getRuntime().availableProcessors();
+
+        mPinToTopComparator = new PinToTop();
+        mRecentOrderComparator = new RecentOrder();
+        mAlphabeticalOrderComparator = new AlphabeticalOrder();
+
+
+        mNumOfCores = Runtime.getRuntime().availableProcessors();
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
         filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         filter.addDataScheme("package");
-        packageChangedReceiver = new PackageChangedReceiver();
-        registerReceiver(packageChangedReceiver,filter);
+        mPackageChangedReceiver = new PackageChangedReceiver();
+        registerReceiver(mPackageChangedReceiver,filter);
         loadLaunchableApps();
         //loadShareableApps();
         setupImageLoadingThreads(resources);
@@ -227,8 +246,9 @@ public class SearchActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
+        mSearchEditText.setText("");
         mSearchEditText.clearFocus();
-        if(mSharedPreferences.getBoolean("pref_autokeyboard",true)) {
+        if(autoKeyboard) {
             mSearchEditText.requestFocus();
         }
     }
@@ -260,23 +280,17 @@ public class SearchActivity extends Activity
     protected void onPostResume() {
         super.onPostResume();
 
-        if(mSharedPreferences.getBoolean("pref_autokeyboard",true)){
+        if(autoKeyboard){
             showKeyboard();
 
             //HACK putting showKeyboard event to the end of the Ui Thread running queue
             // to make sure the keyboard opens.
-            final Thread keyboardEventPosterThread = new Thread(new Runnable() {
+            runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showKeyboard();
-                        }
-                    });
+                    showKeyboard();
                 }
             });
-            keyboardEventPosterThread.start();
         }
 
 
@@ -362,6 +376,12 @@ public class SearchActivity extends Activity
             final int priority = ShortcutNotificationManager.getPriorityFromString(strPriority);
             shortcutNotificationManager.showNotification(this, priority);
         }
+        shouldOrderByRecents =
+                mSharedPreferences.getString("pref_app_preferred_order", "recent").equals("recent");
+        disableIcons =
+                mSharedPreferences.getBoolean("pref_disable_icons", false);
+        autoKeyboard =
+                mSharedPreferences.getBoolean("pref_autokeyboard", false);
     }
 
     private void setupImageLoadingThreads(final Resources resources) {
@@ -375,7 +395,7 @@ public class SearchActivity extends Activity
 
     private int getOptimalNumberOfThreads(final Resources resources) {
         final int maxThreads = resources.getInteger(R.integer.max_imageloading_threads);
-        int numThreads = numOfCores - 1;
+        int numThreads = mNumOfCores - 1;
         //clamp numThreads
         if (numThreads < 1) numThreads = 1;
         else if (numThreads > maxThreads) numThreads = maxThreads;
@@ -398,7 +418,7 @@ public class SearchActivity extends Activity
             }
 
             if (addToTrie) {
-                final String activityLabel = launchableActivity.getActivityLabel().toString();
+                final String activityLabel = launchableActivity.getActivityLabel();
                 final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
                 for (String subword : subwords) {
                     mTrie.put(subword, launchableActivity);
@@ -464,10 +484,18 @@ public class SearchActivity extends Activity
         mActivityInfos.clear();
         mActivityInfos.addAll(infoList);
         mActivityInfos.addAll(mShareableActivityInfos);
-        Collections.sort(mActivityInfos);
+        sortApps();
         Log.d("DEBUG_SEARCH", mActivityInfos.size() + "");
 
         mArrayAdapter.notifyDataSetChanged();
+    }
+
+    private void sortApps() {
+        Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
+        if(shouldOrderByRecents) {
+            Collections.sort(mActivityInfos, mRecentOrderComparator);
+        }
+        Collections.sort(mActivityInfos, mPinToTopComparator);
     }
 
     private void removeActivitiesFromPackage(String packageName) {
@@ -481,7 +509,7 @@ public class SearchActivity extends Activity
         for (LaunchableActivity launchableActivityToRemove : launchableActivitiesToRemove) {
             final String className = launchableActivityToRemove.getClassName();
             Log.d("SearchActivity", "removing activity " + className);
-            String activityLabel = launchableActivityToRemove.getActivityLabel().toString();
+            String activityLabel = launchableActivityToRemove.getActivityLabel();
             final List<String> subwords = getAllSubwords(stripAccents(activityLabel));
             for (String subword : subwords) {
                 mTrie.remove(subword, launchableActivityToRemove);
@@ -517,7 +545,7 @@ public class SearchActivity extends Activity
                 R.layout.app_grid_item, mActivityInfos);
         ArrayList<LaunchableActivity> launchablesFromResolve = new ArrayList<>(infoList.size());
 
-        if (numOfCores <= 1) {
+        if (mNumOfCores <= 1) {
             for (ResolveInfo info : infoList) {
                 final LaunchableActivity launchableActivity = new LaunchableActivity(
                         info.activityInfo, info.activityInfo.loadLabel(mPm).toString(), false);
@@ -525,7 +553,7 @@ public class SearchActivity extends Activity
             }
         } else {
             SimpleTaskConsumerManager simpleTaskConsumerManager =
-                    new SimpleTaskConsumerManager(numOfCores,infoList.size());
+                    new SimpleTaskConsumerManager(mNumOfCores,infoList.size());
 
             LoadLaunchableActivityTask.SharedData sharedAppLoadData =
                     new LoadLaunchableActivityTask.SharedData(mPm, launchablesFromResolve);
@@ -602,7 +630,7 @@ public class SearchActivity extends Activity
     protected void onDestroy() {
         if (mImageLoadingConsumersManager != null)
             mImageLoadingConsumersManager.destroyAllConsumers(false);
-        unregisterReceiver(packageChangedReceiver);
+        unregisterReceiver(mPackageChangedReceiver);
         super.onDestroy();
     }
 
@@ -616,10 +644,21 @@ public class SearchActivity extends Activity
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        //does this need to run in uiThread?
         if (key.equals("package_changed_name") && !sharedPreferences.getString(key, "").isEmpty()) {
-            //does this need to run in uiThread?
             handlePackageChanged();
+        }else if(key.equals("pref_app_preferred_order")){
+            shouldOrderByRecents =
+                    mSharedPreferences.getString("pref_app_preferred_order", "recent").equals("recent");
+            sortApps();
+            mArrayAdapter.notifyDataSetChanged();
+        }else if(key.equals("pref_disable_icons")){
+            recreate();
+        }else if(key.equals("pref_autokeyboard")){
+            autoKeyboard = mSharedPreferences.getBoolean("pref_autokeyboard", false);
         }
+
+
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -701,6 +740,13 @@ public class SearchActivity extends Activity
                         launchableActivity.getComponent().getPackageName()));
                 startActivity(intentPlayStore);
                 return true;
+            case R.id.appmenu_pin_to_top:
+                launchableActivity.setPriority(launchableActivity.getPriority()==0?1:0);
+                mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
+                        launchableActivity.getLaunchTime(), launchableActivity.getPriority());
+                sortApps();
+                mArrayAdapter.notifyDataSetChanged();
+                return true;
             default:
                 return false;
         }
@@ -720,8 +766,8 @@ public class SearchActivity extends Activity
             startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
             launchableActivity.setLaunchTime();
             mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
-                    launchableActivity.getLaunchTime(), false);
-            Collections.sort(mActivityInfos);
+                    launchableActivity.getLaunchTime(), launchableActivity.getPriority());
+            sortApps();
             mArrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {
             //this should only happen when the launcher still hasn't updated the file list after
@@ -785,13 +831,15 @@ public class SearchActivity extends Activity
                 final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
                 final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
                 final View appShareIndicator = view.findViewById(R.id.appShareIndicator);
+                final View appPinToTop = view.findViewById(R.id.appPinToTop);
 
                 appLabelView.setText(label);
 
                 appIconView.setTag(launchableActivity);
                 if (!launchableActivity.isIconLoaded()) {
                     appIconView.setImageDrawable(mDefaultAppIcon);
-                    mImageLoadingConsumersManager.addTask(
+                    if(!disableIcons)
+                        mImageLoadingConsumersManager.addTask(
                             new ImageLoadingTask(appIconView, launchableActivity,
                                     mImageTasksSharedData));
                 } else {
@@ -800,6 +848,9 @@ public class SearchActivity extends Activity
                 }
                 appShareIndicator.setVisibility(
                         launchableActivity.isShareable() ? View.VISIBLE : View.GONE);
+                appPinToTop.setVisibility(
+                        launchableActivity.getPriority() > 0 ? View.VISIBLE : View.GONE);
+
             }
             return view;
         }

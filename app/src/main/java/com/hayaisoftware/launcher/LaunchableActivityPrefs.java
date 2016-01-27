@@ -50,7 +50,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE);
     }
 
-    public void writePreference(String className, long number, boolean favorite) {
+    public void writePreference(String className, long number, int priority) {
         Log.d("LaunchablePrefs", "writePreference running");
         final SQLiteDatabase db = getWritableDatabase();
         final SQLiteStatement countStatement = db.compileStatement(String.format(
@@ -66,13 +66,13 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                     + KEY_LASTLAUNCHTIMESTAMP + "," + KEY_FAVORITE + ") VALUES(?,?,?)");
             statement.bindString(1, className);
             statement.bindLong(2, number);
-            statement.bindLong(3, favorite ? 1L : 0L);
+            statement.bindLong(3, priority);
         } else {
             statement = db.compileStatement("UPDATE "
                     + TABLE_NAME + " SET " + KEY_LASTLAUNCHTIMESTAMP + "=? , " + KEY_FAVORITE + "=? WHERE "
                     + KEY_CLASSNAME + "=?");
             statement.bindLong(1, number);
-            statement.bindLong(2, favorite ? 1L : 0L);
+            statement.bindLong(2, priority);
             statement.bindString(3, className);
         }
         statement.executeInsert();
@@ -105,7 +105,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             do {
                 ActivityPref activityPref = new ActivityPref();
                 activityPref.className = cursor.getString(cursor.getColumnIndex(KEY_CLASSNAME));
-                activityPref.favorite = cursor.getInt(cursor.getColumnIndex(KEY_FAVORITE)) == 1;
+                activityPref.priority = cursor.getInt(cursor.getColumnIndex(KEY_FAVORITE));
                 activityPref.lastTimestamp = cursor.getInt(cursor.getColumnIndex(KEY_LASTLAUNCHTIMESTAMP));
                 activityPrefMap.put(activityPref.className, activityPref);
             } while (cursor.moveToNext());
@@ -117,7 +117,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             if (activityPref != null) {
                 activityPref.wasUsed = true;
                 activity.setLaunchTime(activityPref.lastTimestamp);
-                activity.setFavorite(activityPref.favorite);
+                activity.setPriority(activityPref.priority);
             }
         }
 
@@ -133,7 +133,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 
     private class ActivityPref {
         String className;
-        boolean favorite;
+        int priority;
         long lastTimestamp;
         boolean wasUsed;
     }

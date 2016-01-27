@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_basetheme_entries" >
-        <item>Dark</item>
-        <item>Light</item>
-    </string-array>
 
     <string-array name="pref_notification_priority_entries">
         <item>High</item>
         <item>Low (no icon)</item>
     </string-array>
 
-
-    <string-array name="pref_basetheme_values" translatable="false">
-        <item>dark</item>
-        <item>light</item>
-    </string-array>
-
     <string-array name="pref_notification_priority_values" translatable="false">
         <item>max</item>
         <item>min</item>
+    </string-array>
+
+
+    <string-array name="pref_app_preferred_order_entries">
+        <item>Most recently used first</item>
+        <item>Alphabetical order</item>
+    </string-array>
+
+    <string-array name="pref_app_preferred_order_values" translatable="false">
+        <item>recent</item>
+        <item>alphabetical</item>
     </string-array>
 
 </resources>
