@@ -194,12 +194,7 @@ public class SearchActivity extends Activity
                 StatusBarColorHelper.getNavigationBarHeight(getResources()) +
                 marginFromNavigationBarInPixels;
 
-        final float dpWidth = displayMetrics.widthPixels -
-                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)*2;
-        final float itemWidth = resources.getDimensionPixelSize(R.dimen.app_row_column_width) +
-                resources.getDimensionPixelSize(R.dimen.app_row_horizontal_spacing);
-
-        mColumnCount = (int)(dpWidth / itemWidth);
+        mColumnCount = resources.getInteger(R.integer.app_grid_columns);
 
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
