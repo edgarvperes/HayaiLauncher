@@ -35,7 +35,7 @@
     <TextView
         android:id="@+id/appLabel"
         android:layout_width="match_parent"
-        android:layout_height="30sp"
+        android:layout_height="@dimen/app_icon_label_height"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"
@@ -44,5 +44,5 @@
         android:shadowDy="1"
         android:shadowRadius="1.2"
         android:textColor="#FFFFFF"
-        android:textSize="12sp" />
+        android:textSize="@dimen/app_icon_label_size" />
 </LinearLayout>

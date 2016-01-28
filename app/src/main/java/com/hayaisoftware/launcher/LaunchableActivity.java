@@ -127,6 +127,8 @@ public class LaunchableActivity{
             //rescaling the icon if it is bigger than the target size
             //TODO do this when it is not a bitmap drawable?
             if (_activityIcon instanceof BitmapDrawable) {
+                //Log.d("SIZE"," "+_activityIcon.getIntrinsicHeight()+ " not "+iconSizePixels);
+                //Log.d("SIZE"," "+_activityIcon.getIntrinsicHeight()+ " not "+iconSizePixels);
                 if (_activityIcon.getIntrinsicHeight() > iconSizePixels &&
                         _activityIcon.getIntrinsicWidth() > iconSizePixels) {
                     //noinspection deprecation

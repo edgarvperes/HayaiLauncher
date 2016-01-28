@@ -16,7 +16,6 @@
 package com.hayaisoftware.launcher.activities;
 
 import android.app.Activity;
-import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -194,9 +193,12 @@ public class SearchActivity extends Activity
                 StatusBarColorHelper.getNavigationBarHeight(getResources()) +
                 marginFromNavigationBarInPixels;
 
-        float dpWidth = displayMetrics.widthPixels / displayDensity;
-        final float itemWidth = 72;//TODO remove magic number
-        mColumnCount = (int) (dpWidth / itemWidth) - 1;
+        final float dpWidth = displayMetrics.widthPixels -
+                resources.getDimensionPixelSize(R.dimen.activity_horizontal_margin)*2;
+        final float itemWidth = resources.getDimensionPixelSize(R.dimen.app_row_column_width) +
+                resources.getDimensionPixelSize(R.dimen.app_row_horizontal_spacing);
+
+        mColumnCount = (int)(dpWidth / itemWidth);
 
         mSharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(this);
@@ -300,8 +302,8 @@ public class SearchActivity extends Activity
 
     private void setupViews() {
         //noinspection deprecation
-        ((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
-                WallpaperManager.getInstance(this).getFastDrawable());
+        //((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
+                //WallpaperManager.getInstance(this).getFastDrawable());
 
         mSearchEditText.addTextChangedListener(mTextWatcher);
         mSearchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
