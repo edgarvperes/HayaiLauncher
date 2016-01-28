@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Hayai Launcher</string>
+    <string name="title_activity_search" translatable="false">Hayai Launcher</string>
+    <string name="action_settings">Ρυθμίσεις</string>
+    <string name="application_icon_desc" >Εικονίδιο Εφαρμογής</string>
+    <string name="search_view_hint">Πληκτρολογήστε κάτι…</string>
+    <string name="title_activity_settings">Ρυθμίσεις</string>
+    <string name="settings_category_notification_category">Ειδοποιήσεις</string>
+    <string name="settings_enable_notification_title">Εμφάνιση ειδοποίησης στην μπάρα ειδοποιήσεων</string>
+    <string name="settings_enable_icons_title">Εμφάνιση εικονιδίων εφαρμογών</string>
+    <string name="application_icon_content_description">Εικονίδιο εφαρμογής</string>
+    <string name="appmenu_launch">Εκκίνηση</string>
+    <string name="appmenu_favorite">Αγαπημένο</string>
+    <string name="appmenu_info">Πληροφορίες εφαρμογής</string>
+    <string name="app_item_bottom_never">Δεν εκτελέσθη ποτέ</string>
+    <string name="app_item_favorite_symbol" translatable="false">★</string>
+    <string name="title_activity_about">Σχετικά</string>
+    <string name="launch">Εκκίνηση</string>
+    <string name="action_refresh_app_list">Ενημέρωση λίστας εφαρμογών</string>
+    <string name="action_system_settings">Ρυθμίσεις συσκευής</string>
+    <string name="activity_not_found">Δεν βρέθηκε εφαρμογή.</string>
+    <string name="action_about">Σχετικά</string>
+    <string name="about_content">Hayai Launcher [APP_VERSION]
+\n
+\nΙστοστελίδα:
+\nhttps://github.com/seizonsenryaku/HayaiLauncher
+\n
+\nΣυνεισέφεραν οι:
+\n\tEdgar Villani Peres (seizonsenryaku)
+\n\tDalton de Oliveira Silva(daltonos)
+\n
+\n-
+\n
+\n Copyright 2015 Hayai Software
+\n
+\n Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+\n You may obtain a copy of the License at
+\n
+\n https://www.apache.org/licenses/LICENSE-2.0
+\n
+\n Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+\n See the License for the specific language governing permissions and
+\n limitations under the License.
+\n</string>
+    <string name="action_manage_apps">Διαχείριση εφαρμογών</string>
+    <string name="appmenu_onplaystore">Δες στο Google Play Store</string>
+    <string name="pref_basetheme" >Βασικό θέμα</string>
+    <string name="pref_notification_priority">Προτεραιότητα ειδοποίησης</string>
+    <string name="settings_autokeyboard">Άνοιγμα πληκτρολογίου αυτόματα</string>
+    <string name="settings_category_general_category">Γενικά</string>
+    <string name="pref_preferred_order_dialog">Σειρά εφαρμογών</string>
+    <string name="pref_preferred_app_order_dialog">Σειρά εφαρμογών</string>
+    <string name="settings_disable_icon_loading">Απενεργοποίηση φόρτωσης εικονιδίων</string>
+    <string name="appmenu_pin_to_top">Μαρκάρισμα στην κορυφή</string>
+
+</resources>
