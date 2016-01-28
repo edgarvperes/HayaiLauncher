@@ -29,7 +29,7 @@ import android.graphics.drawable.Drawable;
 import com.hayaisoftware.launcher.util.ContentShare;
 
 
-public class LaunchableActivity implements Comparable<LaunchableActivity> {
+public class LaunchableActivity{
 
     private final ActivityInfo mActivityInfo;
     private final String mActivityLabel;
@@ -38,7 +38,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
     private long lastLaunchTime;
     private boolean mShareable;
     private Drawable mActivityIcon;
-    private boolean mFavorite;
+    private int mPriority;
 
     public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel,
                               final boolean isShareable) {
@@ -75,12 +75,12 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         lastLaunchTime = System.currentTimeMillis() / 1000;
     }
 
-    public boolean isFavorite() {
-        return mFavorite;
+    public int getPriority() {
+        return mPriority;
     }
 
-    public void setFavorite(final boolean favorite) {
-        this.mFavorite = favorite;
+    public void setPriority(final int priority) {
+        this.mPriority = priority;
     }
 
     public long getLaunchTime() {
@@ -91,7 +91,7 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         lastLaunchTime = timestamp;
     }
 
-    public CharSequence getActivityLabel() {
+    public String getActivityLabel() {
         return mActivityLabel;
     }
 
@@ -127,6 +127,8 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
             //rescaling the icon if it is bigger than the target size
             //TODO do this when it is not a bitmap drawable?
             if (_activityIcon instanceof BitmapDrawable) {
+                //Log.d("SIZE"," "+_activityIcon.getIntrinsicHeight()+ " not "+iconSizePixels);
+                //Log.d("SIZE"," "+_activityIcon.getIntrinsicHeight()+ " not "+iconSizePixels);
                 if (_activityIcon.getIntrinsicHeight() > iconSizePixels &&
                         _activityIcon.getIntrinsicWidth() > iconSizePixels) {
                     //noinspection deprecation
@@ -152,16 +154,4 @@ public class LaunchableActivity implements Comparable<LaunchableActivity> {
         return mShareable;
     }
 
-    @Override
-    public int compareTo(LaunchableActivity another) {
-        if (this.mShareable && !another.mShareable)
-            return 1;
-        if (!this.mShareable && another.mShareable)
-            return -1;
-        if (this.lastLaunchTime > another.lastLaunchTime)
-            return -1;
-        if (this.lastLaunchTime < another.lastLaunchTime)
-            return 1;
-        return this.mActivityLabel.compareTo(another.mActivityLabel);
-    }
 }

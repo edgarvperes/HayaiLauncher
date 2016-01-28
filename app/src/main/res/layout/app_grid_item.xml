@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="72dp"
+    android:layout_width="@dimen/app_row_column_width"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_margin="0dp"
+    android:padding="0dp"
+    >
     <RelativeLayout
         android:layout_width="@dimen/app_icon_size"
         android:layout_height="@dimen/app_icon_size"
@@ -21,19 +24,31 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_send_white_18dp"
             android:visibility="gone" />
+        <ImageView
+            android:id="@+id/appPinToTop"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_alignParentRight="true"
+            android:tint="@color/pin_to_top"
+            android:src="@drawable/ic_star_white_18dp"
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
     <TextView
         android:id="@+id/appLabel"
         android:layout_width="match_parent"
-        android:layout_height="30sp"
+        android:layout_height="@dimen/app_icon_label_height"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="2"
         android:shadowColor="#000000"
-        android:shadowDx="1"
-        android:shadowDy="1"
+        android:shadowDx="2"
+        android:shadowDy="2"
         android:shadowRadius="1.2"
         android:textColor="#FFFFFF"
-        android:textSize="12sp" />
+        android:textSize="@dimen/app_icon_label_size"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        />
 </LinearLayout>

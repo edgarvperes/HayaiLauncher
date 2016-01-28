@@ -5,5 +5,11 @@
          screen margins) for sw600dp devices (e.g. 7" tablets) here.
     -->
 
-    <dimen name="app_icon_size">56dp</dimen>
+    <dimen name="app_row_horizontal_spacing">12dp</dimen>
+    <dimen name="app_row_vertical_spacing">12dp</dimen>
+
+    <dimen name="app_icon_size">72dp</dimen>
+    <dimen name="app_icon_label_height">40sp</dimen>
+    <dimen name="app_icon_label_size">16sp</dimen>
+    <dimen name="app_row_column_width">96dp</dimen>
 </resources>

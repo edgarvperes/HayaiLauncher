@@ -7,6 +7,17 @@
             android:defaultValue="true"
             android:key="pref_autokeyboard"
             android:title="@string/settings_autokeyboard" />
+        <ListPreference
+            android:defaultValue="recent"
+            android:dialogTitle="@string/pref_preferred_app_order_dialog"
+            android:entries="@array/pref_app_preferred_order_entries"
+            android:entryValues="@array/pref_app_preferred_order_values"
+            android:key="pref_app_preferred_order"
+            android:title="@string/pref_preferred_app_order_dialog" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_disable_icons"
+            android:title="@string/settings_disable_icon_loading" />
     </PreferenceCategory>
     <PreferenceCategory
         android:key="pref_category_notification"

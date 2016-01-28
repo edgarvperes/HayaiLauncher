@@ -23,16 +23,16 @@
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
         android:clipToPadding="false"
-        android:columnWidth="64dp"
+        android:columnWidth="@dimen/app_row_column_width"
         android:fadingEdge="none"
         android:gravity="center"
-        android:horizontalSpacing="16dp"
+        android:horizontalSpacing="@dimen/app_row_horizontal_spacing"
         android:numColumns="auto_fit"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbars="none"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="16dp" />
+        android:verticalSpacing="@dimen/app_row_vertical_spacing" />
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +99,6 @@
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:background="@null"
                 android:onClick="onClickClearButton"
                 android:src="@drawable/ic_cancel_black_18dp"
                 android:tint="@color/hint_grey"
