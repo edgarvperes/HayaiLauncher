@@ -1,0 +1,229 @@
+com.hayaisoftware.launcher.ImageLoadingTask -> com.hayaisoftware.launcher.a:
+    android.widget.ImageView mImageView -> a
+    com.hayaisoftware.launcher.LaunchableActivity mLaunchableActivity -> b
+    com.hayaisoftware.launcher.ImageLoadingTask$SharedData mSharedData -> c
+    void <init>(android.widget.ImageView,com.hayaisoftware.launcher.LaunchableActivity,com.hayaisoftware.launcher.ImageLoadingTask$SharedData) -> <init>
+    boolean doTask() -> a
+com.hayaisoftware.launcher.ImageLoadingTask$1 -> com.hayaisoftware.launcher.b:
+    android.graphics.drawable.Drawable val$activityIcon -> a
+    com.hayaisoftware.launcher.ImageLoadingTask this$0 -> b
+    void <init>(com.hayaisoftware.launcher.ImageLoadingTask,android.graphics.drawable.Drawable) -> <init>
+    void run() -> run
+com.hayaisoftware.launcher.ImageLoadingTask$SharedData -> com.hayaisoftware.launcher.c:
+    android.app.Activity mActivity -> a
+    android.content.pm.PackageManager mPackageManager -> b
+    android.content.Context mContext -> c
+    int mIconSizePixels -> d
+    void <init>(android.app.Activity,android.content.pm.PackageManager,android.content.Context,int) -> <init>
+com.hayaisoftware.launcher.LaunchableActivity -> com.hayaisoftware.launcher.d:
+    android.content.pm.ActivityInfo mActivityInfo -> g
+    java.lang.String mActivityLabel -> a
+    android.content.ComponentName mComponentName -> b
+    android.content.Intent mLaunchIntent -> c
+    long lastLaunchTime -> d
+    boolean mShareable -> e
+    android.graphics.drawable.Drawable mActivityIcon -> h
+    int mPriority -> f
+    void <init>(android.content.pm.ActivityInfo,java.lang.String) -> <init>
+    boolean isIconLoaded() -> a
+    android.graphics.drawable.Drawable getActivityIcon(android.content.pm.PackageManager,android.content.Context,int) -> a
+com.hayaisoftware.launcher.LaunchableActivityPrefs -> com.hayaisoftware.launcher.e:
+    java.lang.String TABLE_CREATE -> a
+    java.lang.String TABLE_DROP -> b
+    void <init>(android.content.Context) -> <init>
+    void onCreate(android.database.sqlite.SQLiteDatabase) -> onCreate
+    void writePreference(java.lang.String,long,int) -> a
+    void setAllPreferences(java.util.List) -> a
+    void onUpgrade(android.database.sqlite.SQLiteDatabase,int,int) -> onUpgrade
+    void <clinit>() -> <clinit>
+com.hayaisoftware.launcher.LaunchableActivityPrefs$ActivityPref -> com.hayaisoftware.launcher.f:
+    java.lang.String className -> a
+    int priority -> b
+    long lastTimestamp -> c
+    boolean wasUsed -> d
+    com.hayaisoftware.launcher.LaunchableActivityPrefs this$0 -> e
+    void <init>(com.hayaisoftware.launcher.LaunchableActivityPrefs) -> <init>
+    void <init>(com.hayaisoftware.launcher.LaunchableActivityPrefs,byte) -> <init>
+com.hayaisoftware.launcher.LoadLaunchableActivityTask -> com.hayaisoftware.launcher.g:
+    android.content.pm.ResolveInfo info -> a
+    com.hayaisoftware.launcher.LoadLaunchableActivityTask$SharedData mSharedData -> b
+    void <init>(android.content.pm.ResolveInfo,com.hayaisoftware.launcher.LoadLaunchableActivityTask$SharedData) -> <init>
+    boolean doTask() -> a
+com.hayaisoftware.launcher.LoadLaunchableActivityTask$SharedData -> com.hayaisoftware.launcher.h:
+    android.content.pm.PackageManager mPackageManager -> a
+    java.util.ArrayList launchablesFromResolve -> b
+    void <init>(android.content.pm.PackageManager,java.util.ArrayList) -> <init>
+com.hayaisoftware.launcher.PackageChangedReceiver -> com.hayaisoftware.launcher.i:
+    void <init>() -> <init>
+    void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.hayaisoftware.launcher.ShortcutNotificationManager -> com.hayaisoftware.launcher.j:
+    void <init>() -> <init>
+    int getPriorityFromString(java.lang.String) -> a
+    void showNotification(android.content.Context,int) -> a
+com.hayaisoftware.launcher.Trie -> com.hayaisoftware.launcher.k:
+    com.hayaisoftware.launcher.Trie$Node mRoot -> a
+    void <init>() -> <init>
+    java.util.HashSet getAllStartingWithRec(java.lang.CharSequence,com.hayaisoftware.launcher.Trie$Node,java.util.HashSet) -> a
+com.hayaisoftware.launcher.Trie$Node -> com.hayaisoftware.launcher.l:
+    android.util.SparseArray children -> a
+    java.lang.Object object -> b
+    com.hayaisoftware.launcher.Trie this$0 -> c
+    void <init>(com.hayaisoftware.launcher.Trie) -> <init>
+com.hayaisoftware.launcher.activities.AboutActivity -> com.hayaisoftware.launcher.activities.AboutActivity:
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    void onPause() -> onPause
+com.hayaisoftware.launcher.activities.SearchActivity -> com.hayaisoftware.launcher.activities.SearchActivity:
+    java.util.regex.Pattern mPattern -> a
+    int mStatusBarHeight -> b
+    java.util.ArrayList mActivityInfos -> c
+    java.util.ArrayList mShareableActivityInfos -> d
+    com.hayaisoftware.launcher.Trie mTrie -> e
+    android.widget.ArrayAdapter mArrayAdapter -> f
+    java.util.HashMap mLaunchableActivityPackageNameHashMap -> g
+    com.hayaisoftware.launcher.LaunchableActivityPrefs mLaunchableActivityPrefs -> h
+    android.content.SharedPreferences mSharedPreferences -> i
+    android.content.Context mContext -> j
+    android.graphics.drawable.Drawable mDefaultAppIcon -> k
+    com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager mImageLoadingConsumersManager -> l
+    com.hayaisoftware.launcher.ImageLoadingTask$SharedData mImageTasksSharedData -> m
+    int mIconSizePixels -> n
+    android.widget.EditText mSearchEditText -> o
+    android.view.View mClearButton -> p
+    int mNumOfCores -> q
+    android.content.BroadcastReceiver mPackageChangedReceiver -> r
+    java.util.Comparator mPinToTopComparator -> s
+    java.util.Comparator mRecentOrderComparator -> t
+    java.util.Comparator mAlphabeticalOrderComparator -> u
+    android.text.TextWatcher mTextWatcher -> v
+    android.view.inputmethod.InputMethodManager mInputMethodManager -> w
+    android.widget.AdapterView mAppListView -> x
+    android.content.pm.PackageManager mPm -> y
+    android.view.View mOverflowButtonTopleft -> z
+    int mColumnCount -> A
+    java.lang.StringBuilder mWordSinceLastSpaceBuilder -> B
+    java.lang.StringBuilder mWordSinceLastCapitalBuilder -> C
+    int mGridViewTopRowHeight -> D
+    int mGridViewBottomRowHeight -> E
+    boolean shouldOrderByRecents -> F
+    boolean disableIcons -> G
+    boolean autoKeyboard -> H
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void onResume() -> onResume
+    void onPostResume() -> onPostResume
+    boolean openFirstActivity() -> a
+    void updateApps$22871ed2(java.util.List) -> a
+    java.util.List getAllSubwords(java.lang.String) -> a
+    void updateVisibleApps() -> b
+    void sortApps() -> c
+    void removeActivitiesFromPackage(java.lang.String) -> b
+    java.lang.String stripAccents(java.lang.String) -> c
+    void loadLaunchableApps() -> d
+    void showKeyboard() -> e
+    void hideKeyboard() -> f
+    void onBackPressed() -> onBackPressed
+    void onDestroy() -> onDestroy
+    void showPopup(android.view.View) -> showPopup
+    void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+    boolean onKeyUp(int,android.view.KeyEvent) -> onKeyUp
+    void onCreateContextMenu(android.view.ContextMenu,android.view.View,android.view.ContextMenu$ContextMenuInfo) -> onCreateContextMenu
+    boolean onOptionsItemSelected(android.view.MenuItem) -> onOptionsItemSelected
+    boolean onContextItemSelected(android.view.MenuItem) -> onContextItemSelected
+    void onClickSettingsButton(android.view.View) -> onClickSettingsButton
+    void launchActivity(com.hayaisoftware.launcher.LaunchableActivity) -> a
+    void onClickClearButton(android.view.View) -> onClickClearButton
+    android.view.View access$000(com.hayaisoftware.launcher.activities.SearchActivity) -> a
+    void access$100(com.hayaisoftware.launcher.activities.SearchActivity) -> b
+    void access$200(com.hayaisoftware.launcher.activities.SearchActivity) -> c
+    boolean access$300(com.hayaisoftware.launcher.activities.SearchActivity) -> d
+    void access$400(com.hayaisoftware.launcher.activities.SearchActivity) -> e
+    int access$500(com.hayaisoftware.launcher.activities.SearchActivity) -> f
+    java.util.ArrayList access$600(com.hayaisoftware.launcher.activities.SearchActivity) -> g
+    int access$700(com.hayaisoftware.launcher.activities.SearchActivity) -> h
+    int access$800(com.hayaisoftware.launcher.activities.SearchActivity) -> i
+    android.graphics.drawable.Drawable access$900(com.hayaisoftware.launcher.activities.SearchActivity) -> j
+    boolean access$1000(com.hayaisoftware.launcher.activities.SearchActivity) -> k
+    com.hayaisoftware.launcher.ImageLoadingTask$SharedData access$1100(com.hayaisoftware.launcher.activities.SearchActivity) -> l
+    com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager access$1200(com.hayaisoftware.launcher.activities.SearchActivity) -> m
+    android.content.pm.PackageManager access$1300(com.hayaisoftware.launcher.activities.SearchActivity) -> n
+    android.content.Context access$1400(com.hayaisoftware.launcher.activities.SearchActivity) -> o
+    int access$1500(com.hayaisoftware.launcher.activities.SearchActivity) -> p
+com.hayaisoftware.launcher.activities.SearchActivity$1 -> com.hayaisoftware.launcher.activities.a:
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> a
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity) -> <init>
+    void onTextChanged(java.lang.CharSequence,int,int,int) -> onTextChanged
+    void beforeTextChanged(java.lang.CharSequence,int,int,int) -> beforeTextChanged
+    void afterTextChanged(android.text.Editable) -> afterTextChanged
+com.hayaisoftware.launcher.activities.SearchActivity$2 -> com.hayaisoftware.launcher.activities.b:
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> a
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity) -> <init>
+    void run() -> run
+com.hayaisoftware.launcher.activities.SearchActivity$3 -> com.hayaisoftware.launcher.activities.c:
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> a
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity) -> <init>
+    boolean onEditorAction(android.widget.TextView,int,android.view.KeyEvent) -> onEditorAction
+com.hayaisoftware.launcher.activities.SearchActivity$4 -> com.hayaisoftware.launcher.activities.d:
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> a
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity) -> <init>
+    boolean onKey(android.view.View,int,android.view.KeyEvent) -> onKey
+com.hayaisoftware.launcher.activities.SearchActivity$5 -> com.hayaisoftware.launcher.activities.e:
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> a
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity) -> <init>
+    void onScrollStateChanged(android.widget.AbsListView,int) -> onScrollStateChanged
+    void onScroll(android.widget.AbsListView,int,int,int) -> onScroll
+com.hayaisoftware.launcher.activities.SearchActivity$6 -> com.hayaisoftware.launcher.activities.f:
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> a
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity) -> <init>
+    void onItemClick(android.widget.AdapterView,android.view.View,int,long) -> onItemClick
+com.hayaisoftware.launcher.activities.SearchActivity$ActivityInfoArrayAdapter -> com.hayaisoftware.launcher.activities.g:
+    android.view.LayoutInflater inflater -> a
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> b
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity,android.content.Context,java.util.List) -> <init>
+    int getCount() -> getCount
+    android.view.View getView(int,android.view.View,android.view.ViewGroup) -> getView
+com.hayaisoftware.launcher.activities.SearchActivity$PopupEventListener -> com.hayaisoftware.launcher.activities.h:
+    com.hayaisoftware.launcher.activities.SearchActivity this$0 -> a
+    void <init>(com.hayaisoftware.launcher.activities.SearchActivity) -> <init>
+    boolean onMenuItemClick(android.view.MenuItem) -> onMenuItemClick
+com.hayaisoftware.launcher.activities.SettingsActivity -> com.hayaisoftware.launcher.activities.SettingsActivity:
+    void <init>() -> <init>
+    void onCreate(android.os.Bundle) -> onCreate
+    void onSharedPreferenceChanged(android.content.SharedPreferences,java.lang.String) -> onSharedPreferenceChanged
+    boolean onCreateOptionsMenu(android.view.Menu) -> onCreateOptionsMenu
+    void onResume() -> onResume
+    void onPause() -> onPause
+com.hayaisoftware.launcher.comparators.AlphabeticalOrder -> com.hayaisoftware.launcher.a.a:
+    void <init>() -> <init>
+    int compare(java.lang.Object,java.lang.Object) -> compare
+com.hayaisoftware.launcher.comparators.PinToTop -> com.hayaisoftware.launcher.a.b:
+    void <init>() -> <init>
+    int compare(java.lang.Object,java.lang.Object) -> compare
+com.hayaisoftware.launcher.comparators.RecentOrder -> com.hayaisoftware.launcher.a.c:
+    void <init>() -> <init>
+    int compare(java.lang.Object,java.lang.Object) -> compare
+com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager -> com.hayaisoftware.launcher.b.a:
+    java.util.concurrent.BlockingQueue mTasks -> a
+    int mNumThreadsAlive -> b
+    boolean mConsumersShouldDie -> c
+    com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager$SimpleTaskConsumer[] mSimpleTaskConsumers -> d
+    java.lang.Thread[] threads -> e
+    void <init>(int,int) -> <init>
+    void startConsumers(int) -> a
+    void addTask(com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager$Task) -> a
+    void destroyAllConsumers(boolean,boolean) -> a
+    void finalize() -> finalize
+com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager$DieTask -> com.hayaisoftware.launcher.b.b:
+    com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager this$0 -> a
+    void <init>(com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager) -> <init>
+    boolean doTask() -> a
+com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager$SimpleTaskConsumer -> com.hayaisoftware.launcher.b.c:
+    com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager this$0 -> a
+    void <init>(com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager) -> <init>
+    void run() -> run
+    void <init>(com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager,byte) -> <init>
+com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager$Task -> com.hayaisoftware.launcher.b.d:
+    void <init>() -> <init>
+    boolean doTask() -> a
