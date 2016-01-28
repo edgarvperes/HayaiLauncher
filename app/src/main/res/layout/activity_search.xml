@@ -104,6 +104,7 @@
                 android:layout_gravity="center_vertical"
                 android:onClick="onClickClearButton"
                 android:src="@drawable/ic_cancel_black_18dp"
+                android:background="@null"
                 android:tint="@color/hint_grey"
                 android:visibility="gone" />
 
