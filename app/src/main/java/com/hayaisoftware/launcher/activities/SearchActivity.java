@@ -16,6 +16,7 @@
 package com.hayaisoftware.launcher.activities;
 
 import android.app.Activity;
+import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -302,8 +303,8 @@ public class SearchActivity extends Activity
 
     private void setupViews() {
         //noinspection deprecation
-        //((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
-                //WallpaperManager.getInstance(this).getFastDrawable());
+        ((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
+                WallpaperManager.getInstance(this).getFastDrawable());
 
         mSearchEditText.addTextChangedListener(mTextWatcher);
         mSearchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
