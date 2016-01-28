@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Hayai Launcher</string>
+    <string name="title_activity_search" translatable="false">Hayai Launcher</string>
+    <string name="action_settings">Ustawienia</string>
+    <string name="application_icon_desc" >Ikon Applikacji</string>
+    <string name="search_view_hint">Wpisz coś…</string>
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="settings_category_notification_category">Powiadomienia</string>
+    <string name="settings_enable_notification_title">Pokaż skrót w panelu powiadomień</string>
+    <string name="settings_enable_icons_title">Pokazuj Ikony Applikacji</string>
+    <string name="application_icon_content_description">Ikon Applikacji</string>
+    <string name="appmenu_launch">Uruchom</string>
+    <string name="appmenu_favorite">Ulubione</string>
+    <string name="appmenu_info">Informacje Applikacji</string>
+    <string name="app_item_bottom_never">Nigdy nie rozpoczęta</string>
+    <string name="app_item_favorite_symbol" translatable="false">★</string>
+    <string name="title_activity_about">Informacje o</string>
+    <string name="launch">Uruchom</string>
+    <string name="action_refresh_app_list">Odśwież listę aplikacji</string>
+    <string name="action_system_settings">Ustawienia urządzenia</string>
+    <string name="activity_not_found">Nie znaleziono applikacji.</string>
+    <string name="action_about">Informacje o</string>
+    <string name="about_content">Hayai Launcher [APP_VERSION]
+\n
+\nStrona Projektu:
+\nhttps://github.com/seizonsenryaku/HayaiLauncher
+\n
+\nWspółautorzy:
+\n\tEdgar Villani Peres (seizonsenryaku)
+\n\tDalton de Oliveira Silva(daltonos)
+\n
+\n-
+\n
+\n Copyright 2015 Hayai Software
+\n
+\n Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+\n You may obtain a copy of the License at
+\n
+\n https://www.apache.org/licenses/LICENSE-2.0
+\n
+\n Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+\n See the License for the specific language governing permissions and
+\n limitations under the License.
+\n</string>
+    <string name="action_manage_apps">Zarządzaj applikacjami</string>
+    <string name="appmenu_onplaystore">Zobacz w Google Play Store</string>
+    <string name="pref_basetheme" >Base Temat</string>
+    <string name="pref_notification_priority">Priorytet zawiadomienia</string>
+    <string name="settings_autokeyboard">Otwórz klawiaturę automatycznie</string>
+    <string name="settings_category_general_category">Ogólne</string>
+    <string name="pref_preferred_order_dialog">Kolejność aplikacji</string>
+    <string name="pref_preferred_app_order_dialog">Kolejność aplikacji</string>
+    <string name="settings_disable_icon_loading">Wyłącz ładowanie ikonów </string>
+    <string name="appmenu_pin_to_top">Przypnij do góry</string>
+
+</resources>
