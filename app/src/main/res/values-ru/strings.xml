@@ -50,8 +50,12 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="action_manage_apps">Управление приложениями</string>
     <string name="appmenu_onplaystore">Посмотреть в Google Play Store</string>
     <string name="pref_basetheme" >Стандартная тема</string>
-    <string name="pref_notification_priority">Приоритет приложений</string>
+    <string name="pref_notification_priority">Приоритет уведомлений</string>
     <string name="settings_autokeyboard">Открывать клавиатуру автоматически</string>
     <string name="settings_category_general_category">Общее</string>
+    <string name="pref_preferred_order_dialog">Сортировка приложений</string>
+    <string name="pref_preferred_app_order_dialog">Сортировка приложений</string>
+    <string name="settings_disable_icon_loading">Отключить загрузку иконок у приложений</string>
+    <string name="appmenu_pin_to_top">Закрепить вверху</string>
 
 </resources>
