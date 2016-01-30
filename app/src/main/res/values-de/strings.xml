@@ -24,4 +24,8 @@
     <string name="title_activity_settings">Einstellungen</string>
     <string name="settings_autokeyboard">Tastatur automatisch anzeigen</string>
     <string name="settings_category_general_category">Allgemein</string>
+    <string name="settings_disable_icon_loading">Laden von Icons verhindern</string>
+    <string name="pref_preferred_app_order_dialog">Ordnung der Apps</string>
+    <string name="pref_preferred_order_dialog">Ordnung der Apps</string>
+    <string name="appmenu_pin_to_top">Am oberen Bildschirmrand anheften</string>
 </resources>
