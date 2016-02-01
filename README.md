@@ -3,8 +3,7 @@
 It is a fast, lightweight Android Launcher.
 It is [free/libre software](https://www.fsf.org/blogs/rms/20140407-geneva-tedx-talk-free-software-free-society).
 
-Currently the app requires no permissions.
-Moreover, the APK's size is lower than 100KB.
+The app has a very small APK size and currently requires no permissions.
 
 ## Download
 
