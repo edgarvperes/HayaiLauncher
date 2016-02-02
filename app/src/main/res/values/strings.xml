@@ -57,5 +57,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="pref_preferred_app_order_dialog">App order</string>
     <string name="settings_disable_icon_loading">Disable icon loading</string>
     <string name="appmenu_pin_to_top">Pin To Top</string>
+    <string name="pref_notification_priority_entries_high">High</string>
+    <string name="pref_notification_priority_entries_low">Low (no icon)</string>
+    <string name="pref_app_preferred_order_entries_recent">Most recently used first</string>
+    <string name="pref_app_preferred_order_entries_alphabetical">Alphabetical order</string>
 
 </resources>
