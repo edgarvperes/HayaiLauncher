@@ -25,7 +25,11 @@
     <string name="settings_autokeyboard">Tastatur automatisch anzeigen</string>
     <string name="settings_category_general_category">Allgemein</string>
     <string name="settings_disable_icon_loading">Laden von Icons verhindern</string>
-    <string name="pref_preferred_app_order_dialog">Ordnung der Apps</string>
-    <string name="pref_preferred_order_dialog">Ordnung der Apps</string>
+    <string name="pref_preferred_app_order_dialog">Anordnung der Apps</string>
+    <string name="pref_preferred_order_dialog">Anordnung der Apps</string>
     <string name="appmenu_pin_to_top">Am oberen Bildschirmrand anheften</string>
+    <string name="pref_notification_priority_entries_high">Hoch</string>
+    <string name="pref_app_preferred_order_entries_alphabetical">Alphabetische Sortierung</string>
+    <string name="pref_app_preferred_order_entries_recent">Zuletzt genutzte zuerst</string>
+    <string name="pref_notification_priority_entries_low">Niedrig (kein Icon)</string>
 </resources>

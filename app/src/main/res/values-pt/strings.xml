@@ -49,4 +49,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="settings_autokeyboard">Abrir teclado automaticamente</string>
     <string name="settings_category_general_category">Geral</string>
     <string name="appmenu_pin_to_top">Manter no topo</string>
+    <string name="pref_notification_priority_entries_high">Alta</string>
+    <string name="pref_notification_priority_entries_low">Baixa (sem ícone)</string>
 </resources>

@@ -13,7 +13,7 @@
     <string name="application_icon_content_description">Ikon Applikacji</string>
     <string name="appmenu_launch">Uruchom</string>
     <string name="appmenu_favorite">Ulubione</string>
-    <string name="appmenu_info">Informacje Applikacji</string>
+    <string name="appmenu_info">Informacje aplikacji</string>
     <string name="app_item_bottom_never">Nigdy nie rozpoczęta</string>
     <string name="app_item_favorite_symbol" translatable="false">★</string>
     <string name="title_activity_about">Informacje o</string>
@@ -47,7 +47,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 \n See the License for the specific language governing permissions and
 \n limitations under the License.
 \n</string>
-    <string name="action_manage_apps">Zarządzaj applikacjami</string>
+    <string name="action_manage_apps">Zarządzaj aplikacjami</string>
     <string name="appmenu_onplaystore">Zobacz w Google Play Store</string>
     <string name="pref_basetheme" >Base Temat</string>
     <string name="pref_notification_priority">Priorytet zawiadomienia</string>
@@ -55,7 +55,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="settings_category_general_category">Ogólne</string>
     <string name="pref_preferred_order_dialog">Kolejność aplikacji</string>
     <string name="pref_preferred_app_order_dialog">Kolejność aplikacji</string>
-    <string name="settings_disable_icon_loading">Wyłącz ładowanie ikonów </string>
+    <string name="settings_disable_icon_loading">Wyłącz ładowanie ikon</string>
     <string name="appmenu_pin_to_top">Przypnij do góry</string>
 
 </resources>
