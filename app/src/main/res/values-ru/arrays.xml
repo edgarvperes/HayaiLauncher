@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string-array name="pref_notification_priority_entries">
+<item>Высокий</item>
+<item>Низкий (без иконки)</item>
+</string-array>
+<string-array name="pref_notification_priority_values" translatable="false">
+<item>Макс</item>
+<item>Мин</item>
+</string-array>
+<string-array name="pref_app_preferred_order_entries">
+<item>Наиболее используемые идут первыми</item>
+<item>В алфавитном порядке</item>
+</string-array>
+<string-array name="pref_app_preferred_order_values" translatable="false">
+<item>Используемые</item>
+<item>Алфавитный</item>
+</string-array>
+</resources>
