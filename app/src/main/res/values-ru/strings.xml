@@ -57,5 +57,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="pref_preferred_app_order_dialog">Сортировка приложений</string>
     <string name="settings_disable_icon_loading">Отключить загрузку иконок у приложений</string>
     <string name="appmenu_pin_to_top">Закрепить вверху</string>
+    <string name="pref_notification_priority_entries_high">Высокий</string>
+    <string name="pref_notification_priority_entries_low">Низкий(без иконок)</string>
+    <string name="pref_app_preferred_order_entries_recent">Наиболее используемые идут первыми</string>
+    <string name="pref_app_preferred_order_entries_alphabetical">В алфавитном порядке</string>
 
 </resources>
