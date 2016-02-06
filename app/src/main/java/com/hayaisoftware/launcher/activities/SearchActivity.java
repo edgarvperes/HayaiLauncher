@@ -211,7 +211,6 @@ public class SearchActivity extends Activity
         mIconSizePixels = resources.getDimensionPixelSize(R.dimen.app_icon_size);
 
 
-
         mPinToTopComparator = new PinToTop();
         mRecentOrderComparator = new RecentOrder();
         mAlphabeticalOrderComparator = new AlphabeticalOrder();
@@ -225,7 +224,7 @@ public class SearchActivity extends Activity
         filter.addAction(Intent.ACTION_PACKAGE_REPLACED);
         filter.addDataScheme("package");
         mPackageChangedReceiver = new PackageChangedReceiver();
-        registerReceiver(mPackageChangedReceiver,filter);
+        registerReceiver(mPackageChangedReceiver, filter);
         loadLaunchableApps();
         //loadShareableApps();
         setupImageLoadingThreads(resources);
@@ -247,10 +246,10 @@ public class SearchActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-        mCacheClear=false;
+        mCacheClear = false;
         mSearchEditText.setText("");
         mSearchEditText.clearFocus();
-        if(autoKeyboard) {
+        if (autoKeyboard) {
             mSearchEditText.requestFocus();
         }
     }
@@ -282,7 +281,7 @@ public class SearchActivity extends Activity
     protected void onPostResume() {
         super.onPostResume();
 
-        if(autoKeyboard){
+        if (autoKeyboard) {
             showKeyboard();
 
             //HACK putting showKeyboard event to the end of the Ui Thread running queue
@@ -293,7 +292,7 @@ public class SearchActivity extends Activity
                     showKeyboard();
                 }
             });
-        }else{
+        } else {
             hideKeyboard();
         }
 
@@ -418,7 +417,7 @@ public class SearchActivity extends Activity
             mLaunchableActivityPackageNameHashMap.remove(packageName);
         }
 
-        final String thisClassCanonicalName=this.getClass().getCanonicalName();
+        final String thisClassCanonicalName = this.getClass().getCanonicalName();
         for (LaunchableActivity launchableActivity : updatedActivityInfos) {
             final String className = launchableActivity.getComponent().getClassName();
             //don't show this activity in the launcher
@@ -501,7 +500,7 @@ public class SearchActivity extends Activity
 
     private void sortApps() {
         Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
-        if(shouldOrderByRecents) {
+        if (shouldOrderByRecents) {
             Collections.sort(mActivityInfos, mRecentOrderComparator);
         }
         Collections.sort(mActivityInfos, mPinToTopComparator);
@@ -562,7 +561,7 @@ public class SearchActivity extends Activity
             }
         } else {
             SimpleTaskConsumerManager simpleTaskConsumerManager =
-                    new SimpleTaskConsumerManager(mNumOfCores,infoList.size());
+                    new SimpleTaskConsumerManager(mNumOfCores, infoList.size());
 
             LoadLaunchableActivityTask.SharedData sharedAppLoadData =
                     new LoadLaunchableActivityTask.SharedData(mPm, launchablesFromResolve);
@@ -657,14 +656,14 @@ public class SearchActivity extends Activity
         //does this need to run in uiThread?
         if (key.equals("package_changed_name") && !sharedPreferences.getString(key, "").isEmpty()) {
             handlePackageChanged();
-        }else if(key.equals("pref_app_preferred_order")){
+        } else if (key.equals("pref_app_preferred_order")) {
             shouldOrderByRecents =
                     mSharedPreferences.getString("pref_app_preferred_order", "recent").equals("recent");
             sortApps();
             mArrayAdapter.notifyDataSetChanged();
-        }else if(key.equals("pref_disable_icons")){
+        } else if (key.equals("pref_disable_icons")) {
             recreate();
-        }else if(key.equals("pref_autokeyboard")){
+        } else if (key.equals("pref_autokeyboard")) {
             autoKeyboard = mSharedPreferences.getBoolean("pref_autokeyboard", false);
         }
 
@@ -682,14 +681,14 @@ public class SearchActivity extends Activity
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        if(!mCacheClear && level==TRIM_MEMORY_COMPLETE)
-                clearCaches();
+        if (!mCacheClear && level == TRIM_MEMORY_COMPLETE)
+            clearCaches();
 
     }
 
-    private void clearCaches(){
-        mCacheClear=true;
-        for(LaunchableActivity launchableActivity:mActivityInfos){
+    private void clearCaches() {
+        mCacheClear = true;
+        for (LaunchableActivity launchableActivity : mActivityInfos) {
             launchableActivity.deleteActivityIcon();
         }
     }
@@ -729,16 +728,14 @@ public class SearchActivity extends Activity
                 intentManageApps.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intentManageApps);
                 return true;
-            case R.id.action_about:
-                final Intent intentAbout = new Intent(this, AboutActivity.class);
-                startActivity(intentAbout);
-
-                return true;
             case R.id.action_set_wallpaper:
                 final Intent intentWallpaperPicker = new Intent(Intent.ACTION_SET_WALLPAPER);
                 startActivityForResult(intentWallpaperPicker, sWallpaperPickerRequestCode);
                 return true;
-
+            case R.id.action_about:
+                final Intent intentAbout = new Intent(this, AboutActivity.class);
+                startActivity(intentAbout);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -771,7 +768,7 @@ public class SearchActivity extends Activity
                 startActivity(intentPlayStore);
                 return true;
             case R.id.appmenu_pin_to_top:
-                launchableActivity.setPriority(launchableActivity.getPriority()==0?1:0);
+                launchableActivity.setPriority(launchableActivity.getPriority() == 0 ? 1 : 0);
                 mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
                         launchableActivity.getLaunchTime(), launchableActivity.getPriority());
                 sortApps();
@@ -792,7 +789,7 @@ public class SearchActivity extends Activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==sWallpaperPickerRequestCode){
+        if (requestCode == sWallpaperPickerRequestCode) {
             setWallpaper();
         }
     }
@@ -876,10 +873,10 @@ public class SearchActivity extends Activity
                 appIconView.setTag(launchableActivity);
                 if (!launchableActivity.isIconLoaded()) {
                     appIconView.setImageDrawable(mDefaultAppIcon);
-                    if(!disableIcons)
+                    if (!disableIcons)
                         mImageLoadingConsumersManager.addTask(
-                            new ImageLoadingTask(appIconView, launchableActivity,
-                                    mImageTasksSharedData));
+                                new ImageLoadingTask(appIconView, launchableActivity,
+                                        mImageTasksSharedData));
                 } else {
                     appIconView.setImageDrawable(
                             launchableActivity.getActivityIcon(mPm, mContext, mIconSizePixels));
