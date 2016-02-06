@@ -29,7 +29,10 @@ public class SimpleTaskConsumerManager {
     private Thread[] threads;
 
     public SimpleTaskConsumerManager(final int numConsumers, final int queueSize) {
-        mTasks = new ArrayBlockingQueue<>(queueSize);
+        if(queueSize<1)
+            mTasks = new LinkedBlockingQueue<>();
+        else
+            mTasks = new ArrayBlockingQueue<>(queueSize);
         startConsumers(numConsumers);
 
     }
