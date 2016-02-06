@@ -48,7 +48,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 \n limitations under the License.
 \n</string>
     <string name="action_manage_apps">Manage apps</string>
-    <string name="appmenu_onplaystore">See on Google Play Store</string>
+    <string name="appmenu_onplaystore">Open on app market</string>
     <string name="pref_basetheme" >Base Theme</string>
     <string name="pref_notification_priority">Notification priority</string>
     <string name="settings_autokeyboard">Open keyboard automatically</string>
