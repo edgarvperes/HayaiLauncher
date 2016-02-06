@@ -99,6 +99,10 @@ public class LaunchableActivity{
         return mActivityIcon != null;
     }
 
+    public synchronized void deleteActivityIcon(){
+        mActivityIcon=null;
+    }
+
     public synchronized Drawable getActivityIcon(final PackageManager pm, final Context context,
                                                  final int iconSizePixels) {
         if (!isIconLoaded()) {

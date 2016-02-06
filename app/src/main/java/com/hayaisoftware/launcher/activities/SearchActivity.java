@@ -155,6 +155,7 @@ public class SearchActivity extends Activity
     private boolean shouldOrderByRecents;
     private boolean disableIcons;
     private boolean autoKeyboard;
+    private boolean mCacheClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,6 +245,7 @@ public class SearchActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
+        mCacheClear=false;
         mSearchEditText.setText("");
         mSearchEditText.clearFocus();
         if(autoKeyboard) {
@@ -631,6 +633,7 @@ public class SearchActivity extends Activity
         if (mImageLoadingConsumersManager != null)
             mImageLoadingConsumersManager.destroyAllConsumers(false);
         unregisterReceiver(mPackageChangedReceiver);
+        Log.d("HayaiLauncher", "Hayai is ded");
         super.onDestroy();
     }
 
@@ -669,6 +672,19 @@ public class SearchActivity extends Activity
         return super.onKeyUp(keyCode, event);
     }
 
+    @Override
+    public void onTrimMemory(int level) {
+        super.onTrimMemory(level);
+        if(!mCacheClear && level==TRIM_MEMORY_COMPLETE)
+                clearCaches();
+    }
+
+    private void clearCaches(){
+        mCacheClear=true;
+        for(LaunchableActivity launchableActivity:mActivityInfos){
+            launchableActivity.deleteActivityIcon();
+        }
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
