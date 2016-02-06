@@ -16,7 +16,6 @@
 package com.hayaisoftware.launcher.activities;
 
 import android.app.Activity;
-import android.app.WallpaperManager;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -87,7 +86,6 @@ import java.util.regex.Pattern;
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final int sWallpaperPickerRequestCode = 1;
     private static final int sNavigationBarHeightMultiplier = 1;
     private static final int sGridViewTopRowExtraPaddingInDP = 56;
     private static final int sMarginFromNavigationBarInDp = 16;
@@ -162,7 +160,9 @@ public class SearchActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_search);
+
         mPm = getPackageManager();
 
         final Resources resources = getResources();
@@ -217,6 +217,7 @@ public class SearchActivity extends Activity
 
 
         mNumOfCores = Runtime.getRuntime().availableProcessors();
+
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
@@ -225,7 +226,9 @@ public class SearchActivity extends Activity
         filter.addDataScheme("package");
         mPackageChangedReceiver = new PackageChangedReceiver();
         registerReceiver(mPackageChangedReceiver, filter);
+
         loadLaunchableApps();
+
         //loadShareableApps();
         setupImageLoadingThreads(resources);
         setupViews();
@@ -300,8 +303,6 @@ public class SearchActivity extends Activity
     }
 
     private void setupViews() {
-        //noinspection deprecation
-        setWallpaper();
 
         mSearchEditText.addTextChangedListener(mTextWatcher);
         mSearchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
@@ -358,12 +359,6 @@ public class SearchActivity extends Activity
         });
 
 
-    }
-
-    private void setWallpaper() {
-
-        ((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
-                WallpaperManager.getInstance(this).getFastDrawable());
     }
 
     private boolean openFirstActivity() {
@@ -730,7 +725,7 @@ public class SearchActivity extends Activity
                 return true;
             case R.id.action_set_wallpaper:
                 final Intent intentWallpaperPicker = new Intent(Intent.ACTION_SET_WALLPAPER);
-                startActivityForResult(intentWallpaperPicker, sWallpaperPickerRequestCode);
+                startActivity(intentWallpaperPicker);
                 return true;
             case R.id.action_about:
                 final Intent intentAbout = new Intent(this, AboutActivity.class);
@@ -784,14 +779,6 @@ public class SearchActivity extends Activity
         showPopup(mOverflowButtonTopleft);
 
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == sWallpaperPickerRequestCode) {
-            setWallpaper();
-        }
     }
 
     public void launchActivity(final LaunchableActivity launchableActivity) {

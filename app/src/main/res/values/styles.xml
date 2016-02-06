@@ -10,8 +10,9 @@
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         -->
-        <!--<item name="android:windowBackground">@color/full_transparent</item>-->
-        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:windowBackground">@color/full_transparent</item>
+        <item name="android:windowShowWallpaper">true</item>
+
     </style>
 
         <style name="AppSettingsTheme" parent="@android:style/Theme.Holo.Light">

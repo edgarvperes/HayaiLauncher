@@ -17,8 +17,10 @@
 
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
-        <!--<item name="android:windowBackground">@color/full_transparent</item>-->
-        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:windowBackground">@color/full_transparent</item>
+        <item name="android:windowShowWallpaper">true</item>
+
+
     </style>
 
     <style name="AppSettingsTheme" parent="@android:style/Theme.Material.Light.DarkActionBar">
