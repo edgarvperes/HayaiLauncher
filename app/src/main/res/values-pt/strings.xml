@@ -55,4 +55,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="settings_disable_icon_loading">Desabilitar carregamento de icones</string>
     <string name="pref_preferred_app_order_dialog">Ordem dos aplicativos</string>
     <string name="pref_preferred_order_dialog">Ordem dos aplicativos</string>
+    <string name="action_set_wallpaper">Trocar papel de parede</string>
 </resources>

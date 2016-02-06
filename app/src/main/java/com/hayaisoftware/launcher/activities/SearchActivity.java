@@ -86,6 +86,8 @@ import java.util.regex.Pattern;
 
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static final int sWallpaperPickerRequestCode = 1;
     private static final int sNavigationBarHeightMultiplier = 1;
     private static final int sGridViewTopRowExtraPaddingInDP = 56;
     private static final int sMarginFromNavigationBarInDp = 16;
@@ -300,8 +302,7 @@ public class SearchActivity extends Activity
 
     private void setupViews() {
         //noinspection deprecation
-        ((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
-                WallpaperManager.getInstance(this).getFastDrawable());
+        setWallpaper();
 
         mSearchEditText.addTextChangedListener(mTextWatcher);
         mSearchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
@@ -358,6 +359,12 @@ public class SearchActivity extends Activity
         });
 
 
+    }
+
+    private void setWallpaper() {
+
+        ((ImageView) findViewById(R.id.backgroundView)).setImageDrawable(
+                WallpaperManager.getInstance(this).getFastDrawable());
     }
 
     private boolean openFirstActivity() {
@@ -677,6 +684,7 @@ public class SearchActivity extends Activity
         super.onTrimMemory(level);
         if(!mCacheClear && level==TRIM_MEMORY_COMPLETE)
                 clearCaches();
+
     }
 
     private void clearCaches(){
@@ -724,7 +732,13 @@ public class SearchActivity extends Activity
             case R.id.action_about:
                 final Intent intentAbout = new Intent(this, AboutActivity.class);
                 startActivity(intentAbout);
+
                 return true;
+            case R.id.action_set_wallpaper:
+                final Intent intentWallpaperPicker = new Intent(Intent.ACTION_SET_WALLPAPER);
+                startActivityForResult(intentWallpaperPicker, sWallpaperPickerRequestCode);
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -773,6 +787,14 @@ public class SearchActivity extends Activity
         showPopup(mOverflowButtonTopleft);
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==sWallpaperPickerRequestCode){
+            setWallpaper();
+        }
     }
 
     public void launchActivity(final LaunchableActivity launchableActivity) {

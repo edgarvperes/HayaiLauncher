@@ -31,4 +31,5 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="pin_to_top">#FFFF00</color>
+    <color name="full_transparent">#80000000</color>
 </resources>

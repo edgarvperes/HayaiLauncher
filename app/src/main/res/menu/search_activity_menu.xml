@@ -8,6 +8,8 @@
         android:orderInCategory="3" android:showAsAction="never" />
     <item android:id="@+id/action_manage_apps" android:title="@string/action_manage_apps"
         android:orderInCategory="3" android:showAsAction="never" />
-    <item android:id="@+id/action_about" android:title="@string/action_about"
+    <item android:id="@+id/action_set_wallpaper" android:title="@string/action_set_wallpaper"
         android:orderInCategory="4" android:showAsAction="never" />
+    <item android:id="@+id/action_about" android:title="@string/action_about"
+        android:orderInCategory="5" android:showAsAction="never" />
 </menu>
