@@ -114,7 +114,18 @@ public class SearchActivity extends Activity
     private Comparator<LaunchableActivity> mPinToTopComparator;
     private Comparator<LaunchableActivity> mRecentOrderComparator;
     private Comparator<LaunchableActivity> mAlphabeticalOrderComparator;
-
+    private InputMethodManager mInputMethodManager;
+    private AdapterView mAppListView;
+    private PackageManager mPm;
+    private View mOverflowButtonTopleft;
+    private int mColumnCount;
+    //used only in function getAllSubwords. they are here as class fields to avoid
+    // object re-allocation.
+    private StringBuilder mWordSinceLastSpaceBuilder;
+    private StringBuilder mWordSinceLastCapitalBuilder;
+    private int mGridViewTopRowHeight;
+    private int mGridViewBottomRowHeight;
+    private boolean mShouldOrderByRecents;
     private final TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
@@ -138,24 +149,9 @@ public class SearchActivity extends Activity
 
 
     };
-    private InputMethodManager mInputMethodManager;
-    private AdapterView mAppListView;
-    private PackageManager mPm;
-    private View mOverflowButtonTopleft;
-    private int mColumnCount;
-
-    //used only in function getAllSubwords. they are here as class fields to avoid
-    // object re-allocation.
-    private StringBuilder mWordSinceLastSpaceBuilder;
-    private StringBuilder mWordSinceLastCapitalBuilder;
-
-
-    private int mGridViewTopRowHeight;
-    private int mGridViewBottomRowHeight;
-    private boolean shouldOrderByRecents;
-    private boolean disableIcons;
-    private boolean autoKeyboard;
-    private boolean mCacheClear;
+    private boolean mDisableIcons;
+    private boolean mAutoKeyboard;
+    private boolean mIsCacheClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,10 +245,10 @@ public class SearchActivity extends Activity
     @Override
     protected void onResume() {
         super.onResume();
-        mCacheClear = false;
+        mIsCacheClear = false;
         mSearchEditText.setText("");
         mSearchEditText.clearFocus();
-        if (autoKeyboard) {
+        if (mAutoKeyboard) {
             mSearchEditText.requestFocus();
         }
     }
@@ -284,7 +280,7 @@ public class SearchActivity extends Activity
     protected void onPostResume() {
         super.onPostResume();
 
-        if (autoKeyboard) {
+        if (mAutoKeyboard) {
             showKeyboard();
 
             //HACK putting showKeyboard event to the end of the Ui Thread running queue
@@ -379,11 +375,11 @@ public class SearchActivity extends Activity
             final int priority = ShortcutNotificationManager.getPriorityFromString(strPriority);
             shortcutNotificationManager.showNotification(this, priority);
         }
-        shouldOrderByRecents =
+        mShouldOrderByRecents =
                 mSharedPreferences.getString("pref_app_preferred_order", "recent").equals("recent");
-        disableIcons =
+        mDisableIcons =
                 mSharedPreferences.getBoolean("pref_disable_icons", false);
-        autoKeyboard =
+        mAutoKeyboard =
                 mSharedPreferences.getBoolean("pref_autokeyboard", false);
     }
 
@@ -495,7 +491,7 @@ public class SearchActivity extends Activity
 
     private void sortApps() {
         Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
-        if (shouldOrderByRecents) {
+        if (mShouldOrderByRecents) {
             Collections.sort(mActivityInfos, mRecentOrderComparator);
         }
         Collections.sort(mActivityInfos, mPinToTopComparator);
@@ -652,14 +648,14 @@ public class SearchActivity extends Activity
         if (key.equals("package_changed_name") && !sharedPreferences.getString(key, "").isEmpty()) {
             handlePackageChanged();
         } else if (key.equals("pref_app_preferred_order")) {
-            shouldOrderByRecents =
+            mShouldOrderByRecents =
                     mSharedPreferences.getString("pref_app_preferred_order", "recent").equals("recent");
             sortApps();
             mArrayAdapter.notifyDataSetChanged();
         } else if (key.equals("pref_disable_icons")) {
             recreate();
         } else if (key.equals("pref_autokeyboard")) {
-            autoKeyboard = mSharedPreferences.getBoolean("pref_autokeyboard", false);
+            mAutoKeyboard = mSharedPreferences.getBoolean("pref_autokeyboard", false);
         }
 
 
@@ -676,13 +672,13 @@ public class SearchActivity extends Activity
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
-        if (!mCacheClear && level == TRIM_MEMORY_COMPLETE)
+        if (!mIsCacheClear && level == TRIM_MEMORY_COMPLETE)
             clearCaches();
 
     }
 
     private void clearCaches() {
-        mCacheClear = true;
+        mIsCacheClear = true;
         for (LaunchableActivity launchableActivity : mActivityInfos) {
             launchableActivity.deleteActivityIcon();
         }
@@ -860,7 +856,7 @@ public class SearchActivity extends Activity
                 appIconView.setTag(launchableActivity);
                 if (!launchableActivity.isIconLoaded()) {
                     appIconView.setImageDrawable(mDefaultAppIcon);
-                    if (!disableIcons)
+                    if (!mDisableIcons)
                         mImageLoadingConsumersManager.addTask(
                                 new ImageLoadingTask(appIconView, launchableActivity,
                                         mImageTasksSharedData));
