@@ -8,8 +8,8 @@
     <string name="settings_enable_notification_title">Mostrar</string>
     <string name="settings_category_notification_category">Notificaciones</string>
     <string name="settings_category_general_category">General</string>
-    <string name="settings_autokeyboard">Abrir teclado automaticámente</string>
-    <string name="search_view_hint">Escribe algo...</string>
+    <string name="settings_autokeyboard">Abrir teclado automáticamente</string>
+    <string name="search_view_hint">Escribe algo…</string>
     <string name="appmenu_launch">Abrir</string>
     <string name="appmenu_onplaystore">Abrir en app market</string>
     <string name="appmenu_pin_to_top">Anclar al inicio</string>
