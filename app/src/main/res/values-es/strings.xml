@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_about">Acerca de</string>
+    <string name="action_manage_apps">Administrar aplicaciones</string>
+    <string name="action_settings">Preferencias</string>
+    <string name="title_activity_about">Acerca de</string>
+    <string name="title_activity_settings">Preferencias</string>
+    <string name="settings_enable_notification_title">Mostrar</string>
+    <string name="settings_category_notification_category">Notificaciones</string>
+    <string name="settings_category_general_category">General</string>
+    <string name="settings_autokeyboard">Abrir teclado automáticamente</string>
+    <string name="search_view_hint">Escribe algo…</string>
+    <string name="appmenu_launch">Abrir</string>
+    <string name="appmenu_onplaystore">Abrir en app market</string>
+    <string name="appmenu_pin_to_top">Anclar al inicio</string>
+    <string name="launch">Ir</string>
+    <string name="pref_app_preferred_order_entries_alphabetical">Ordenar alfabéticamente</string>
+    <string name="pref_app_preferred_order_entries_recent">Más usadas primero</string>
+    <string name="pref_basetheme">Tema base</string>
+    <string name="pref_notification_priority">Prioridad de la notificación</string>
+    <string name="pref_notification_priority_entries_high">Alta</string>
+    <string name="pref_notification_priority_entries_low">Baja (sin ícono)</string>
+    <string name="action_refresh_app_list">Actualizar lista de aplicaciones</string>
+    <string name="action_set_wallpaper">Cambiar fondo de pantalla</string>
+    <string name="action_system_settings">Preferencias del dispositivo</string>
+    <string name="activity_not_found">Actividad no encontrada</string>
+    <string name="app_item_bottom_never">Nunca abierta</string>
+    <string name="application_icon_content_description">Ícono de aplicación</string>
+    <string name="application_icon_desc">Ícono de aplicación</string>
+    <string name="appmenu_favorite">Favorito</string>
+    <string name="appmenu_info">Información</string>
+    <string name="pref_preferred_app_order_dialog">Orden de aplicaciones</string>
+    <string name="pref_preferred_order_dialog">Ordenar aplicaciones</string>
+    <string name="settings_disable_icon_loading">Desactivar carga de íconos</string>
+    <string name="settings_enable_icons_title">Mostrar íconos</string>
+</resources>
