@@ -12,7 +12,6 @@
     <string name="appmenu_favorite">Favoriten</string>
     <string name="appmenu_info">Informationen zur App</string>
     <string name="appmenu_launch">Starten</string>
-    <string name="appmenu_onplaystore">Im Google Play Store ansehen</string>
     <string name="launch">Start</string>
     <string name="pref_basetheme">Basis-Thema</string>
     <string name="pref_notification_priority">Priorität der Benachrichtigung.</string>
@@ -33,4 +32,5 @@
     <string name="pref_app_preferred_order_entries_recent">Zuletzt genutzte zuerst</string>
     <string name="pref_notification_priority_entries_low">Niedrig (kein Icon)</string>
     <string name="action_set_wallpaper">Hintergrundbild wählen</string>
+    <string name="appmenu_onplaystore">Im App-Markt öffnen (z.B. Google Play Store)</string>
 </resources>
