@@ -32,4 +32,5 @@
     <string name="pref_app_preferred_order_entries_alphabetical">Alphabetische Sortierung</string>
     <string name="pref_app_preferred_order_entries_recent">Zuletzt genutzte zuerst</string>
     <string name="pref_notification_priority_entries_low">Niedrig (kein Icon)</string>
+    <string name="action_set_wallpaper">Hintergrundbild wählen</string>
 </resources>
