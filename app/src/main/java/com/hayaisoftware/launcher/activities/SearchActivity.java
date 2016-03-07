@@ -785,7 +785,7 @@ public class SearchActivity extends Activity
             case R.id.appmenu_pin_to_top:
                 launchableActivity.setPriority(launchableActivity.getPriority() == 0 ? 1 : 0);
                 mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
-                        launchableActivity.getLaunchTime(), launchableActivity.getPriority());
+                        launchableActivity.getLaunchTime(), launchableActivity.getPriority(), launchableActivity.getusagesQuantity());
                 sortApps();
                 mArrayAdapter.notifyDataSetChanged();
                 return true;
@@ -810,7 +810,7 @@ public class SearchActivity extends Activity
             // TODO: Right?
             launchableActivity.addUsage();
             mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
-                    launchableActivity.getLaunchTime(), launchableActivity.getPriority());
+                    launchableActivity.getLaunchTime(), launchableActivity.getPriority(), launchableActivity.getusagesQuantity());
             sortApps();
             mArrayAdapter.notifyDataSetChanged();
         } catch (ActivityNotFoundException e) {

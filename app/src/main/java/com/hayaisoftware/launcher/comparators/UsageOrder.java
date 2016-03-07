@@ -15,6 +15,8 @@
 
 package com.hayaisoftware.launcher.comparators;
 
+import android.util.Log;
+
 import com.hayaisoftware.launcher.LaunchableActivity;
 
 import java.util.Comparator;
@@ -24,8 +26,12 @@ public class UsageOrder implements Comparator<LaunchableActivity>{
 
     @Override
     public int compare(LaunchableActivity lhs, LaunchableActivity rhs) {
-        int lhsUsageQuantity=lhs.getusagesQuantity();
+        int lhsUsageQuantity = lhs.getusagesQuantity();
         int rhsUsageQuantity = rhs.getusagesQuantity();
+        if (lhsUsageQuantity > 0 && rhsUsageQuantity > 0) {
+            Log.d(getClass().getName(), "links: " + lhs.getClassName() + " " + lhsUsageQuantity);
+            Log.d(getClass().getName(), "rechts: " + rhs.getClassName() + " " + rhsUsageQuantity);
+        }
         if (lhsUsageQuantity > rhsUsageQuantity)
             return -1;
         if (lhsUsageQuantity < rhsUsageQuantity)
