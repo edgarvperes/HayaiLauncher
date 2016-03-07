@@ -494,6 +494,7 @@ public class SearchActivity extends Activity
         if (mShouldOrderByRecents) {
             Collections.sort(mActivityInfos, mRecentOrderComparator);
         }
+        // TODO: implement new sorting thinie here
         Collections.sort(mActivityInfos, mPinToTopComparator);
     }
 

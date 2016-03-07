@@ -136,5 +136,8 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         int priority;
         long lastTimestamp;
         boolean wasUsed;
+
+        // variable to count usages
+        int usages;
     }
 }

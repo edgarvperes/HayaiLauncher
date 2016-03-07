@@ -15,6 +15,7 @@
     <string-array name="pref_app_preferred_order_entries">
         <item>@string/pref_app_preferred_order_entries_recent</item>
         <item>@string/pref_app_preferred_order_entries_alphabetical</item>
+        <item>@string/pref_app_preferred_order_entries_usages</item>
     </string-array>
 
     <string-array name="pref_app_preferred_order_values" translatable="false">
