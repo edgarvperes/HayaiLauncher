@@ -28,10 +28,7 @@ public class UsageOrder implements Comparator<LaunchableActivity>{
     public int compare(LaunchableActivity lhs, LaunchableActivity rhs) {
         int lhsUsageQuantity = lhs.getusagesQuantity();
         int rhsUsageQuantity = rhs.getusagesQuantity();
-        if (lhsUsageQuantity > 0 && rhsUsageQuantity > 0) {
-            Log.d(getClass().getName(), "links: " + lhs.getClassName() + " " + lhsUsageQuantity);
-            Log.d(getClass().getName(), "rechts: " + rhs.getClassName() + " " + rhsUsageQuantity);
-        }
+        
         if (lhsUsageQuantity > rhsUsageQuantity)
             return -1;
         if (lhsUsageQuantity < rhsUsageQuantity)

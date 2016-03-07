@@ -508,13 +508,13 @@ public class SearchActivity extends Activity
     }
 
     private void sortApps() {
-        Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
         if (mShouldOrderByRecents) {
             Collections.sort(mActivityInfos, mRecentOrderComparator);
         } else if(mShouldOrderByUsages) {
             Collections.sort(mActivityInfos, mUsageOrderComparator);
+        } else {
+            Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
         }
-        // TODO: implement new usage sorting here
         Collections.sort(mActivityInfos, mPinToTopComparator);
     }
 
@@ -670,9 +670,11 @@ public class SearchActivity extends Activity
             handlePackageChanged();
         } else if (key.equals("pref_app_preferred_order")) {
             String order = mSharedPreferences.getString("pref_app_preferred_order", "recent");
-            mShouldOrderByUsages = order.equals("usag");
+            mShouldOrderByUsages = order.equals("usage");
             mShouldOrderByRecents = order.equals("recent");
             // TODO: this double bool doesn't look too good
+            Log.d(getClass().getName(), "Settings did change to " + order);
+
             //mShouldOrderByUsages = mSharedPreferences.getString("pref_app_preferred_order", "usages").equals("usages");
             sortApps();
             mArrayAdapter.notifyDataSetChanged();
