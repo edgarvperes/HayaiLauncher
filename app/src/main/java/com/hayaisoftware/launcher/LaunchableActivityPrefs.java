@@ -28,11 +28,12 @@ import java.util.List;
 
 public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String TABLE_NAME = "ActivityLaunchNumbers";
     private static final String KEY_CLASSNAME = "ClassName";
     private static final String KEY_ID = "Id";
     private static final String KEY_LASTLAUNCHTIMESTAMP = "LastLaunchTimestamp";
+    private static final String KEY_USAGEQUANTIY = "UsageQuantity";
     private static final String KEY_FAVORITE = "Favorite";
     private static final String TABLE_CREATE = String
             .format("CREATE TABLE %s "
@@ -107,6 +108,8 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 activityPref.className = cursor.getString(cursor.getColumnIndex(KEY_CLASSNAME));
                 activityPref.priority = cursor.getInt(cursor.getColumnIndex(KEY_FAVORITE));
                 activityPref.lastTimestamp = cursor.getInt(cursor.getColumnIndex(KEY_LASTLAUNCHTIMESTAMP));
+                // TODO: right?
+                activityPref.usagesQuantity = cursor.getInt(cursor.getColumnIndex(KEY_USAGEQUANTIY));
                 activityPrefMap.put(activityPref.className, activityPref);
             } while (cursor.moveToNext());
         }
@@ -117,6 +120,8 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             if (activityPref != null) {
                 activityPref.wasUsed = true;
                 activity.setLaunchTime(activityPref.lastTimestamp);
+                // TODO: right?
+                activity.setusagesQuantity(activityPref.usagesQuantity);
                 activity.setPriority(activityPref.priority);
             }
         }
@@ -136,8 +141,6 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         int priority;
         long lastTimestamp;
         boolean wasUsed;
-
-        // variable to count usages
-        int usages;
+        int usagesQuantity;
     }
 }

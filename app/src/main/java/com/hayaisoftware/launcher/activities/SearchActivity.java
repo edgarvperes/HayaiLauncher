@@ -58,6 +58,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.hayaisoftware.launcher.ImageLoadingTask;
 import com.hayaisoftware.launcher.LaunchableActivity;
 import com.hayaisoftware.launcher.LaunchableActivityPrefs;
@@ -70,6 +73,7 @@ import com.hayaisoftware.launcher.Trie;
 import com.hayaisoftware.launcher.comparators.AlphabeticalOrder;
 import com.hayaisoftware.launcher.comparators.PinToTop;
 import com.hayaisoftware.launcher.comparators.RecentOrder;
+import com.hayaisoftware.launcher.comparators.UsageOrder;
 import com.hayaisoftware.launcher.threading.SimpleTaskConsumerManager;
 import com.hayaisoftware.launcher.util.ContentShare;
 
@@ -114,6 +118,7 @@ public class SearchActivity extends Activity
     private Comparator<LaunchableActivity> mPinToTopComparator;
     private Comparator<LaunchableActivity> mRecentOrderComparator;
     private Comparator<LaunchableActivity> mAlphabeticalOrderComparator;
+    private Comparator<LaunchableActivity> mUsageOrderComparator;
     private InputMethodManager mInputMethodManager;
     private AdapterView mAppListView;
     private PackageManager mPm;
@@ -126,6 +131,7 @@ public class SearchActivity extends Activity
     private int mGridViewTopRowHeight;
     private int mGridViewBottomRowHeight;
     private boolean mShouldOrderByRecents;
+    private boolean mShouldOrderByUsages;
     private final TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
@@ -152,6 +158,11 @@ public class SearchActivity extends Activity
     private boolean mDisableIcons;
     private boolean mAutoKeyboard;
     private boolean mIsCacheClear;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,6 +221,7 @@ public class SearchActivity extends Activity
         mPinToTopComparator = new PinToTop();
         mRecentOrderComparator = new RecentOrder();
         mAlphabeticalOrderComparator = new AlphabeticalOrder();
+        mUsageOrderComparator = new UsageOrder();
 
 
         mNumOfCores = Runtime.getRuntime().availableProcessors();
@@ -229,6 +241,9 @@ public class SearchActivity extends Activity
         setupImageLoadingThreads(resources);
         setupViews();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     private void loadShareableApps() {
@@ -375,8 +390,11 @@ public class SearchActivity extends Activity
             final int priority = ShortcutNotificationManager.getPriorityFromString(strPriority);
             shortcutNotificationManager.showNotification(this, priority);
         }
-        mShouldOrderByRecents =
-                mSharedPreferences.getString("pref_app_preferred_order", "recent").equals("recent");
+        // TODO: does this work?
+        String order = mSharedPreferences.getString("pref_app_preferred_order", "recent");
+        mShouldOrderByUsages = order.equals("usage");
+        mShouldOrderByRecents = order.equals("recent");
+
         mDisableIcons =
                 mSharedPreferences.getBoolean("pref_disable_icons", false);
         mAutoKeyboard =
@@ -493,8 +511,10 @@ public class SearchActivity extends Activity
         Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
         if (mShouldOrderByRecents) {
             Collections.sort(mActivityInfos, mRecentOrderComparator);
+        } else if(mShouldOrderByUsages) {
+            Collections.sort(mActivityInfos, mUsageOrderComparator);
         }
-        // TODO: implement new sorting thinie here
+        // TODO: implement new usage sorting here
         Collections.sort(mActivityInfos, mPinToTopComparator);
     }
 
@@ -649,8 +669,11 @@ public class SearchActivity extends Activity
         if (key.equals("package_changed_name") && !sharedPreferences.getString(key, "").isEmpty()) {
             handlePackageChanged();
         } else if (key.equals("pref_app_preferred_order")) {
-            mShouldOrderByRecents =
-                    mSharedPreferences.getString("pref_app_preferred_order", "recent").equals("recent");
+            String order = mSharedPreferences.getString("pref_app_preferred_order", "recent");
+            mShouldOrderByUsages = order.equals("usag");
+            mShouldOrderByRecents = order.equals("recent");
+            // TODO: this double bool doesn't look too good
+            //mShouldOrderByUsages = mSharedPreferences.getString("pref_app_preferred_order", "usages").equals("usages");
             sortApps();
             mArrayAdapter.notifyDataSetChanged();
         } else if (key.equals("pref_disable_icons")) {
@@ -747,7 +770,7 @@ public class SearchActivity extends Activity
                 return true;
             case R.id.appmenu_info:
                 final Intent intent = new Intent(
-                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                 intent.setData(Uri.parse("package:"
                         + launchableActivity.getComponent().getPackageName()));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -784,6 +807,8 @@ public class SearchActivity extends Activity
         try {
             startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
             launchableActivity.setLaunchTime();
+            // TODO: Right?
+            launchableActivity.addUsage();
             mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
                     launchableActivity.getLaunchTime(), launchableActivity.getPriority());
             sortApps();

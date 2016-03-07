@@ -21,6 +21,7 @@
     <string-array name="pref_app_preferred_order_values" translatable="false">
         <item>recent</item>
         <item>alphabetical</item>
+        <item>usage</item>
     </string-array>
 
 </resources>
