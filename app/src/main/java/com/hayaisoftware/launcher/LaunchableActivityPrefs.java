@@ -40,7 +40,6 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                             + "(%S INTEGER PRIMARY KEY, %s TEXT UNIQUE, %s INTEGER, %s INTEGER, %s INTEGER);",
                     TABLE_NAME, KEY_ID, KEY_CLASSNAME, KEY_LASTLAUNCHTIMESTAMP,
                     KEY_FAVORITE, KEY_USAGEQUANTIY);
-    // TODO: richtig hier?
     private static final String TABLE_DROP = String.format("DROP TABLE IF EXISTS %s", TABLE_NAME);
     public LaunchableActivityPrefs(Context context) {
         super(context, TABLE_NAME, null, DATABASE_VERSION);
@@ -110,7 +109,6 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 activityPref.className = cursor.getString(cursor.getColumnIndex(KEY_CLASSNAME));
                 activityPref.priority = cursor.getInt(cursor.getColumnIndex(KEY_FAVORITE));
                 activityPref.lastTimestamp = cursor.getInt(cursor.getColumnIndex(KEY_LASTLAUNCHTIMESTAMP));
-                // TODO: right?
                 activityPref.usagesQuantity = cursor.getInt(cursor.getColumnIndex(KEY_USAGEQUANTIY));
                 activityPrefMap.put(activityPref.className, activityPref);
             } while (cursor.moveToNext());
@@ -122,7 +120,6 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             if (activityPref != null) {
                 activityPref.wasUsed = true;
                 activity.setLaunchTime(activityPref.lastTimestamp);
-                // TODO: right?
                 activity.setusagesQuantity(activityPref.usagesQuantity);
                 activity.setPriority(activityPref.priority);
             }

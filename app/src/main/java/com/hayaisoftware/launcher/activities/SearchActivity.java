@@ -390,7 +390,6 @@ public class SearchActivity extends Activity
             final int priority = ShortcutNotificationManager.getPriorityFromString(strPriority);
             shortcutNotificationManager.showNotification(this, priority);
         }
-        // TODO: does this work?
         String order = mSharedPreferences.getString("pref_app_preferred_order", "recent");
         mShouldOrderByUsages = order.equals("usage");
         mShouldOrderByRecents = order.equals("recent");
@@ -672,8 +671,6 @@ public class SearchActivity extends Activity
             String order = mSharedPreferences.getString("pref_app_preferred_order", "recent");
             mShouldOrderByUsages = order.equals("usage");
             mShouldOrderByRecents = order.equals("recent");
-            // TODO: this double bool doesn't look too good
-            Log.d(getClass().getName(), "Settings did change to " + order);
 
             //mShouldOrderByUsages = mSharedPreferences.getString("pref_app_preferred_order", "usages").equals("usages");
             sortApps();
@@ -809,7 +806,6 @@ public class SearchActivity extends Activity
         try {
             startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
             launchableActivity.setLaunchTime();
-            // TODO: Right?
             launchableActivity.addUsage();
             mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
                     launchableActivity.getLaunchTime(), launchableActivity.getPriority(), launchableActivity.getusagesQuantity());
