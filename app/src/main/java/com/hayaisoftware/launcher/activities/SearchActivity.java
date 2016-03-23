@@ -507,13 +507,14 @@ public class SearchActivity extends Activity
     }
 
     private void sortApps() {
+        Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
+
         if (mShouldOrderByRecents) {
             Collections.sort(mActivityInfos, mRecentOrderComparator);
         } else if(mShouldOrderByUsages) {
             Collections.sort(mActivityInfos, mUsageOrderComparator);
-        } else {
-            Collections.sort(mActivityInfos, mAlphabeticalOrderComparator);
         }
+
         Collections.sort(mActivityInfos, mPinToTopComparator);
     }
 

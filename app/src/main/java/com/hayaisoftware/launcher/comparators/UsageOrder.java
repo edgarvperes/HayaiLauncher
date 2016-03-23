@@ -28,11 +28,7 @@ public class UsageOrder implements Comparator<LaunchableActivity>{
     public int compare(LaunchableActivity lhs, LaunchableActivity rhs) {
         int lhsUsageQuantity = lhs.getusagesQuantity();
         int rhsUsageQuantity = rhs.getusagesQuantity();
-        
-        if (lhsUsageQuantity > rhsUsageQuantity)
-            return -1;
-        if (lhsUsageQuantity < rhsUsageQuantity)
-            return 1;
-        return 0;
+
+        return rhsUsageQuantity - lhsUsageQuantity;
     }
 }
