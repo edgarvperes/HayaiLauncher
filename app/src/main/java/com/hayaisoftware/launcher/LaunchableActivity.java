@@ -36,6 +36,7 @@ public class LaunchableActivity{
     private final ComponentName mComponentName;
     private Intent mLaunchIntent;
     private long lastLaunchTime;
+    private int usagesQuantity;
     private boolean mShareable;
     private Drawable mActivityIcon;
     private int mPriority;
@@ -158,4 +159,13 @@ public class LaunchableActivity{
         return mShareable;
     }
 
+    public void addUsage() {
+        usagesQuantity ++;
+    }
+    public int getusagesQuantity(){
+        return usagesQuantity;
+    }
+    public void setusagesQuantity(int usagesQuantity){
+        this.usagesQuantity = usagesQuantity;
+    }
 }

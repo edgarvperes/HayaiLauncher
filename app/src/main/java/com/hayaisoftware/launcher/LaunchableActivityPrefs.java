@@ -28,17 +28,18 @@ import java.util.List;
 
 public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String TABLE_NAME = "ActivityLaunchNumbers";
     private static final String KEY_CLASSNAME = "ClassName";
     private static final String KEY_ID = "Id";
     private static final String KEY_LASTLAUNCHTIMESTAMP = "LastLaunchTimestamp";
+    private static final String KEY_USAGEQUANTIY = "UsageQuantity";
     private static final String KEY_FAVORITE = "Favorite";
     private static final String TABLE_CREATE = String
             .format("CREATE TABLE %s "
-                            + "(%S INTEGER PRIMARY KEY, %s TEXT UNIQUE, %s INTEGER, %s INTEGER);",
+                            + "(%S INTEGER PRIMARY KEY, %s TEXT UNIQUE, %s INTEGER, %s INTEGER, %s INTEGER);",
                     TABLE_NAME, KEY_ID, KEY_CLASSNAME, KEY_LASTLAUNCHTIMESTAMP,
-                    KEY_FAVORITE);
+                    KEY_FAVORITE, KEY_USAGEQUANTIY);
     private static final String TABLE_DROP = String.format("DROP TABLE IF EXISTS %s", TABLE_NAME);
     public LaunchableActivityPrefs(Context context) {
         super(context, TABLE_NAME, null, DATABASE_VERSION);
@@ -46,11 +47,10 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-
         db.execSQL(TABLE_CREATE);
     }
 
-    public void writePreference(String className, long number, int priority) {
+    public void writePreference(String className, long number, int priority, int usageQuantity) {
         Log.d("LaunchablePrefs", "writePreference running");
         final SQLiteDatabase db = getWritableDatabase();
         final SQLiteStatement countStatement = db.compileStatement(String.format(
@@ -63,17 +63,19 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         if (count == 0) {
             statement = db.compileStatement("INSERT INTO "
                     + TABLE_NAME + " (" + KEY_CLASSNAME + ", "
-                    + KEY_LASTLAUNCHTIMESTAMP + "," + KEY_FAVORITE + ") VALUES(?,?,?)");
+                    + KEY_LASTLAUNCHTIMESTAMP + "," + KEY_FAVORITE + "," + KEY_USAGEQUANTIY + ") VALUES(?,?,?,?)");
             statement.bindString(1, className);
             statement.bindLong(2, number);
             statement.bindLong(3, priority);
+            statement.bindLong(4, usageQuantity);
         } else {
             statement = db.compileStatement("UPDATE "
-                    + TABLE_NAME + " SET " + KEY_LASTLAUNCHTIMESTAMP + "=? , " + KEY_FAVORITE + "=? WHERE "
+                    + TABLE_NAME + " SET " + KEY_LASTLAUNCHTIMESTAMP + "=? , " + KEY_FAVORITE + "=? , " + KEY_USAGEQUANTIY + "=? WHERE "
                     + KEY_CLASSNAME + "=?");
             statement.bindLong(1, number);
             statement.bindLong(2, priority);
-            statement.bindString(3, className);
+            statement.bindLong(3, usageQuantity);
+            statement.bindString(4, className);
         }
         statement.executeInsert();
         statement.close();
@@ -96,7 +98,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         final SQLiteDatabase db = getReadableDatabase();
 
         final Cursor cursor = db.query(TABLE_NAME,
-                new String[]{KEY_CLASSNAME, KEY_LASTLAUNCHTIMESTAMP, KEY_FAVORITE},
+                new String[]{KEY_CLASSNAME, KEY_LASTLAUNCHTIMESTAMP, KEY_USAGEQUANTIY, KEY_FAVORITE},
                 null, null, null, null, null);
 
         final AbstractMap<String, ActivityPref> activityPrefMap = new HashMap<>(cursor.getCount());
@@ -107,6 +109,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
                 activityPref.className = cursor.getString(cursor.getColumnIndex(KEY_CLASSNAME));
                 activityPref.priority = cursor.getInt(cursor.getColumnIndex(KEY_FAVORITE));
                 activityPref.lastTimestamp = cursor.getInt(cursor.getColumnIndex(KEY_LASTLAUNCHTIMESTAMP));
+                activityPref.usagesQuantity = cursor.getInt(cursor.getColumnIndex(KEY_USAGEQUANTIY));
                 activityPrefMap.put(activityPref.className, activityPref);
             } while (cursor.moveToNext());
         }
@@ -117,6 +120,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
             if (activityPref != null) {
                 activityPref.wasUsed = true;
                 activity.setLaunchTime(activityPref.lastTimestamp);
+                activity.setusagesQuantity(activityPref.usagesQuantity);
                 activity.setPriority(activityPref.priority);
             }
         }
@@ -136,5 +140,6 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
         int priority;
         long lastTimestamp;
         boolean wasUsed;
+        int usagesQuantity;
     }
 }
