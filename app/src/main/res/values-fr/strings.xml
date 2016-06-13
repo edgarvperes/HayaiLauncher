@@ -18,19 +18,19 @@
     
     <string name="action_settings">Paramètres</string>
     <string name="application_icon_desc" >Icône de l\'application</string>
-    <string name="search_view_hint">Tapez quelque chose…</string>
+    <string name="search_view_hint">Rechercher une application…</string>
     <string name="title_activity_settings">Paramètres</string>
     <string name="settings_category_notification_category">Notifications</string>
-    <string name="settings_enable_notification_title">Montrer un raccourci dans le panneau des notifications</string>
+    <string name="settings_enable_notification_title">Montrer la notification</string>
     <string name="settings_enable_icons_title">Afficher les icônes des apps</string>
     <string name="application_icon_content_description">Icône de l\'application</string>
-    <string name="appmenu_launch">Lancé</string>
+    <string name="appmenu_launch">Lancer</string>
     <string name="appmenu_favorite">Favori</string>
-    <string name="appmenu_info">Informations sur l\'app</string>
+    <string name="appmenu_info">Informations sur l\'application</string>
     <string name="app_item_bottom_never">Jamais lancé</string>
     <string name="title_activity_about">À propos</string>
     <string name="launch">Aller</string>
-    <string name="action_refresh_app_list">Rafraichir la liste des apps</string>
+    <string name="action_refresh_app_list">Rafraîchir la liste des apps</string>
     <string name="action_system_settings">Paramètres de l\'appareil</string>
     <string name="activity_not_found">Activité non trouvée.</string>
     <string name="action_about">À propos</string>
@@ -59,9 +59,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 \n See the License for the specific language governing permissions and
 \n limitations under the License.
 \n</string>-->
-    <string name="action_manage_apps">Gérer les apps</string>
-    <string name="appmenu_onplaystore">Voir sur le Google Play Store</string>
+    <string name="action_manage_apps">Gérer les applications</string>
+    <string name="appmenu_onplaystore">Voir dans le magasin</string>
     <string name="pref_basetheme" >Thème de base</string>
     <string name="pref_notification_priority">Priorité des notifications</string>
+    <string name="settings_autokeyboard">Ouvrir le clavier automatiquement</string>
+    <string name="settings_category_general_category">Général</string>
+    <string name="pref_preferred_order_dialog">Ordre des applications</string>
+    <string name="pref_preferred_app_order_dialog">Ordre des applications</string>
+    <string name="settings_disable_icon_loading">Désactiver le chargement des icônes</string>
+    <string name="appmenu_pin_to_top">Favori</string>
+    <string name="pref_notification_priority_entries_high">Haute</string>
+    <string name="pref_notification_priority_entries_low">Basse (pas d'icône)</string>
+    <string name="pref_app_preferred_order_entries_recent">Récemment utilisées</string>
+    <string name="pref_app_preferred_order_entries_alphabetical">Ordre alphabétique</string>
+    <string name="action_set_wallpaper">Changer le fond d'écran</string>
 
 </resources>
