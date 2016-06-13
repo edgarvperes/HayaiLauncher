@@ -129,7 +129,7 @@ public class LaunchableActivityPrefs extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion == 1 && newVersion == 2) {
+        if (oldVersion < 3 && newVersion == 3) {
             db.execSQL(TABLE_DROP);
             onCreate(db);
         }
