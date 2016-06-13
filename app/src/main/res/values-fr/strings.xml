@@ -31,7 +31,6 @@
     <string name="title_activity_about">À propos</string>
     <string name="launch">Aller</string>
     <string name="action_refresh_app_list">Rafraîchir la liste des apps</string>
-    <string name="action_system_settings">Paramètres de l\'appareil</string>
     <string name="activity_not_found">Activité non trouvée.</string>
     <string name="action_about">À propos</string>
     <!--<string name="about_content">Hayai Launcher [APP_VERSION]
@@ -70,9 +69,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="settings_disable_icon_loading">Désactiver le chargement des icônes</string>
     <string name="appmenu_pin_to_top">Favori</string>
     <string name="pref_notification_priority_entries_high">Haute</string>
-    <string name="pref_notification_priority_entries_low">Basse (pas d'icône)</string>
+    <string name="pref_notification_priority_entries_low">Basse (pas d\'icône)</string>
     <string name="pref_app_preferred_order_entries_recent">Récemment utilisées</string>
     <string name="pref_app_preferred_order_entries_alphabetical">Ordre alphabétique</string>
-    <string name="action_set_wallpaper">Changer le fond d'écran</string>
+    <string name="action_set_wallpaper">Changer le fond d\'écran</string>
+    <string name="action_system_settings">Paramètres de l\'appareil</string>
 
 </resources>
