@@ -12,9 +12,9 @@
     <string name="appmenu_launch">Запуск</string>
     <string name="appmenu_favorite">Избранное</string>
     <string name="appmenu_info">Информация о приложении</string>
-    <string name="app_item_bottom_never">Никогда не запущен</string>
+    <string name="app_item_bottom_never">Не запускалось</string>
     <string name="title_activity_about">О приложении</string>
-    <string name="launch">Запустить</string>
+    <string name="launch">Запуск</string>
     <string name="action_refresh_app_list">Обновить список приложений</string>
     <string name="action_system_settings">Настройки устройства</string>
     <string name="activity_not_found">Действие не найдено.</string>
@@ -26,7 +26,7 @@
 \n
 \nContributors:
 \n\tEdgar Villani Peres (seizonsenryaku)
-\n\tDalton de Oliveira Silva(daltonos)
+\n\tDalton de Oliveira Silva (daltonos)
 \n
 \n-
 \n
@@ -46,17 +46,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 \n</string>
     <string name="action_manage_apps">Управление приложениями</string>
     <string name="appmenu_onplaystore">Посмотреть в Google Play Store</string>
-    <string name="pref_basetheme" >Стандартная тема</string>
+    <string name="pref_basetheme" >Базовая тема</string>
     <string name="pref_notification_priority">Приоритет уведомлений</string>
     <string name="settings_autokeyboard">Открывать клавиатуру автоматически</string>
     <string name="settings_category_general_category">Общее</string>
     <string name="pref_preferred_order_dialog">Сортировка приложений</string>
     <string name="pref_preferred_app_order_dialog">Сортировка приложений</string>
     <string name="settings_disable_icon_loading">Отключить загрузку иконок у приложений</string>
-    <string name="appmenu_pin_to_top">Закрепить вверху</string>
+    <string name="appmenu_pin_to_top">Закрепить наверху</string>
     <string name="pref_notification_priority_entries_high">Высокий</string>
-    <string name="pref_notification_priority_entries_low">Низкий(без иконок)</string>
-    <string name="pref_app_preferred_order_entries_recent">Наиболее используемые идут первыми</string>
-    <string name="pref_app_preferred_order_entries_alphabetical">В алфавитном порядке</string>
+    <string name="pref_notification_priority_entries_low">Низкий (без иконок)</string>
+    <string name="pref_app_preferred_order_entries_recent">Последние использованные сначала</string>
+    <string name="pref_app_preferred_order_entries_alphabetical">Алфавитный порядок</string>
+    <string name="pref_app_preferred_order_entries_usages">Самые используемые сначала</string>
+    <string name="action_set_wallpaper">Установить обои</string>
 
 </resources>
