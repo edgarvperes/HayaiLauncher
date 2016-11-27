@@ -3,30 +3,34 @@
 
     <string name="action_settings">Ustawienia</string>
     <string name="application_icon_desc" >Ikon Applikacji</string>
-    <string name="search_view_hint">Wpisz coś…</string>
+    <string name="search_view_hint">Szukaj...</string>
     <string name="title_activity_settings">Ustawienia</string>
     <string name="settings_category_notification_category">Powiadomienia</string>
     <string name="settings_enable_notification_title">Pokaż skrót w panelu powiadomień</string>
-    <string name="settings_enable_icons_title">Pokazuj Ikony Applikacji</string>
-    <string name="application_icon_content_description">Ikon Applikacji</string>
-    <string name="appmenu_launch">Uruchom</string>
+    <string name="settings_enable_icons_title">Wyświetlaj ikony aplikacji</string>
+    <string name="application_icon_content_description">Ikona aplikacji</string>
+    <string name="appmenu_launch">Uruchom aplikację</string>
     <string name="appmenu_favorite">Ulubione</string>
-    <string name="appmenu_info">Informacje aplikacji</string>
-    <string name="app_item_bottom_never">Nigdy nie rozpoczęta</string>
-    <string name="title_activity_about">Informacje o</string>
+    <string name="appmenu_info">Informacje o aplikacji</string>
+    <string name="app_item_bottom_never">Nigdy nie została uruchomiona</string>
+    <string name="title_activity_about">O aplikacji</string>
     <string name="launch">Uruchom</string>
     <string name="action_refresh_app_list">Odśwież listę aplikacji</string>
     <string name="action_system_settings">Ustawienia urządzenia</string>
     <string name="activity_not_found">Nie znaleziono applikacji.</string>
-    <string name="action_about">Informacje o</string>
+    <string name="action_about">O aplikacji</string>
     <string name="about_content">Hayai Launcher [APP_VERSION]
 \n
 \nStrona Projektu:
 \nhttps://github.com/seizonsenryaku/HayaiLauncher
 \n
-\nWspółautorzy:
+\nAutorzy:
 \n\tEdgar Villani Peres (seizonsenryaku)
-\n\tDalton de Oliveira Silva(daltonos)
+\n\tDalton de Oliveira Silva (daltonos)
+\n
+\n-
+\nTłumaczenie:
+\n\tArtur Motyka (artur9010)
 \n
 \n-
 \n
@@ -45,14 +49,20 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 \n limitations under the License.
 \n</string>
     <string name="action_manage_apps">Zarządzaj aplikacjami</string>
-    <string name="appmenu_onplaystore">Zobacz w Google Play Store</string>
-    <string name="pref_basetheme" >Base Temat</string>
-    <string name="pref_notification_priority">Priorytet zawiadomienia</string>
-    <string name="settings_autokeyboard">Otwórz klawiaturę automatycznie</string>
+    <string name="appmenu_onplaystore">Zobacz w sklepie</string>
+    <string name="pref_basetheme">Motyw podstawowy</string>
+    <string name="pref_notification_priority">Priorytet powiadomienia</string>
+    <string name="settings_autokeyboard">Automatycznie wysuwaj klawiaturę</string>
     <string name="settings_category_general_category">Ogólne</string>
     <string name="pref_preferred_order_dialog">Kolejność aplikacji</string>
     <string name="pref_preferred_app_order_dialog">Kolejność aplikacji</string>
-    <string name="settings_disable_icon_loading">Wyłącz ładowanie ikon</string>
+    <string name="settings_disable_icon_loading">Wyłącz ładowanie ikon aplikacji</string>
     <string name="appmenu_pin_to_top">Przypnij do góry</string>
+    <string name="pref_notification_priority_entries_high">Wysoki</string>
+    <string name="pref_notification_priority_entries_low">Niski (bez ikony)</string>
+    <string name="pref_app_preferred_order_entries_recent">Ostatnio używane pierwsze</string>
+    <string name="pref_app_preferred_order_entries_alphabetical">Kolejność alfabetyczna</string>
+    <string name="pref_app_preferred_order_entries_usages">Najczęściej używane pierwsze</string>
+    <string name="action_set_wallpaper">Ustaw tapetę</string>
 
 </resources>
