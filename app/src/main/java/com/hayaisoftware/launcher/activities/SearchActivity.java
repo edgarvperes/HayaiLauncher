@@ -64,6 +64,7 @@ import com.hayaisoftware.launcher.LaunchableActivityPrefs;
 import com.hayaisoftware.launcher.LoadLaunchableActivityTask;
 import com.hayaisoftware.launcher.PackageChangedReceiver;
 import com.hayaisoftware.launcher.R;
+import com.hayaisoftware.launcher.SdCardMountedReceiver;
 import com.hayaisoftware.launcher.ShortcutNotificationManager;
 import com.hayaisoftware.launcher.StatusBarColorHelper;
 import com.hayaisoftware.launcher.Trie;
@@ -111,6 +112,7 @@ public class SearchActivity extends Activity
     private View mClearButton;
     private int mNumOfCores;
     private BroadcastReceiver mPackageChangedReceiver;
+    private BroadcastReceiver mSdCardChangedReceiver;
 
     private Comparator<LaunchableActivity> mPinToTopComparator;
     private Comparator<LaunchableActivity> mRecentOrderComparator;
@@ -218,6 +220,7 @@ public class SearchActivity extends Activity
 
         mNumOfCores = Runtime.getRuntime().availableProcessors();
 
+        // broadcast receiver that listens for app changes
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
@@ -226,6 +229,13 @@ public class SearchActivity extends Activity
         filter.addDataScheme("package");
         mPackageChangedReceiver = new PackageChangedReceiver();
         registerReceiver(mPackageChangedReceiver, filter);
+
+        // broadcast receiver that listens for sd card mounting
+        final IntentFilter sdCradFilter = new IntentFilter();
+        sdCradFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
+        //sdCradFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
+        mSdCardChangedReceiver = new SdCardMountedReceiver(this);
+        registerReceiver(mSdCardChangedReceiver, sdCradFilter);
 
         loadLaunchableApps();
 
