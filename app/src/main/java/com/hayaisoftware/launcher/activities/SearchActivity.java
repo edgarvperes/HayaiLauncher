@@ -234,7 +234,7 @@ public class SearchActivity extends Activity
         final IntentFilter sdCradFilter = new IntentFilter();
         sdCradFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
         //sdCradFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
-        mSdCardChangedReceiver = new SdCardMountedReceiver(this);
+        mSdCardChangedReceiver = new SdCardMountedReceiver();
         registerReceiver(mSdCardChangedReceiver, sdCradFilter);
 
         loadLaunchableApps();

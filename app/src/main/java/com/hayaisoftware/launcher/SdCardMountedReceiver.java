@@ -5,29 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
-import com.hayaisoftware.launcher.activities.SearchActivity;
-
-/**
- * Created by thereiskeks on 04.02.2017.
- */
 
 public class SdCardMountedReceiver extends BroadcastReceiver {
 
-    SearchActivity callback;
-    public SdCardMountedReceiver(SearchActivity callback)
-    {
-        this.callback = callback;
-    }
     public void onReceive(Context context, Intent intent) {
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
-        Log.e("Received thing","sd card is mounted");
 
         // this is the list of newly available apps
         String[] packageChangedNames = intent.getExtras().getStringArray(Intent.EXTRA_CHANGED_PACKAGE_LIST);
@@ -46,10 +27,7 @@ public class SdCardMountedReceiver extends BroadcastReceiver {
                 names += " " + availablePackage;
                 editor.putString("package_changed_name", names.trim());
             }
-
         }
-
         editor.apply();
     }
-
 }
