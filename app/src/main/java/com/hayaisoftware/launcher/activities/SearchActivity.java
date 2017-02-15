@@ -650,7 +650,8 @@ public class SearchActivity extends Activity
         if (mImageLoadingConsumersManager != null)
             mImageLoadingConsumersManager.destroyAllConsumers(false);
         unregisterReceiver(mPackageChangedReceiver);
-        Log.d("HayaiLauncher", "Hayai is ded");
+        unregisterReceiver(mSdCardChangedReceiver);
+        Log.d("HayaiLauncher", "Hayai is dead");
         super.onDestroy();
     }
 
