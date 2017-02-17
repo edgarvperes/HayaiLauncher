@@ -27,12 +27,8 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <action android:name="android.intent.action.ASSIST" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-                
-
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
@@ -47,6 +43,16 @@
             android:theme="@style/AppSettingsTheme"
             android:label="@string/title_activity_about" >
         </activity>
+
+        <receiver
+            android:name=".SdCardMountedReceiver"
+            android:enabled="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 

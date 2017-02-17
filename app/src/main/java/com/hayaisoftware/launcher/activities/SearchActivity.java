@@ -230,12 +230,7 @@ public class SearchActivity extends Activity
         mPackageChangedReceiver = new PackageChangedReceiver();
         registerReceiver(mPackageChangedReceiver, filter);
 
-        // broadcast receiver that listens for sd card mounting
-        final IntentFilter sdCradFilter = new IntentFilter();
-        sdCradFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
-        //sdCradFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
-        mSdCardChangedReceiver = new SdCardMountedReceiver();
-        registerReceiver(mSdCardChangedReceiver, sdCradFilter);
+
 
         loadLaunchableApps();
 
