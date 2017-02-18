@@ -64,6 +64,7 @@ import com.hayaisoftware.launcher.LaunchableActivityPrefs;
 import com.hayaisoftware.launcher.LoadLaunchableActivityTask;
 import com.hayaisoftware.launcher.PackageChangedReceiver;
 import com.hayaisoftware.launcher.R;
+import com.hayaisoftware.launcher.SdCardMountedReceiver;
 import com.hayaisoftware.launcher.ShortcutNotificationManager;
 import com.hayaisoftware.launcher.StatusBarColorHelper;
 import com.hayaisoftware.launcher.Trie;
@@ -111,6 +112,7 @@ public class SearchActivity extends Activity
     private View mClearButton;
     private int mNumOfCores;
     private BroadcastReceiver mPackageChangedReceiver;
+    private BroadcastReceiver mSdCardChangedReceiver;
 
     private Comparator<LaunchableActivity> mPinToTopComparator;
     private Comparator<LaunchableActivity> mRecentOrderComparator;
@@ -218,6 +220,7 @@ public class SearchActivity extends Activity
 
         mNumOfCores = Runtime.getRuntime().availableProcessors();
 
+        // broadcast receiver that listens for app changes
         final IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_CHANGED);
@@ -226,6 +229,8 @@ public class SearchActivity extends Activity
         filter.addDataScheme("package");
         mPackageChangedReceiver = new PackageChangedReceiver();
         registerReceiver(mPackageChangedReceiver, filter);
+
+
 
         loadLaunchableApps();
 
@@ -640,7 +645,8 @@ public class SearchActivity extends Activity
         if (mImageLoadingConsumersManager != null)
             mImageLoadingConsumersManager.destroyAllConsumers(false);
         unregisterReceiver(mPackageChangedReceiver);
-        Log.d("HayaiLauncher", "Hayai is ded");
+        unregisterReceiver(mSdCardChangedReceiver);
+        Log.d("HayaiLauncher", "Hayai is dead");
         super.onDestroy();
     }
 
