@@ -20,6 +20,9 @@
     <string name="title_activity_search" translatable="false">Hayai Launcher</string>
     <string name="action_settings">Settings</string>
     <string name="application_icon_desc" >Application Icon</string>
+    <string name="search_icon">Search Icon</string>
+    <string name="clear_button">Clear Text Button</string>
+    <string name="overflow_menu_button">Overflow Menu Button</string>
     <string name="search_view_hint">Type something…</string>
     <string name="title_activity_settings">Settings</string>
     <string name="settings_category_notification_category">Notifications</string>
@@ -78,5 +81,5 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     <string name="pref_app_preferred_order_entries_alphabetical">Alphabetical order</string>
     <string name="pref_app_preferred_order_entries_usages">Most used first</string>
     <string name="action_set_wallpaper">Set wallpaper</string>
-
+    <string name="pref_allow_rotation">Allow orientation change</string>
 </resources>

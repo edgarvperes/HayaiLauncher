@@ -28,7 +28,6 @@
             android:alwaysRetainTaskState="true"
             android:label="@string/title_activity_search"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             >
 

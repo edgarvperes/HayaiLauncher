@@ -31,6 +31,8 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	public static final String KEY_PREF_NOTIFICATION = "pref_notification";
     public static final String KEY_PREF_NOTIFICATION_PRIORITY = "pref_notification_priority";
+	public static final String KEY_PREF_AUTO_KEYBOARD = "pref_autokeyboard";
+    public static final String KEY_PREF_ALLOW_ROTATION = "pref_allow_rotation";
 
 	@SuppressWarnings("deprecation")
 	@Override

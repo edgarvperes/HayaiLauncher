@@ -21,17 +21,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -41,7 +41,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -63,7 +63,6 @@ import com.hayaisoftware.launcher.LoadLaunchableActivityTask;
 import com.hayaisoftware.launcher.PackageChangedReceiver;
 import com.hayaisoftware.launcher.R;
 import com.hayaisoftware.launcher.ShortcutNotificationManager;
-import com.hayaisoftware.launcher.StatusBarColorHelper;
 import com.hayaisoftware.launcher.Trie;
 import com.hayaisoftware.launcher.comparators.AlphabeticalOrder;
 import com.hayaisoftware.launcher.comparators.PinToTop;
@@ -85,14 +84,8 @@ import java.util.regex.Pattern;
 public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final int sNavigationBarHeightMultiplier = 1;
-    private static final int sGridViewTopRowExtraPaddingInDP = 56;
-    private static final int sMarginFromNavigationBarInDp = 16;
-    private static final int sGridItemHeightInDp = 96;
     private static final int sInitialArrayListSize = 300;
-
     private final Pattern mPattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-    private int mStatusBarHeight;
     private ArrayList<LaunchableActivity> mActivityInfos;
     private ArrayList<LaunchableActivity> mShareableActivityInfos;
     private Trie<LaunchableActivity> mTrie;
@@ -108,22 +101,17 @@ public class SearchActivity extends Activity
     private View mClearButton;
     private int mNumOfCores;
     private BroadcastReceiver mPackageChangedReceiver;
-
     private Comparator<LaunchableActivity> mPinToTopComparator;
     private Comparator<LaunchableActivity> mRecentOrderComparator;
     private Comparator<LaunchableActivity> mAlphabeticalOrderComparator;
     private Comparator<LaunchableActivity> mUsageOrderComparator;
     private InputMethodManager mInputMethodManager;
-    private AdapterView mAppListView;
     private PackageManager mPm;
     private View mOverflowButtonTopleft;
-    private int mColumnCount;
     //used only in function getAllSubwords. they are here as class fields to avoid
     // object re-allocation.
     private StringBuilder mWordSinceLastSpaceBuilder;
     private StringBuilder mWordSinceLastCapitalBuilder;
-    private int mGridViewTopRowHeight;
-    private int mGridViewBottomRowHeight;
     private boolean mShouldOrderByRecents;
     private boolean mShouldOrderByUsages;
     private final TextWatcher mTextWatcher = new TextWatcher() {
@@ -150,14 +138,135 @@ public class SearchActivity extends Activity
 
     };
     private boolean mDisableIcons;
-    private boolean mAutoKeyboard;
     private boolean mIsCacheClear;
+
+    /**
+     * Retrieves the visibility status of the navigation bar.
+     *
+     * @param resources The resources for the device.
+     * @return {@code True} if the navigation bar is enabled, {@code false} otherwise.
+     */
+    private static boolean hasNavBar(final Resources resources) {
+        final boolean hasNavBar;
+        final int id = resources.getIdentifier("config_showNavigationBar", "bool", "android");
+
+        if (id > 0) {
+            hasNavBar = resources.getBoolean(id);
+        } else {
+            hasNavBar = false;
+        }
+
+        return hasNavBar;
+    }
+
+    /**
+     * Retrieves the navigation bar height.
+     *
+     * @param resources The resources for the device.
+     * @return The height of the navigation bar.
+     */
+    private static int getNavigationBarHeight(final Resources resources) {
+        final int navBarHeight;
+
+        if (hasNavBar(resources)) {
+            final Configuration configuration = resources.getConfiguration();
+
+            //Only phone between 0-599 has navigationbar can move
+            final boolean isSmartphone = configuration.smallestScreenWidthDp < 600;
+            final boolean isPortrait =
+                    configuration.orientation == Configuration.ORIENTATION_PORTRAIT;
+
+            if (isSmartphone && !isPortrait) {
+                navBarHeight = 0;
+            } else if (isPortrait) {
+                navBarHeight = getDimensionSize(resources, "navigation_bar_height");
+            } else {
+                navBarHeight = getDimensionSize(resources, "navigation_bar_height_landscape");
+            }
+        } else {
+            navBarHeight = 0;
+        }
+
+
+        return navBarHeight;
+    }
+
+    /**
+     * Get the navigation bar width.
+     *
+     * @param resources The resources for the device.
+     * @return The width of the navigation bar.
+     */
+    private static int getNavigationBarWidth(final Resources resources) {
+        final int navBarWidth;
+
+        if (hasNavBar(resources)) {
+            final Configuration configuration = resources.getConfiguration();
+
+            //Only phone between 0-599 has navigationbar can move
+            final boolean isSmartphone = configuration.smallestScreenWidthDp < 600;
+
+            if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE && isSmartphone) {
+                navBarWidth = getDimensionSize(resources, "navigation_bar_width");
+            } else {
+                navBarWidth = 0;
+            }
+        } else {
+            navBarWidth = 0;
+        }
+
+
+        return navBarWidth;
+    }
+
+    /**
+     * This method returns the size of the dimen
+     *
+     * @param resources The resources for the containing the named identifier.
+     * @param name      The name of the resource to get the id for.
+     * @return The dimension size, {@code 0} if the name for the identifier doesn't exist.
+     */
+    private static int getDimensionSize(final Resources resources, final String name) {
+        final int resourceId = resources.getIdentifier(name, "dimen", "android");
+        final int dimensionSize;
+
+        if (resourceId > 0) {
+            dimensionSize = resources.getDimensionPixelSize(resourceId);
+        } else {
+            dimensionSize = 0;
+        }
+
+        return dimensionSize;
+    }
+
+    /**
+     * Simply adds to the already existing padding.
+     *
+     * @param view   The {@link View} to add padding to.
+     * @param left   The padding to add to the left side.
+     * @param top    The padding to add to the top.
+     * @param right  The padding to add to the right side.
+     * @param bottom The padding to add to the bottom.
+     */
+    private static void addToPadding(final View view, final int left, final int top,
+                                     final int right, final int bottom) {
+        final int leftPadding = view.getPaddingLeft() + left;
+        final int topPadding = view.getPaddingTop() + top;
+        final int rightPadding = view.getPaddingRight() + right;
+        final int bottomPadding = view.getPaddingBottom() + bottom;
+
+        view.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_search);
+
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        setupPreferences();
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         mPm = getPackageManager();
 
@@ -171,38 +280,35 @@ public class SearchActivity extends Activity
         mWordSinceLastSpaceBuilder = new StringBuilder(64);
         mWordSinceLastCapitalBuilder = new StringBuilder(64);
 
-        mSearchEditText = (EditText) findViewById(R.id.editText1);
-        mAppListView = (GridView) findViewById(R.id.appsContainer);
+        mSearchEditText = (EditText) findViewById(R.id.user_search_input);
         mClearButton = findViewById(R.id.clear_button);
         mOverflowButtonTopleft = findViewById(R.id.overflow_button_topleft);
         mContext = getApplicationContext();
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        mStatusBarHeight = StatusBarColorHelper.getStatusBarHeight(resources);
-        final DisplayMetrics displayMetrics = resources.getDisplayMetrics();
-        final float displayDensity = displayMetrics.density;
-        final int gridViewTopRowExtraPaddingInPixels =
-                Math.round(displayDensity * sGridViewTopRowExtraPaddingInDP);
-        final int marginFromNavigationBarInPixels =
-                Math.round(displayDensity * sMarginFromNavigationBarInDp);
-        final int gridItemHeightInPixels =
-                Math.round(displayDensity * sGridItemHeightInDp);
-        int statusBarMultiplierPaddings = setPaddingHeights();
-        mGridViewTopRowHeight = statusBarMultiplierPaddings * mStatusBarHeight +
-                gridViewTopRowExtraPaddingInPixels;
-        mGridViewBottomRowHeight = gridItemHeightInPixels + sNavigationBarHeightMultiplier *
-                StatusBarColorHelper.getNavigationBarHeight(getResources()) +
-                marginFromNavigationBarInPixels;
 
-        mColumnCount = resources.getInteger(R.integer.app_grid_columns);
+        final int vertMargin = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin);
+        final int navBarWidth = getNavigationBarWidth(resources);
+        final int searchUpperPadding = getDimensionSize(resources, "status_bar_height") +
+                vertMargin;
+        final View masterLayout = findViewById(R.id.masterLayout);
 
-        mSharedPreferences = PreferenceManager
-                .getDefaultSharedPreferences(this);
-        setupPreferences();
-        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        // If the navigation bar is on the side, don't put apps under it.
+        addToPadding(masterLayout, 0, searchUpperPadding, navBarWidth, 0);
+
+        /*
+            If the navigation bar is on the top or bottom, pad the bottom so the app list
+                termination doesn't end up under the navigation bar.
+        */
+        final int navBarHeightNew = getNavigationBarHeight(resources);
+        if (navBarHeightNew != 0) {
+            final View view = findViewById(R.id.appsContainer);
+
+            addToPadding(view, 0, 0, 0, navBarHeightNew);
+        }
+
         mLaunchableActivityPrefs = new LaunchableActivityPrefs(this);
 
         mIconSizePixels = resources.getDimensionPixelSize(R.dimen.app_icon_size);
-
 
         mPinToTopComparator = new PinToTop();
         mRecentOrderComparator = new RecentOrder();
@@ -226,7 +332,6 @@ public class SearchActivity extends Activity
         //loadShareableApps();
         setupImageLoadingThreads(resources);
         setupViews();
-
     }
 
     private void loadShareableApps() {
@@ -245,59 +350,24 @@ public class SearchActivity extends Activity
         super.onResume();
         mIsCacheClear = false;
         mSearchEditText.setText("");
-        mSearchEditText.clearFocus();
-        if (mAutoKeyboard) {
+        if (mSharedPreferences.getBoolean(SettingsActivity.KEY_PREF_AUTO_KEYBOARD, false)) {
             mSearchEditText.requestFocus();
-        }
-    }
-
-    public int setPaddingHeights() {
-        int statusBarPaddings = 2;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-
-            final Window window = getWindow();
-            window.getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-
-            final View statusBarDummy = findViewById(R.id.statusBarDummyView);
-            statusBarDummy.getLayoutParams().height = mStatusBarHeight;
-            statusBarPaddings++;
-        }
-
-        final View topFillerView = findViewById(R.id.topFillerView);
-        topFillerView.getLayoutParams().height = mStatusBarHeight;
-
-        final View bottomFillerView = findViewById(R.id.bottomFillerView);
-        bottomFillerView.getLayoutParams().height = mStatusBarHeight;
-
-        return statusBarPaddings;
-    }
-
-    @Override
-    protected void onPostResume() {
-        super.onPostResume();
-
-        if (mAutoKeyboard) {
-            showKeyboard();
-
-            //HACK putting showKeyboard event to the end of the Ui Thread running queue
-            // to make sure the keyboard opens.
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    showKeyboard();
-                }
-            });
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            mInputMethodManager.showSoftInput(mSearchEditText, 0);
         } else {
-            hideKeyboard();
+            findViewById(R.id.appsContainer).requestFocus();
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
 
-
+        if (mSharedPreferences.getBoolean(SettingsActivity.KEY_PREF_ALLOW_ROTATION, false)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        }
     }
 
     private void setupViews() {
-
+        final GridView appContainer = (GridView) findViewById(R.id.appsContainer);
         mSearchEditText.addTextChangedListener(mTextWatcher);
         mSearchEditText.setImeActionLabel(getString(R.string.launch), EditorInfo.IME_ACTION_GO);
         mSearchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -321,9 +391,9 @@ public class SearchActivity extends Activity
                 return false;
             }
         });
-        registerForContextMenu(mAppListView);
+        registerForContextMenu(appContainer);
 
-        ((GridView) mAppListView).setOnScrollListener(new AbsListView.OnScrollListener() {
+        appContainer.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState != SCROLL_STATE_IDLE) {
@@ -338,21 +408,16 @@ public class SearchActivity extends Activity
             }
         });
         //noinspection unchecked
-        mAppListView.setAdapter(mArrayAdapter);
+        appContainer.setAdapter(mArrayAdapter);
 
-
-        mAppListView.setOnItemClickListener(new OnItemClickListener() {
+        appContainer.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position >= mColumnCount) {
-                    launchActivity(mActivityInfos.get(position - mColumnCount));
-                }
+                launchActivity(mActivityInfos.get(position));
             }
 
         });
-
-
     }
 
     private boolean openFirstActivity() {
@@ -379,8 +444,6 @@ public class SearchActivity extends Activity
 
         mDisableIcons =
                 mSharedPreferences.getBoolean("pref_disable_icons", false);
-        mAutoKeyboard =
-                mSharedPreferences.getBoolean("pref_autokeyboard", false);
     }
 
     private void setupImageLoadingThreads(final Resources resources) {
@@ -494,7 +557,7 @@ public class SearchActivity extends Activity
 
         if (mShouldOrderByRecents) {
             Collections.sort(mActivityInfos, mRecentOrderComparator);
-        } else if(mShouldOrderByUsages) {
+        } else if (mShouldOrderByUsages) {
             Collections.sort(mActivityInfos, mUsageOrderComparator);
         }
 
@@ -573,12 +636,9 @@ public class SearchActivity extends Activity
         updateApps(launchablesFromResolve, true);
     }
 
-    private void showKeyboard() {
-        mInputMethodManager.showSoftInput(mSearchEditText, 0);
-    }
-
     private void hideKeyboard() {
         mInputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
+        findViewById(R.id.appsContainer).requestFocus();
     }
 
     private void handlePackageChanged() {
@@ -661,11 +721,7 @@ public class SearchActivity extends Activity
             mArrayAdapter.notifyDataSetChanged();
         } else if (key.equals("pref_disable_icons")) {
             recreate();
-        } else if (key.equals("pref_autokeyboard")) {
-            mAutoKeyboard = mSharedPreferences.getBoolean("pref_autokeyboard", false);
         }
-
-
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -827,56 +883,38 @@ public class SearchActivity extends Activity
         }
 
         @Override
-        public int getCount() {
-            return super.getCount() + mColumnCount;
-        }
-
-        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
             final View view =
                     convertView != null ?
                             convertView : inflater.inflate(R.layout.app_grid_item, parent, false);
-            final AbsListView.LayoutParams params =
-                    (AbsListView.LayoutParams) view.getLayoutParams();
 
-            if (position < mColumnCount) {
-                params.height = mGridViewTopRowHeight;
-                view.setLayoutParams(params);
-                view.setVisibility(View.INVISIBLE);
+            view.setVisibility(View.VISIBLE);
+            final LaunchableActivity launchableActivity = getItem(position);
+            final CharSequence label = launchableActivity.getActivityLabel();
+            final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
+            final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
+            final View appShareIndicator = view.findViewById(R.id.appShareIndicator);
+            final View appPinToTop = view.findViewById(R.id.appPinToTop);
+
+            appLabelView.setText(label);
+
+            appIconView.setTag(launchableActivity);
+            if (!launchableActivity.isIconLoaded()) {
+                if (!mDisableIcons)
+                    mImageLoadingConsumersManager.addTask(
+                            new ImageLoadingTask(appIconView, launchableActivity,
+                                    mImageTasksSharedData));
             } else {
-                if (position == (getCount() - 1)) {
-                    params.height = mGridViewBottomRowHeight;
-                } else {
-                    params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                }
-                view.setLayoutParams(params);
-                view.setVisibility(View.VISIBLE);
-                final LaunchableActivity launchableActivity = getItem(position - mColumnCount);
-                final CharSequence label = launchableActivity.getActivityLabel();
-                final TextView appLabelView = (TextView) view.findViewById(R.id.appLabel);
-                final ImageView appIconView = (ImageView) view.findViewById(R.id.appIcon);
-                final View appShareIndicator = view.findViewById(R.id.appShareIndicator);
-                final View appPinToTop = view.findViewById(R.id.appPinToTop);
-
-                appLabelView.setText(label);
-
-                appIconView.setTag(launchableActivity);
-                if (!launchableActivity.isIconLoaded()) {
-                    if (!mDisableIcons)
-                        mImageLoadingConsumersManager.addTask(
-                                new ImageLoadingTask(appIconView, launchableActivity,
-                                        mImageTasksSharedData));
-                } else {
-                    appIconView.setImageDrawable(
-                            launchableActivity.getActivityIcon(mContext, mIconSizePixels));
-                }
-                appShareIndicator.setVisibility(
-                        launchableActivity.isShareable() ? View.VISIBLE : View.GONE);
-                appPinToTop.setVisibility(
-                        launchableActivity.getPriority() > 0 ? View.VISIBLE : View.GONE);
-
+                appIconView.setImageDrawable(
+                        launchableActivity.getActivityIcon(mContext, mIconSizePixels));
             }
+
+            appShareIndicator.setVisibility(
+                    launchableActivity.isShareable() ? View.VISIBLE : View.GONE);
+            appPinToTop.setVisibility(
+                    launchableActivity.getPriority() > 0 ? View.VISIBLE : View.GONE);
+
             return view;
         }
 
