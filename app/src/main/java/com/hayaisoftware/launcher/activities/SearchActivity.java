@@ -85,6 +85,7 @@ public class SearchActivity extends Activity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int sInitialArrayListSize = 300;
+    private static final String SEARCH_EDIT_TEXT_KEY = "SearchEditText";
     private final Pattern mPattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     private ArrayList<LaunchableActivity> mActivityInfos;
     private ArrayList<LaunchableActivity> mShareableActivityInfos;
@@ -349,14 +350,20 @@ public class SearchActivity extends Activity
     protected void onResume() {
         super.onResume();
         mIsCacheClear = false;
-        mSearchEditText.setText("");
-        if (mSharedPreferences.getBoolean(SettingsActivity.KEY_PREF_AUTO_KEYBOARD, false)) {
+        final Editable searchText = mSearchEditText.getText();
+
+        if (mSharedPreferences.getBoolean(SettingsActivity.KEY_PREF_AUTO_KEYBOARD, false) ||
+                searchText.length() > 0) {
+            // This is a special case to show SearchEditText should have focus.
+            if (searchText.length() == 1 && searchText.charAt(0) == '\0') {
+                mSearchEditText.setText(null);
+            }
+
             mSearchEditText.requestFocus();
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
             mInputMethodManager.showSoftInput(mSearchEditText, 0);
         } else {
-            findViewById(R.id.appsContainer).requestFocus();
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+            hideKeyboard();
         }
 
         if (mSharedPreferences.getBoolean(SettingsActivity.KEY_PREF_ALLOW_ROTATION, false)) {
@@ -539,6 +546,33 @@ public class SearchActivity extends Activity
         return subwords;
     }
 
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        final String searchEdit = mSearchEditText.getText().toString();
+
+        if (!searchEdit.isEmpty()) {
+            outState.putCharSequence(SEARCH_EDIT_TEXT_KEY, searchEdit);
+        } else if (mSearchEditText.hasFocus()) {
+            // This is a special case to show that the box had focus.
+            outState.putCharSequence(SEARCH_EDIT_TEXT_KEY, '\0' + "");
+        }
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        final CharSequence searchEditText =
+                savedInstanceState.getCharSequence(SEARCH_EDIT_TEXT_KEY);
+
+        if (searchEditText != null) {
+            mSearchEditText.setText(searchEditText);
+            mSearchEditText.setSelection(searchEditText.length());
+        }
+    }
+
     private void updateVisibleApps() {
         final HashSet<LaunchableActivity> infoList =
                 mTrie.getAllStartingWith(stripAccents(mSearchEditText.getText()
@@ -637,8 +671,13 @@ public class SearchActivity extends Activity
     }
 
     private void hideKeyboard() {
-        mInputMethodManager.hideSoftInputFromWindow(mSearchEditText.getWindowToken(), 0);
+        final View focus = getCurrentFocus();
+
+        if (focus != null) {
+            mInputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
+        }
         findViewById(R.id.appsContainer).requestFocus();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
     private void handlePackageChanged() {
@@ -722,6 +761,19 @@ public class SearchActivity extends Activity
         } else if (key.equals("pref_disable_icons")) {
             recreate();
         }
+    }
+
+    /**
+     * This method is called when the user is already in this activity and presses the {@code home}
+     * button. Use this opportunity to return this activity back to a default state.
+     *
+     * @param intent The incoming {@link Intent} sent by this activity
+     */
+    @Override
+    protected void onNewIntent(final Intent intent) {
+        super.onNewIntent(intent);
+
+        mSearchEditText.setText(null);
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -845,6 +897,7 @@ public class SearchActivity extends Activity
         hideKeyboard();
         try {
             startActivity(launchableActivity.getLaunchIntent(mSearchEditText.getText().toString()));
+            mSearchEditText.setText(null);
             launchableActivity.setLaunchTime();
             launchableActivity.addUsage();
             mLaunchableActivityPrefs.writePreference(launchableActivity.getClassName(),
