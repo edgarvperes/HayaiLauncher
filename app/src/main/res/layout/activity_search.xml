@@ -12,12 +12,17 @@
   ~ limitations under the License.
   -->
 
+<!--
+  ~ Warning: Padding for the masterLayout and the appContainer are set dynamically and will be
+  ~ overwritten. See SearchActivity.java#setupPadding().
+  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:id="@+id/masterLayout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:layout_marginLeft="@dimen/activity_horizontal_margin"
               android:layout_marginRight="@dimen/activity_horizontal_margin"
+              android:layout_marginTop="@dimen/activity_vertical_margin"
               android:orientation="vertical">
 
     <LinearLayout

@@ -27,6 +27,7 @@ import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -240,23 +241,11 @@ public class SearchActivity extends Activity
         return dimensionSize;
     }
 
-    /**
-     * Simply adds to the already existing padding.
-     *
-     * @param view   The {@link View} to add padding to.
-     * @param left   The padding to add to the left side.
-     * @param top    The padding to add to the top.
-     * @param right  The padding to add to the right side.
-     * @param bottom The padding to add to the bottom.
-     */
-    private static void addToPadding(final View view, final int left, final int top,
-                                     final int right, final int bottom) {
-        final int leftPadding = view.getPaddingLeft() + left;
-        final int topPadding = view.getPaddingTop() + top;
-        final int rightPadding = view.getPaddingRight() + right;
-        final int bottomPadding = view.getPaddingBottom() + bottom;
+    @Override
+    public void onMultiWindowModeChanged(final boolean isInMultiWindowMode) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode);
 
-        view.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
+        setupPadding(!isInMultiWindowMode);
     }
 
     @Override
@@ -287,25 +276,11 @@ public class SearchActivity extends Activity
         mContext = getApplicationContext();
         mInputMethodManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 
-        final int vertMargin = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin);
-        final int navBarWidth = getNavigationBarWidth(resources);
-        final int searchUpperPadding = getDimensionSize(resources, "status_bar_height") +
-                vertMargin;
-        final View masterLayout = findViewById(R.id.masterLayout);
+        final boolean noMultiWindow = Build.VERSION.SDK_INT < Build.VERSION_CODES.N ||
+                !isInMultiWindowMode();
+        final boolean transparentPossible = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
-        // If the navigation bar is on the side, don't put apps under it.
-        addToPadding(masterLayout, 0, searchUpperPadding, navBarWidth, 0);
-
-        /*
-            If the navigation bar is on the top or bottom, pad the bottom so the app list
-                termination doesn't end up under the navigation bar.
-        */
-        final int navBarHeightNew = getNavigationBarHeight(resources);
-        if (navBarHeightNew != 0) {
-            final View view = findViewById(R.id.appsContainer);
-
-            addToPadding(view, 0, 0, 0, navBarHeightNew);
-        }
+        setupPadding(transparentPossible && noMultiWindow);
 
         mLaunchableActivityPrefs = new LaunchableActivityPrefs(this);
 
@@ -333,6 +308,36 @@ public class SearchActivity extends Activity
         //loadShareableApps();
         setupImageLoadingThreads(resources);
         setupViews();
+    }
+
+    /**
+     * This method dynamically sets the padding for the outer boundaries of the masterLayout and
+     * appContainer.
+     *
+     * @param isNavBarTranslucent Set this to {@code true} if android.R.windowTranslucentNavigation
+     *                            is expected to be {@code true}, {@code false} otherwise.
+     */
+    private void setupPadding(final boolean isNavBarTranslucent) {
+        final Resources resources = getResources();
+        final View masterLayout = findViewById(R.id.masterLayout);
+        final View appContainer = findViewById(R.id.appsContainer);
+        final int appTop = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin);
+
+        if (isNavBarTranslucent) {
+            masterLayout.setFitsSystemWindows(false);
+            final int navBarWidth = getNavigationBarWidth(resources);
+            final int searchUpperPadding = getDimensionSize(resources, "status_bar_height");
+            final int navBarHeight = getNavigationBarHeight(resources);
+
+            // If the navigation bar is on the side, don't put apps under it.
+            masterLayout.setPadding(0, searchUpperPadding, navBarWidth, 0);
+
+            // If the navigation bar is at the bottom, stop the icons above it.
+            appContainer.setPadding(0, appTop, 0, navBarHeight);
+        } else {
+            masterLayout.setFitsSystemWindows(true);
+            appContainer.setPadding(0, appTop, 0, 0);
+        }
     }
 
     private void loadShareableApps() {
