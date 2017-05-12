@@ -29,8 +29,7 @@
             android:id="@+id/appIcon"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
-
+            android:src="@android:mipmap/sym_def_app_icon"/>
         <ImageView
             android:id="@+id/appShareIndicator"
             android:layout_width="wrap_content"

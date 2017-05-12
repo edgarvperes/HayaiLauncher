@@ -102,7 +102,6 @@ public class SearchActivity extends Activity
     private LaunchableActivityPrefs mLaunchableActivityPrefs;
     private SharedPreferences mSharedPreferences;
     private Context mContext;
-    private Drawable mDefaultAppIcon;
     private SimpleTaskConsumerManager mImageLoadingConsumersManager;
     private ImageLoadingTask.SharedData mImageTasksSharedData;
     private int mIconSizePixels;
@@ -203,9 +202,6 @@ public class SearchActivity extends Activity
         mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
         mLaunchableActivityPrefs = new LaunchableActivityPrefs(this);
 
-        //noinspection deprecation
-        mDefaultAppIcon = Resources.getSystem().getDrawable(
-                android.R.mipmap.sym_def_app_icon);
         mIconSizePixels = resources.getDimensionPixelSize(R.dimen.app_icon_size);
 
 
@@ -868,7 +864,6 @@ public class SearchActivity extends Activity
 
                 appIconView.setTag(launchableActivity);
                 if (!launchableActivity.isIconLoaded()) {
-                    appIconView.setImageDrawable(mDefaultAppIcon);
                     if (!mDisableIcons)
                         mImageLoadingConsumersManager.addTask(
                                 new ImageLoadingTask(appIconView, launchableActivity,
