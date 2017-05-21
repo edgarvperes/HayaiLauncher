@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -389,7 +388,7 @@ public class SearchActivity extends Activity
         mImageLoadingConsumersManager =
                 new SimpleTaskConsumerManager(getOptimalNumberOfThreads(resources),
                         mActivityInfos.size());
-        mImageTasksSharedData = new ImageLoadingTask.SharedData(this, mPm, mContext, mIconSizePixels);
+        mImageTasksSharedData = new ImageLoadingTask.SharedData(this, mContext, mIconSizePixels);
     }
 
 
@@ -870,7 +869,7 @@ public class SearchActivity extends Activity
                                         mImageTasksSharedData));
                 } else {
                     appIconView.setImageDrawable(
-                            launchableActivity.getActivityIcon(mPm, mContext, mIconSizePixels));
+                            launchableActivity.getActivityIcon(mContext, mIconSizePixels));
                 }
                 appShareIndicator.setVisibility(
                         launchableActivity.isShareable() ? View.VISIBLE : View.GONE);

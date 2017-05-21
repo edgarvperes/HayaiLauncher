@@ -24,13 +24,15 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.DrawableRes;
 
 import com.hayaisoftware.launcher.util.ContentShare;
 
 
 public class LaunchableActivity{
 
-    private final ActivityInfo mActivityInfo;
+    @DrawableRes
+    private final int mIconResource;
     private final String mActivityLabel;
     private final ComponentName mComponentName;
     private Intent mLaunchIntent;
@@ -42,18 +44,19 @@ public class LaunchableActivity{
 
     public LaunchableActivity(final ActivityInfo activityInfo, final String activityLabel,
                               final boolean isShareable) {
-        this.mActivityInfo = activityInfo;
+        mIconResource = activityInfo.getIconResource();
         this.mActivityLabel = activityLabel;
         mComponentName = new ComponentName(activityInfo.packageName, activityInfo.name);
         this.mShareable = isShareable;
     }
+
     public LaunchableActivity(final ComponentName componentName, final String label,
                               final Drawable activityIcon, final Intent launchIntent){
         this.mComponentName = componentName;
         this.mActivityLabel = label;
         this.mLaunchIntent = launchIntent;
         this.mActivityIcon = activityIcon;
-        this.mActivityInfo = null;
+        mIconResource = -1;
     }
 
     public Intent getLaunchIntent(final String searchString) {
@@ -103,18 +106,27 @@ public class LaunchableActivity{
         mActivityIcon=null;
     }
 
-    public synchronized Drawable getActivityIcon(final PackageManager pm, final Context context,
-                                                 final int iconSizePixels) {
+    public synchronized Drawable getActivityIcon(final Context context, final int iconSizePixels) {
         if (!isIconLoaded()) {
             Drawable _activityIcon = null;
                 final ActivityManager activityManager =
                         (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                 final int iconDpi = activityManager.getLauncherLargeIconDensity();
                 try {
+                    final PackageManager pm = context.getPackageManager();
+                    final Resources resources = pm.getResourcesForActivity(mComponentName);
+                    @DrawableRes
+                    final int iconRes;
+
+                    if (mIconResource == -1) {
+                        iconRes = pm.getActivityInfo(mComponentName, 0).getIconResource();
+                    } else {
+                        iconRes = mIconResource;
+                    }
+
                     //noinspection deprecation
                     _activityIcon =
-                            pm.getResourcesForActivity(mComponentName).getDrawableForDensity(
-                                    mActivityInfo.getIconResource(), iconDpi);
+                            resources.getDrawableForDensity(iconRes, iconDpi);
 
                 } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
                     //if we get here, there's no icon to load.
